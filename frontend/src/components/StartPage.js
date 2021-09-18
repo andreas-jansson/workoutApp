@@ -47,7 +47,7 @@ export default class StartPage extends Component{
                 { this.renderHeader() }
                 <div className="sp-box1-info">
                     <div className="title">
-                        WorkIT
+                        <p>WorkIT</p>
                     </div>
                     <div className="sp-text-info">
                     <p>

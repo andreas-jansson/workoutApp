@@ -1,3 +1,17 @@
+
+/***** Variables *****/
+
+
+:root {
+    --orangeGradiant1:rgb(230,106,4);
+    --orangeGradiant2: linear-gradient(90deg, rgba(230,106,4,1) 28%, rgb(250, 185, 46) 64%, rgba(252,239,69,1) 100%);
+    --grayDefault: #292727;
+
+    --silverGradiant1:rgb(255,255,255);
+    --silverGradiant2:linear-gradient(90deg, rgba(255,255,255,1) 19%, rgba(203,203,203,1) 39%, rgba(255,255,255,1) 62%, rgba(182,182,182,1) 100%);
+  }
+  
+
 html,
 body {
   height: 100%;
@@ -135,14 +149,24 @@ Button:hover{
 
 .title{
     display: inline-block;
-    color:#e66a04;
     font-size: 180px;
     font-weight: bold;
     text-align: center;
+    height: 400px;
+
+
+}
+
+.title p{
+    background: -webkit-linear-gradient(360deg,#e66a04, #fcef45);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+    font-family: Arial, Helvetica, sans-serif;
+    font-variant: normal;
 }
 
 .box-2{
-    background-color: #292727;
+    background-color: var(--grayDefault);
     display:flex;
     align-items: center;
     justify-content:space-evenly;
@@ -150,6 +174,7 @@ Button:hover{
 
 .box-2-img{
     background-image: url('../images/default-workout-img.jpeg');
+    box-shadow: 10px 10px 5px rgb(34, 34, 34);
     height: 266px;
     width: 400px;
     background-size:contain;
@@ -172,16 +197,23 @@ Button:hover{
 }
 
 .sp-btn-join{
-    background-color: #e66a04; 
+    background:var(--orangeGradiant1);
+    background: var(--orangeGradiant2); 
     border: none;
     border-radius: 35px;
-    color: white;
     padding: 15px 32px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 32px;
     margin-right:10px;
+}
+
+/* försöker få call to action knappens text att bli lite metallisk- funkar inte atm*/
+.sp-btn-join p{
+    background: -webkit-linear-gradient(360deg,#ffffff, #b9b9b9);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
 }
 
 .db-container{

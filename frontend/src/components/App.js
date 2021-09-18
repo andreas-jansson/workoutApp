@@ -62,7 +62,6 @@ renderNav(){
     );
 }
 
-
 containerSessionName(){
     if(this.state.sessionActive){
         console.log("content-container-session")
