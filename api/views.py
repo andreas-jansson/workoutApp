@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from django.http import JsonResponse
 from .serializers import UserSerializer
 from .models import User
+from .hashUtils import compare_pw_hash, create_pw_hash, create_salt
 # Create your views here.
 
 
@@ -28,3 +29,16 @@ class SessionExistView(APIView):
         print("**** session Missing ****")
         return Response({'User New': 'Stay'}, status=status.HTTP_200_OK)
         
+
+
+
+class HashTestView(APIView):
+    def get(self, request, format=None):
+        password = "abcdefg"
+        salt = create_salt()
+        print("salt: " + salt)
+        pwHash = create_pw_hash(password, salt)
+        print("hash: " + pwHash)
+        check = compare_pw_hash(password, salt, pwHash)
+        print("check: " + str(check))
+        return Response({'Hash complete': 'OK'}, status=status.HTTP_200_OK)
