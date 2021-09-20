@@ -24,7 +24,7 @@ class Workout(models.Model):
 class User(models.Model):
     fname = models.CharField(max_length=50, null=False)
     lname = models.CharField(max_length=50, null=False)
-    email = models.CharField(max_length=75, null=False)
+    email = models.CharField(max_length=75, null=False, unique=True)
     pwhash = models.CharField(max_length=100, null=False)
     salt = models.CharField(max_length=100, null=True)
     roleid = models.ForeignKey(Role, null=False, on_delete=PROTECT)
