@@ -20,6 +20,9 @@ export default class LoginPage extends Component{
         return(
             <div className="db-container">
                 <h1>Login</h1>
+                <label>
+                    AWOOOOOOOOOO
+                </label>
             </div>
         );
     }

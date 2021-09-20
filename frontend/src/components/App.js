@@ -82,6 +82,8 @@ export default class App extends Component {
                 )}
               </Route>
               <Route path="/dashboard" component={DashboardPage} />
+              <Route path="/register" component={RegisterPage} />
+              <Route path="/login" component={LoginPage} />
             </Switch>
           </Router>
         </div>
