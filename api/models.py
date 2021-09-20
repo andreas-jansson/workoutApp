@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractUser
 # Create your models here.
 
 class Role(models.Model):
-    description = models.CharField(max_length=50, null=False)
+    description = models.CharField(max_length=50, null=False, unique=True)
 
 class ExerciseType(models.Model):
     type = models.CharField(max_length=50, unique=True)
@@ -19,7 +19,7 @@ class Workout(models.Model):
     description = models.CharField(max_length=100)
     active = models.BooleanField(default=True)
     shared = models.BooleanField(default=True)
-    consistsOf = models.ManyToManyField(Exercise)
+    consistsOf = models.ManyToManyField(Exercise, blank=True)
 
 class User(models.Model):
     fname = models.CharField(max_length=50, null=False)
@@ -29,7 +29,7 @@ class User(models.Model):
     salt = models.CharField(max_length=100, null=True)
     roleid = models.ForeignKey(Role, null=False, on_delete=PROTECT)
     created = models.DateTimeField(auto_now_add=True)
-    hasWorkouts = models.ManyToManyField(Workout)
+    hasWorkouts = models.ManyToManyField(Workout, blank=True)
 
 class scheduledWorkout(models.Model):
     user = models.ForeignKey(User, null=False, on_delete=PROTECT)
