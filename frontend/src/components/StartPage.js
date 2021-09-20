@@ -47,7 +47,7 @@ export default class StartPage extends Component{
                 { this.renderHeader() }
                 <div className="sp-box1-info">
                     <div className="title">
-                        <p>WorkIT</p>
+                        <p>WORKIT</p>
                     </div>
                     <div className="sp-text-info">
                     <p>
@@ -75,24 +75,27 @@ export default class StartPage extends Component{
                 </div>
             </div>
             <div className="sp-section box-2">
-                <div className="box-2-img">
+                <div className="box-2-top">
+                    <div className="box-2-img">
+                    </div>
+                    <div className="box-2-info">
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                        <br /> 
+                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
+                        <br /> 
+                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+                        <br /> 
+                        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
+                        <br /> 
+                        fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+                        <br /> 
+                        sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        <br /> 
+                        </p>
+                    </div>
                 </div>
-                <div className="box-2-info">
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                    <br /> 
-                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
-                    <br /> 
-                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-                    <br /> 
-                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
-                    <br /> 
-                    fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                    <br /> 
-                    sunt in culpa qui officia deserunt mollit anim id est laborum.
-                    <br /> 
-                    </p>
-                </div>
+                <div className="box-2-bottom" />
             </div>
             <div className="sp-section box-3">
                 boring info

@@ -1,35 +1,68 @@
-import React, {Component, useEffect} from "react";
-import { BrowserRouter as Router, Switch, Route, Link, Redirect} from "react-router-dom";
+import React, { Component, useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+} from "react-router-dom";
 
+export default class DashboardPage extends Component {
+  static defaultProps = {};
 
+  constructor(props) {
+    super(props);
 
-export default class DashboardPage extends Component{
+    this.state = {
+      sessionActive: false,
+    };
+  }
 
-    static defaultProps = {
+  /* runs on page load*/
+  componentDidMount = () => {
+    this.sessionExist();
+  };
+
+  /* redirects if session exists */
+  sessionExist = () => {
+    const requestOptions = {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
     };
 
-    constructor(props){
-        super(props);
+    fetch("/api/session-exist", requestOptions).then((response) => {
+      if (response.status == 202) {
+        console.log("session exists");
+        this.setState({ sessionActive: true });
+      } else {
+        console.log("Session Missing");
+        /* Remove the "//" comment to make localhost:8000/dashboard redirect to the index */
+        //this.props.history.push("/");
+      }
+    });
+  };
 
-        this.state={
-            sessionActive: false,
-        };
-    }
+  DashboardPage() {
+    return (
+      /* main container*/
+      <div className="db-container">
+        <div className="db-section1">
+          <div className="db-section1-img" />
+        </div>
 
-    DashboardPage(){
-        return(
-            <div className="db-container">
-                <h1>Dashboard</h1>
-            </div>
-        );
-    }
-    
+        <div className="db-container2">
+          <div className="db-section2">
+            <h1>syskon1</h1>
+          </div>
+          <div className="db-section3">
+            <h1>syskon2</h1>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-
-    render(){
-        return(
-             this.DashboardPage()
-         );
-    }
-
+  render() {
+    return this.DashboardPage();
+  }
 }
