@@ -18,7 +18,7 @@ class SessionExistView(APIView):
     serializer_class = UserSerializer
 
     def get(self, request, format=None):
-        self.request.session.create()
+        #self.request.session.create()
         #request.session['user-id'] = 420
         #print("**** sessionID: " +  str(request.session['user-id']))
         # serializer = self.serializer_class(data=request.data)
