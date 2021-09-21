@@ -12,6 +12,8 @@ import DashboardPage from "./DashboardPage";
 import LoginPage from "./LoginPage";
 import RegisterPage from "./RegisterPage";
 import RegisterPage2 from "./RegisterPage2";
+import WorkoutPage from "./WorkoutPage";
+
 
 export default class App extends Component {
   constructor(props) {
@@ -48,11 +50,21 @@ export default class App extends Component {
     return (
       <div className="nav-bar">
         <div className="container-menu-btn">
-          <div className="menu-btn btn1">Dashboard</div>
-          <div className="menu-btn btn2">Workouts</div>
-          <div className="menu-btn btn3">Workout Planner</div>
-          <div className="menu-btn btn4">Active Workout</div>
-          <div className="menu-btn btn1">Instagram 2.0</div>
+            <Link to="/dashboard">
+                <div className="menu-btn btn1">Dashboard</div>
+            </Link>
+            <Link to="/workout">
+                <div className="menu-btn btn2">Workout</div>
+            </Link>
+            <Link to="/dashboard">
+                <div className="menu-btn btn3">Workout Planner</div>
+            </Link>
+            <Link to="/dashboard">
+                <div className="menu-btn btn4">Active Workout</div>
+            </Link>
+            <Link to="/dashboard">
+                <div className="menu-btn btn1">Instagram 2.0</div>
+            </Link>
         </div>
       </div>
     );
@@ -71,9 +83,9 @@ export default class App extends Component {
   render() {
     return (
       <div className="app-container">
-        {this.state.sessionActive ? this.renderNav() : null}
-        <div className={this.containerSessionName()}>
           <Router>
+          {this.state.sessionActive ? this.renderNav() : null}
+              <div className={this.containerSessionName()}>
             <Switch>
               <Route exact path="/">
                 {this.state.sessionActive ? (
@@ -86,9 +98,10 @@ export default class App extends Component {
               <Route path="/register" component={RegisterPage} />
               <Route path="/login" component={LoginPage} />
               <Route path="/signup" component={RegisterPage2} />
+              <Route path="/workout" component={WorkoutPage} />
             </Switch>
+            </div>
           </Router>
-        </div>
       </div>
     );
   }
