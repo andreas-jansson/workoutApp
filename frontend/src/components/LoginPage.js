@@ -23,6 +23,11 @@ export default class LoginPage extends Component{
                 <label>
                     AWOOOOOOOOOO
                 </label>
+                <Link to="/signup">
+                        <div className="header-btn-btn3">
+                            No accout? Click here!
+                        </div>
+                    </Link>
             </div>
         );
     }

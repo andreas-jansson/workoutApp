@@ -30,8 +30,6 @@ class SessionExistView(APIView):
         return Response({'User New': 'Stay'}, status=status.HTTP_200_OK)
         
 
-
-
 class HashTestView(APIView):
     def get(self, request, format=None):
         password = "abcdefg"
@@ -42,3 +40,9 @@ class HashTestView(APIView):
         check = compare_pw_hash(password, salt, pwHash)
         print("check: " + str(check))
         return Response({'Hash complete': 'OK'}, status=status.HTTP_200_OK)
+
+
+class RegisterUserView(APIView):
+    def post(self, request, format=None):
+        print("HEJHEJHEJHEJHEJHEJHEJHEJHEJHEJHEJ")
+        return Response({'User registered': 'OK'}, status=status.HTTP_200_OK)

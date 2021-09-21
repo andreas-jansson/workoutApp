@@ -11,6 +11,7 @@ import StartPage from "./StartPage";
 import DashboardPage from "./DashboardPage";
 import LoginPage from "./LoginPage";
 import RegisterPage from "./RegisterPage";
+import RegisterPage2 from "./RegisterPage2";
 
 export default class App extends Component {
   constructor(props) {
@@ -84,6 +85,7 @@ export default class App extends Component {
               <Route path="/dashboard" component={DashboardPage} />
               <Route path="/register" component={RegisterPage} />
               <Route path="/login" component={LoginPage} />
+              <Route path="/signup" component={RegisterPage2} />
             </Switch>
           </Router>
         </div>
