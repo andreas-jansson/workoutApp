@@ -30,8 +30,6 @@ class SessionExistView(APIView):
         return Response({'User New': 'Stay'}, status=status.HTTP_200_OK)
         
 
-
-
 class HashTestView(APIView):
     def get(self, request, format=None):
         password = "abcdefg"

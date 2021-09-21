@@ -6,4 +6,5 @@ urlpatterns = [
     path('dashboard', index),
     path('register', index),
     path('login', index),
+    path('workout', index),
 ]
