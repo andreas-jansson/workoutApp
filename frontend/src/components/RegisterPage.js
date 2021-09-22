@@ -90,6 +90,7 @@ function RegisterPage(props) {
                       value={state.fname}
                       onChange={handleChange}
                       name="first-name"
+                      required
                     ></input>
                   </label>
                   <br />
@@ -105,6 +106,7 @@ function RegisterPage(props) {
                       value={state.lname}
                       onChange={handleChange}
                       name="last-name"
+                      required
                     ></input>
                   </label>
                   <div align="left" className="signup-padding">
@@ -119,6 +121,7 @@ function RegisterPage(props) {
                       value={state.email}
                       onChange={handleChange}
                       name="email"
+                      required
                     ></input>
                   </label>
                   <div align="left" className="signup-padding">
@@ -132,6 +135,7 @@ function RegisterPage(props) {
                       id="password"
                       value={state.password}
                       onChange={handleChange}
+                      required
                     ></input>
                   </label>
                   <label>
@@ -145,6 +149,7 @@ function RegisterPage(props) {
                       id="confirmed_password"
                       value={state.confirmed_password}
                       onChange={handleChange}
+                      required
                     ></input>
                   </label>
                   <br /> <br />   <br /> <br />   <br /> <br />

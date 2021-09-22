@@ -4,8 +4,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
 from .serializers import UserSerializer
-from .models import User
+from .models import Role, User
 from .hashUtils import compare_pw_hash, create_pw_hash, create_salt
+import io
+from rest_framework.parsers import JSONParser
 # Create your views here.
 
 
@@ -44,6 +46,13 @@ class HashTestView(APIView):
 
 class RegisterUserView(APIView):
     def post(self, request, format=None):
-        data = self.request.body.decode()
-        print(data)
+        customRole = Role()
+        stream = io.BytesIO(request.body)
+        data = JSONParser().parse(stream)
+        u = User(fname = data['fname'], 
+        lname = data['lname'], 
+        email = data['email'],
+        pwhash = data['password'],
+        roleid = Role.objects.filter(description = 'Unauthorized')[0])
+        u.save()
         return Response({'User registered': 'OK'}, status=status.HTTP_200_OK)
