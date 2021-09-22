@@ -1,6 +1,6 @@
 import React, {Component, useEffect} from "react";
 import { BrowserRouter as Router, Switch, Route, Link, Redirect} from "react-router-dom";
-
+import WorkoutAddPage from "./WorkoutAddPage";
 
 
 export default class WorkoutPage extends Component{
@@ -20,7 +20,6 @@ export default class WorkoutPage extends Component{
         this.handleSubmit1 = this.handleSubmit1.bind(this);
         this.handleSubmit2 = this.handleSubmit2.bind(this);
         this.handleSubmit3 = this.handleSubmit3.bind(this);
-        this.WorkoutCreate = this.WorkoutCreate.bind(this);
         this.WorkoutLanding = this.WorkoutLanding.bind(this);
         this.WorkoutManage = this.WorkoutManage.bind(this);
         this.WorkoutStandard = this.WorkoutStandard.bind(this);
@@ -32,6 +31,8 @@ export default class WorkoutPage extends Component{
         this.setState({
             mainSelector: 1,
         });
+        console.log("1");
+        this.props.history.push("/workout-add");
     }
 
     handleSubmit2(){
@@ -55,7 +56,8 @@ export default class WorkoutPage extends Component{
             return(this.WorkoutLanding());
         }
         else if(this.state.mainSelector == 1){
-            return(this.WorkoutCreate());
+            <Redirect push to="/workout-add" />
+            return(<WorkoutAddPage/>);
         }
         else if(this.state.mainSelector == 2){
             return(this.WorkoutManage());
@@ -101,14 +103,7 @@ export default class WorkoutPage extends Component{
         );
         
     }
- 
-    WorkoutCreate(){
 
-        return(
-            <p>Create</p>
-        );
-    
-    }
 
     WorkoutManage(){
         return(
@@ -126,7 +121,7 @@ export default class WorkoutPage extends Component{
     }
     render(){
         return(
-             this.WorkoutRender()
+             this.WorkoutLanding()
          );
     }
 
