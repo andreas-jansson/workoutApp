@@ -423,3 +423,147 @@ Button:hover{
       position:relative;
       top:1px;
   }
+
+
+/****** SignUp Page ******/
+
+.signup-text-title {
+    
+    font-size:30px;
+    font-family:"Roboto", "Helvetica", "Arial", sans-serif;
+    font-weight:bold;
+    padding-top: 5px;
+    padding-bottom: 10px;
+    border-radius: 5px;
+    width: 40;
+    height: 20;
+    background: linear-gradient(rgb(196, 151, 4), rgb(245, 149, 24));
+    color: rgb(255, 254, 253);
+  }
+
+
+.signup-container{
+    display:flex;
+    flex-direction: column;
+}
+
+
+.signup-section{
+    width:100vw;
+    height: 100vh;
+}
+
+.signup-box{
+    background-color: #2C2B2B;
+    background: linear-gradient(rgb(75, 72, 72), rgb(53, 51, 51));
+    width: 340px;
+    height: auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+    background: #292727;
+    color: #FF9D00;
+    border-radius: 5px;
+    box-shadow: 5px 5px 5px 5px rgba(34, 32, 32, 0.623);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+.signup-container {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.315), rgba(0, 0, 0, 0.226)), url("../images/test.jpg");
+    background-blend-mode: luminosity;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size:cover;
+  }
+
+  .signup-padding {
+    padding-bottom: 2px;
+    padding-top: 10px;
+    align-content: center;
+  }
+
+  .signup-text{
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    color:rgb(255, 255, 255);
+    background: rgb(182, 127, 7);
+    font-weight: bold;
+    font-size: 20px;
+    padding-bottom: 5px;
+    padding-top: 10px;
+  }
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: rgb(255, 255, 255);
+    opacity: 0.77; /* Firefox */
+  }
+
+  /* För knappen I sign up [animering] */
+
+  @import url('https://fonts.googleapis.com/css?family=Lato:100&display=swap');
+
+body, html {
+  margin: 200;
+  background: #daa30f;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+}
+
+.container {
+  width: auto;
+  height: auto;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.center {
+    width: 180px;
+    height: 60px;
+  position: absolute;
+}
+
+.btn {
+    margin-top: 230px;
+  width: 180px;
+  height: 60px;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid #ffffff;
+  outline: none;
+  transition: 1s ease-in-out;
+}
+
+svg {
+  margin-top: 230px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  fill: none;
+  stroke: #fff;
+  stroke-dasharray: 150 480;
+  stroke-dashoffset: 150;
+  transition: 0.5s ease-in-out;
+}
+
+.btn:hover {
+  transition: 1s ease-in-out;
+  background: #bb8c0a;
+}
+
+.btn:hover svg {
+  stroke-dashoffset: -480;
+}
+
+.btn span {
+  color: white;
+  font-size: 18px;
+  font-weight: 100;
+}

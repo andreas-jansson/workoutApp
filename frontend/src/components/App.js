@@ -14,7 +14,6 @@ import RegisterPage from "./RegisterPage";
 import RegisterPage2 from "./RegisterPage2";
 import WorkoutPage from "./WorkoutPage";
 
-
 export default class App extends Component {
   constructor(props) {
     super(props);
