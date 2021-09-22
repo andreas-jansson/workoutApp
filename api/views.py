@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import generics, status
+from rest_framework import generics, serializers, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
@@ -44,5 +44,6 @@ class HashTestView(APIView):
 
 class RegisterUserView(APIView):
     def post(self, request, format=None):
-        print("HEJHEJHEJHEJHEJHEJHEJHEJHEJHEJHEJ")
+        data = self.request.body.decode()
+        print(data)
         return Response({'User registered': 'OK'}, status=status.HTTP_200_OK)
