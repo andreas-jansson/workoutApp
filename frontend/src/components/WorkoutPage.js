@@ -1,5 +1,6 @@
 import React, {Component, useEffect} from "react";
 import { BrowserRouter as Router, Switch, Route, Link, Redirect} from "react-router-dom";
+import WorkoutManagePage from "./WorkoutManagePage";
 
 
 
@@ -58,7 +59,7 @@ export default class WorkoutPage extends Component{
             return(this.WorkoutCreate());
         }
         else if(this.state.mainSelector == 2){
-            return(this.WorkoutManage());
+            return(<WorkoutManagePage/>)
         }
         else if(this.state.mainSelector == 3){
             return(this.WorkoutStandard());
