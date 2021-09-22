@@ -8,4 +8,6 @@ urlpatterns = [
     path('login', index),
     path('signup', index),
     path('workout', index),
+    path('workout-add', index),
+
 ]

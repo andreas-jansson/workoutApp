@@ -12,6 +12,9 @@ import DashboardPage from "./DashboardPage";
 import LoginPage from "./LoginPage";
 import RegisterPage from "./RegisterPage";
 import WorkoutPage from "./WorkoutPage";
+import WorkoutAddPage from "./WorkoutAddPage";
+import ReactDOM from 'react-dom';
+
 
 export default class App extends Component {
   constructor(props) {
@@ -96,6 +99,7 @@ export default class App extends Component {
               <Route path="/login" component={LoginPage} />
               <Route path="/signup" component={RegisterPage} />
               <Route path="/workout" component={WorkoutPage} />
+              <Route path="/workout-add" component={WorkoutAddPage} />
             </Switch>
             </div>
           </Router>

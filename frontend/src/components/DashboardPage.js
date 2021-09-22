@@ -49,13 +49,10 @@ export default class DashboardPage extends Component {
         <div className="db-section1">
           <div className="db-section1-img" />
         </div>
-
         <div className="db-container2">
           <div className="db-section2">
-            <h1>syskon1</h1>
           </div>
           <div className="db-section3">
-            <h1>syskon2</h1>
           </div>
         </div>
       </div>
