@@ -66,7 +66,7 @@ export default class StartPage extends Component{
                     </p>
                     </div>
                     <div className="sp-container-btn-join">
-                    <Link to="/join">
+                    <Link to="/signup">
                         <button type="button" className="sp-btn-join">
                             Join!
                         </button>
