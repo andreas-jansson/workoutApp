@@ -96,6 +96,7 @@ export default class RegisterPage extends Component {
         .then((response) => {
           if (response.ok) {
             window.location.href='/'
+
           } else {
             console.log("Failed!");
           }

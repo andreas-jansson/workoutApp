@@ -17,28 +17,30 @@ from rest_framework.parsers import JSONParser
 # Create your views here.
 
 
+
 class UserView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
 class SessionExistView(APIView):
-    serializer_class = UserSerializer
 
     def get(self, request, format=None):
-        self.request.session.create()
-        #request.session['user-id'] = 420
-        #print("**** sessionID: " +  str(request.session['user-id']))
-        # self.request.session.create()
-        # request.session['user-id'] = 420
-        # print("**** sessionID: " +  str(request.session['user-id']))
-        # serializer = self.serializer_class(data=request.data)
-
         if self.request.session.exists(self.request.session.session_key):
             print("**** session Exist ****")
-            return Response({'User Exist': 'Redirect'}, status=status.HTTP_202_ACCEPTED)
+            fname = self.request.session.get('first_name')
+            role_id = self.request.session.get('role_id')
+
+            return Response({'fname' : fname, 'role_id' : role_id}, status=status.HTTP_202_ACCEPTED)
         print("**** session Missing ****")
         return Response({'User New': 'Stay'}, status=status.HTTP_200_OK)
+
+class SignOutView(APIView):
+
+    def get(self, request, format=None):
+        print("Signout Triggered")
+        self.request.session.flush()
+        return Response({'User Sign Out': 'Redirect'}, status=status.HTTP_202_ACCEPTED)
 
 
 class HashTestView(APIView):
@@ -93,6 +95,9 @@ class LoginUserView(generics.ListAPIView):
             if(p.email == emailstring):
                 salt = p.salt
                 pwhash = p.pwhash
+                roleId = p.roleid_id
+                fname = p.fname
+                lname = p.lname
                 break
         # Efter det här så har vi två fina strings med salt och hash från databasen.
         # Shoutout till Padron
@@ -101,7 +106,12 @@ class LoginUserView(generics.ListAPIView):
 
         print(isCorrect)
         if(isCorrect):
-            #self.request.session.create() #Ta bort kommentaren om du vill att toolbaren ska hänga med
+            self.request.session.create() #Ta bort kommentaren om du vill att toolbaren ska hänga med
+            self.request.session['role_id'] = roleId
+            self.request.session['first_name'] = fname
+            self.request.session['last_name'] = lname
+
+
             return Response({'Login OK'}, status=status.HTTP_200_OK)
         else:
             return Response({'Login NOT OK'}, status=status.HTTP_401_UNAUTHORIZED)

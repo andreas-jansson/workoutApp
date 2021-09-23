@@ -20,6 +20,7 @@ export default class WorkoutAddPage extends Component{
             category: "None",
             exersizeList: "",
             exerciseId: 0,
+            workoutSaved: false,
         };
 
         this.CreateWorkout = this.CreateWorkout.bind(this);
@@ -145,6 +146,8 @@ export default class WorkoutAddPage extends Component{
             }
             else{
                 console.log("Success save workout!");
+                this.setState({ workoutSaved: true });
+
             }
         })
     }
@@ -388,6 +391,19 @@ export default class WorkoutAddPage extends Component{
         );
     }
 
+    WorkoutSavedPromt(){
+        return(
+        <div className="wap-saved-prompt-container">
+            <div className="wap-saved-prompt-box">
+                <div className="wap-saved-prompt-message">
+                    <p>Workout: { this.state.workoutName} saved!</p>
+                </div>
+            <button className="wap-saved-prompt-btn" onClick={ () => { window.location.href='/workout'}}>Return</button>
+            </div>
+        </div>
+        );
+    }
+
     RenderWorkoutFlow(){
         /*console.log("state: " + this.state.workoutDesc)
         console.log("step1: " + this.state.step1complete)
@@ -397,6 +413,9 @@ export default class WorkoutAddPage extends Component{
         if(this.state.step1complete == false){
             /*console.log("true")*/
             return(this.CreateWorkoutInfo())
+        }
+        else if(this.state.workoutSaved == true){
+            return(this.WorkoutSavedPromt())
         }
         else{
             /*console.log("false")*/
