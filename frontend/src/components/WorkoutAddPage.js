@@ -19,6 +19,7 @@ export default class WorkoutAddPage extends Component{
             step1complete: false, /* initial name + description, true if submitted */
             category: "None",
             exersizeList: "",
+            exerciseId: 0,
         };
 
         this.CreateWorkout = this.CreateWorkout.bind(this);
@@ -30,7 +31,9 @@ export default class WorkoutAddPage extends Component{
         this.DescChange = this.DescChange.bind(this);
         this.handleExerciseGroup = this.handleExerciseGroup.bind(this);
         this.ExerciseCategory = this.ExerciseCategory.bind(this);
-        this.handleAddExercise = this.handleAddExercise.bind(this)
+        this.handleAddExercise = this.handleAddExercise.bind(this);
+        this.handleCreateWorkout = this.handleCreateWorkout.bind(this);
+        this.SaveWorkout = this.SaveWorkout.bind(this);
     }
 
     handleBtnContinue= (e) =>{
@@ -50,11 +53,104 @@ export default class WorkoutAddPage extends Component{
     DescChange(event) {
         this.setState({ workoutDesc: event.target.value });
     }
-
+    
     handleAddExercise(e){
-        e.preventDefault;
-        console.log("Btn: " + e.target.value)
+        e.preventDefault();
+        console.log("test: " + e.target.value);
+
+        const formTest = document.createElement('form');
+        formTest.onclick = this.handleRemoveExercise
+
+        const elemAddedItem = document.createElement('div');
+        elemAddedItem.className = "wap-dynamic-exercise-added-item"
+        elemAddedItem.value = e.target.value
+        //elemAddedItem.innerHTML = e.target.value
+        elemAddedItem.id = e.target.value
+
+        var elemTextContainer = document.createElement('div');
+        elemTextContainer.className = "wap-exercise-added-elemTextContainer"
+        var elemText = document.createTextNode(e.target.value);
+
+        const elemMinus = document.createElement('Button');
+        elemMinus.className = "wap-remove-exercise-btn"
+        elemMinus.innerHTML = "-"
+        elemMinus.value = e.target.value
+        elemMinus.type = "submit"
+
+        elemTextContainer.appendChild(elemText)
+        elemAddedItem.appendChild(elemMinus)
+        elemAddedItem.appendChild(elemTextContainer)
+        formTest.appendChild(elemAddedItem)
+
+        let targetNode = document.getElementsByClassName("wap-exercise-container")[0].appendChild(formTest)
     }
+
+    handleRemoveExercise(e){
+        e.preventDefault();
+        console.log(e.target.value);
+
+        const removeItem = document.getElementById(e.target.value)
+        removeItem.remove();
+
+    }
+
+    handleCreateWorkout(e){
+        e.preventDefault();
+        console.log("Creating Workout!");
+
+        //check child divs id's
+        //if none return error else add them to a list
+        //send post to api
+
+        let exercises = document.getElementsByClassName('wap-exercise-container')[0].getElementsByClassName('wap-dynamic-exercise-added-item');
+        console.log(exercises);
+        var exercises_list=[]
+        if(exercises.length > 0){
+            console.log("Exercises exist");
+            for(var i=0;i<exercises.length;i++){
+                console.log(exercises[i].value)
+                exercises_list.push(exercises[i].value)
+            }
+            console.log(exercises_list);    
+            this.SaveWorkout(exercises_list);
+
+        }
+        else{
+            console.log("Exercises missing");
+            alert("No exercises added yet")
+        }
+
+    }
+
+    SaveWorkout(exercises_list){
+
+        let workoutName = this.state.workoutName;
+        let workoutDesc = this.state.workoutDesc;
+        console.log("***")
+        console.log(typeof exercises_list)
+        const requestOptions={
+            method: 'POST',
+            headers: {'Content-Type' : 'application/json'},
+            body: JSON.stringify({
+                workoutName,
+                workoutDesc,
+                exercises_list,
+            }),
+        };
+
+        fetch("/api/create-workout", requestOptions)
+        .then((response) => {
+            if (!response.ok){
+                console.log("Failed save workout!");
+            }
+            else{
+                console.log("Success save workout!");
+            }
+        })
+    }
+
+
+   
 
     ExcercisesAdded(){
         return(
@@ -62,8 +158,11 @@ export default class WorkoutAddPage extends Component{
             <h2>{ this.state.workoutName }</h2>
             <p>{ this.state.workoutDesc }</p>
             <div className="wap-exercise-container">
-
+                
             </div>
+            <button onClick={ this.handleCreateWorkout } className="wap-create-workout-btn">
+                Create Workout
+            </button>
             </>
         );
     }
@@ -71,7 +170,7 @@ export default class WorkoutAddPage extends Component{
     handleExerciseGroup(e){
         this.setState({ category: e.target.value });
         const exercise = e.target.value;
-        let exercise_list = []
+        let exercise_list = [];
         /* fetches all exercies for selected group */
 
         fetch("/api/get-exercises?type=" + exercise)
@@ -85,37 +184,45 @@ export default class WorkoutAddPage extends Component{
                 elemContainer.className = "wap-dynamic-exercise-container"
 
                 const formTest = document.createElement('form');
-                formTest.onsubmit = this.handleAddExercise
+                formTest.onclick = this.handleAddExercise
+                
 
                 for(var i = 0; i < data.length; i++) {
                     var exerciseName = data[i].name.toString();
 
                     var elemItem = document.createElement('div');
-                    elemItem.className = "wap-exercise-item"
-                    elemItem.id = i
-                    elemItem.value = exerciseName
+                    elemItem.className = "wap-exercise-item";
+                    elemItem.id = i;
+                    elemItem.value = exerciseName;
 
+                    var elemTextContainer = document.createElement('div');
+                    elemTextContainer.className = "wap-exercise-elemTextContainer"
                     var elemText = document.createTextNode(exerciseName);
+                    elemText.value = exerciseName
 
                     var elemPlus = document.createElement('Button');
-                    elemPlus.className = "wap-add-exercise-btn"
-                    elemPlus.innerHTML = "+"
-                    elemPlus.value = exerciseName
-                    elemPlus.type = "submit"
-                    elemPlus.onCLick = this.handleAddExercise
+                    elemPlus.className = "wap-add-exercise-btn";
+                    elemPlus.innerHTML = "+";
+                    elemPlus.value = exerciseName;
+                    elemPlus.type = "submit";
+                    elemPlus.id = i;
 
                     elemContainer.appendChild(elemItem);
-                    elemItem.appendChild(elemText);
+                    elemItem.appendChild(elemTextContainer)
                     elemItem.appendChild(elemPlus);
+                    elemTextContainer.appendChild(elemText);
+
+
                 }
                 console.log(elemContainer)
                 formTest.appendChild(elemContainer);
 
                 this.setState({
                     exersizeList: elemContainer,
+                    
                 });
                 
-                let targetNode = document.getElementsByClassName("wap-exercise-ec-container")[0].appendChild(formTest)
+                let targetNode = document.getElementsByClassName("wap-exercise-ec-container")[0].appendChild(formTest);
 
             });
 
@@ -261,7 +368,7 @@ export default class WorkoutAddPage extends Component{
                         <br/>
                         <input type="text" 
                         className="wap-cwi-textinput" 
-                        required="true" 
+                        required
                         workoutName={this.state.workoutName}
                         onChange={this.NameChange}/>
                         <br/>
@@ -269,6 +376,7 @@ export default class WorkoutAddPage extends Component{
                         <br/>
                         <input type="text" 
                         className="wap-cwi-textinput"
+                        required
                         workoutDesc={this.state.workoutDesc}
                         onChange={this.DescChange}/>
                         <br/>
@@ -281,17 +389,17 @@ export default class WorkoutAddPage extends Component{
     }
 
     RenderWorkoutFlow(){
-        console.log("state: " + this.state.workoutDesc)
+        /*console.log("state: " + this.state.workoutDesc)
         console.log("step1: " + this.state.step1complete)
         console.log("value: " + this.state.category);
-        console.log("List: " + this.state.exersizeList);
+        console.log("List: " + this.state.exersizeList);*/
 
         if(this.state.step1complete == false){
-            console.log("true")
+            /*console.log("true")*/
             return(this.CreateWorkoutInfo())
         }
         else{
-            console.log("false")
+            /*console.log("false")*/
             return( this.CreateWorkout() )
         }
     }

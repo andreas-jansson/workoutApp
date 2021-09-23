@@ -48,7 +48,7 @@ function RegisterPage(props) {
           console.log("Failed!");
         }
       })
-      .then(() => props.history.push("/login"));
+      .then(() => props.history.push("/dashboard"));
 
     console.log(fname);
     console.log(lname);
