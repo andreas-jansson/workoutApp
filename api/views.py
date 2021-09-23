@@ -55,19 +55,22 @@ class HashTestView(APIView):
 
 class RegisterUserView(APIView):
     def post(self, request, format=None):
-        print(self.request.body.decode())
         stream = io.BytesIO(request.body)
         data = JSONParser().parse(stream)
         if (User.objects.filter(email = data['email'])):
             return Response({'User already exists': 'BAD'}, status=status.HTTP_226_IM_USED)
-        u = User(fname = data['fname'],
-        lname = data['lname'],
-        email = data['email'],
-        pwhash = data['password'],
-        roleid = Role.objects.filter(description = 'Unauthorized')[0])
-        u.save()
-        self.request.session.create()
-        return Response({'User registered': 'OK'}, status=status.HTTP_200_OK)
+        else:
+            new_salt = create_salt()
+            new_password = create_pw_hash(data['password'], new_salt)
+            u = User(fname = data['fname'],
+            lname = data['lname'],
+            email = data['email'],
+            salt = new_salt,
+            pwhash = new_password,
+            roleid = Role.objects.filter(description = 'Unauthorized')[0])
+            u.save()
+            self.request.session.create()
+            return Response({'User registered': 'OK'}, status=status.HTTP_200_OK)
 
 
 class LoginUserView(generics.ListAPIView):
