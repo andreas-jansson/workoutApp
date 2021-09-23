@@ -9,8 +9,8 @@ from rest_framework import response
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
-from .serializers import UserSerializer
-from .models import Role, User
+from .serializers import UserSerializer, ExerciseSerializer
+from .models import Role, User, Exercise, ExerciseType, Workout
 from .hashUtils import compare_pw_hash, create_pw_hash, create_salt
 import io
 from rest_framework.parsers import JSONParser
@@ -105,3 +105,55 @@ class LoginUserView(generics.ListAPIView):
             return Response({'Login OK'}, status=status.HTTP_200_OK)
         else:
             return Response({'Login NOT OK'}, status=status.HTTP_401_UNAUTHORIZED)
+
+# Recieves exercise type and returns all exercises 
+class GetExercisesView(generics.ListAPIView):
+    lookup_url_kwarg = 'type'
+    def get(self, request, format=None):
+        exercise_type = request.GET.get(self.lookup_url_kwarg)
+        print("GetExercisesView Triggered!")
+        print(exercise_type)
+        if exercise_type != None:
+            queryset = Exercise.objects.raw('select e.id, e.name from api_exercisetype as et join api_exercise as e on et.id = e.type_id where et.type = \'{}\''.format(exercise_type))
+            if len(queryset)>0:
+                data = ExerciseSerializer(queryset, many=True).data
+                print(data)                    
+                return Response(data, status=status.HTTP_200_OK)
+            return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'Bad request': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CreateWorkoutView(APIView):
+    #serializer_class = CreateWorkoutInfoSerializer;
+
+    def post(self, request, format=None):
+        print("CreateWorkoutView Triggered!")
+        #print(request.data['workoutName'])
+        #print(request.data['workoutDesc'])
+        #Creates workout
+        name = request.data['workoutName']
+        description = request.data['workoutDesc']
+        active=True
+        shared=False
+        consistsOf = 'wtf'
+        workout = Workout(name=name, description=description, active=True, shared=False)
+        workout.save()
+        
+        #Finds user and creates user_hasWorkout - mtm
+        #user_id = self.request.session.get('user_id')       
+        #user_has_workout = User.objects.get(id=user_id)
+        #user_has_workout.consistsOf.add(exercise)
+
+        #Find all exercises that the user picked. Finds the specific exercise object and creates mtm with workout
+        for exercise in request.data['exercises_list']:
+            queryset = Exercise.objects.raw('select e.id, e.name, e.type_id from api_exercise as e where name = \'{}\' limit 1'.format(exercise))
+            #var_type = queryset[0].type_id
+            var_name = queryset[0].name
+
+            exercise = Exercise.objects.get(name=var_name)
+            print(exercise)
+            workout.consistsOf.add(exercise)
+            print(workout)
+        return Response({'User registered': 'OK'}, status=status.HTTP_200_OK)
+        #return Response({'Bad request': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
+
