@@ -88,8 +88,9 @@ Button:hover{
 /* main container if session exist */
 .content-container-session{
     grid-column: 3 / -1;
-    height: auto;
+    height: 100vh;
     background: var(--grayDefault);
+    overflow-y: scroll;
 }
 
 /* main container if session does not exist */
@@ -379,10 +380,21 @@ Button:hover{
 
 .wap-exercise-container{
     border:2px var(--orangeGradiant1) solid;
-    height:80%;
+    height:70%;
     width:80%;
     border-radius: 10px;
+    display:flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: scroll;
 
+
+}
+
+.wap-exercise-container form{
+    width:90%;
+    height: auto;
 }
 
 .wap-exercise-cat-container{
@@ -494,17 +506,86 @@ Button:hover{
 .wap-dynamic-exercise-container{
     width:100%;
     width:100%;
+    display:flex;
+    justify-content: space-evenly;
+    flex-direction: column;
+    align-items: center;
+    
 }
 
 .wap-exercise-item{
+    width:95%;
+    height:50px;
+    border:2px rgb(56, 55, 55) solid;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-around;
+    margin-top:3%;
+    border-radius:5px;
+}
+
+.wap-exercise-elemTextContainer{
+    order:1;
+    width:85%;
+    margin-left:10px;
+}
+
+.wap-exercise-item button{
+    width:45px;
+    height: 45px;
+    font-size: 40px;
+    background: none;
+    border:none;
+    color:white;
+    order:2;
+}
+
+.wap-dynamic-exercise-added-item{
     width:100%;
     height:50px;
     border:2px rgb(56, 55, 55) solid;
-    display: inline-block;
-    vertical-align: middle;
     align-self: center;
+    border-radius: 5px;
+    margin-top:3%;
+    display:flex;
+    align-items: center;
+    justify-content: space-around;
+}
 
-    
+
+.wap-exercise-added-elemTextContainer{
+    order:1;
+    width:85%;
+    margin-left:10px;
+}
+
+
+.wap-dynamic-exercise-added-item button{
+    width:45px;
+    height: 45px;
+    font-size: 40px;
+    background: none;
+    border:none;
+    color:white;
+    order:2;
+}
+
+.wap-dynamic-exercise-added-item text{
+    width:45px;
+    height: 45px;
+    font-size: 40px;
+    color:white;
+
+}
+
+.wap-create-workout-btn{
+    margin-top:10px;
+    border-radius:10px;
+    height: 40px;
+    font-size: 24px;
+    background: none;
+    border:2px var(--orangeGradiant1) solid;
+    color:var(--orangeGradiant1)
 }
 /***** Login Page *******/
 
