@@ -57,38 +57,45 @@ export default class WorkoutAddPage extends Component{
     
     handleAddExercise(e){
         e.preventDefault();
-        console.log("test: " + e.target.value);
+        var unique_id = this.state.exerciseId;
+
+        console.log("add value: " + e.target.value);
+        console.log("add id: " + unique_id);
+
 
         const formTest = document.createElement('form');
         formTest.onclick = this.handleRemoveExercise
 
         const elemAddedItem = document.createElement('div');
-        elemAddedItem.className = "wap-dynamic-exercise-added-item"
-        elemAddedItem.value = e.target.value
-        //elemAddedItem.innerHTML = e.target.value
-        elemAddedItem.id = e.target.value
+        elemAddedItem.className = "wap-dynamic-exercise-added-item";
+        elemAddedItem.value = e.target.value;
+        //elemAddedItem.innerHTML = e.target.value;
+        elemAddedItem.id = unique_id;
 
         var elemTextContainer = document.createElement('div');
-        elemTextContainer.className = "wap-exercise-added-elemTextContainer"
+        elemTextContainer.className = "wap-exercise-added-elemTextContainer";
         var elemText = document.createTextNode(e.target.value);
 
         const elemMinus = document.createElement('Button');
-        elemMinus.className = "wap-remove-exercise-btn"
-        elemMinus.innerHTML = "-"
-        elemMinus.value = e.target.value
-        elemMinus.type = "submit"
+        elemMinus.className = "wap-remove-exercise-btn";
+        elemMinus.innerHTML = "-";
+        elemMinus.value = unique_id;
+        elemMinus.type = "submit";
 
-        elemTextContainer.appendChild(elemText)
-        elemAddedItem.appendChild(elemMinus)
-        elemAddedItem.appendChild(elemTextContainer)
-        formTest.appendChild(elemAddedItem)
+        elemTextContainer.appendChild(elemText);
+        elemAddedItem.appendChild(elemMinus);
+        elemAddedItem.appendChild(elemTextContainer);
+        formTest.appendChild(elemAddedItem);
 
         let targetNode = document.getElementsByClassName("wap-exercise-container")[0].appendChild(formTest)
+        this.setState({exerciseId : this.state.exerciseId + 1});
+
     }
 
     handleRemoveExercise(e){
         e.preventDefault();
-        console.log(e.target.value);
+        console.log("removing value: " + e.target.value);
+        console.log("removing id: " + e.target.id);
 
         const removeItem = document.getElementById(e.target.value)
         removeItem.remove();
@@ -188,11 +195,11 @@ export default class WorkoutAddPage extends Component{
 
                 const formTest = document.createElement('form');
                 formTest.onclick = this.handleAddExercise
-                
-
+                //var unique_id
                 for(var i = 0; i < data.length; i++) {
+                    //unique_id = this.state.exerciseId;
                     var exerciseName = data[i].name.toString();
-
+                    
                     var elemItem = document.createElement('div');
                     elemItem.className = "wap-exercise-item";
                     elemItem.id = i;
@@ -214,8 +221,7 @@ export default class WorkoutAddPage extends Component{
                     elemItem.appendChild(elemTextContainer)
                     elemItem.appendChild(elemPlus);
                     elemTextContainer.appendChild(elemText);
-
-
+                    //this.setState({exerciseId : this.state.exerciseId + 1});
                 }
                 console.log(elemContainer)
                 formTest.appendChild(elemContainer);

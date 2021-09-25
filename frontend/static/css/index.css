@@ -127,37 +127,37 @@ Button:hover{
 }
 
 .menu-btn-icon1{
-    height:32px;
-    width:32px;
-    background-image: url('../images/posterous-spaces-32.png');
-
+    height:24px;
+    width:24px;
+    background-image: url('../images/dashboard.png');
+    object-fit:cover;
 }
 
 .menu-btn-icon2{
-    height:32px;
-    width:32px;
+    height:24px;
+    width:24px;
     background-image: url('../images/barbell.png');
     background-repeat: no-repeat;
 
 }
 
 .menu-btn-icon3{
-    height:32px;
-    width:32px;
-    background-image: url('../images/calendar-32.png');
+    height:24px;
+    width:24px;
+    background-image: url('../images/calendar.png');
 
 }
 
 .menu-btn-icon4{
-    height:32px;
-    width:32px;
+    height:24px;
+    width:24px;
     background-image: url('../images/active.png');
 
 }
 
 .menu-btn-icon5{
-    height:32px;
-    width:32px;
+    height:24px;
+    width:24px;
     background-image: url('../images/social.png');
 
 }
@@ -716,7 +716,8 @@ Button:hover{
 
 
 .lp-container {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url("../images/login-page.jpg");
+    /*background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url("../images/login-page.jpg");*/
+    background: linear-gradient(0deg,rgba(0,0,0,0.6),rgba(73, 73, 73, 0.2)), url('../images/login-page.jpg');
     background-blend-mode: luminosity;
     background-position: center;
     background-repeat: no-repeat;
