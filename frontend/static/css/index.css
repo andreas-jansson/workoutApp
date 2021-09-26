@@ -50,8 +50,8 @@ Button:hover{
     cursor:pointer;
 }
 
-/****************** App - Navbar *************************/
 
+<<<<<<< HEAD
 .app-container{
     display: grid;
     grid-template-columns: repeat(12, 1fr);
@@ -1024,3 +1024,5 @@ svg {
   font-size: 18px;
   font-weight: 100;
 }
+=======
+>>>>>>> dbe380d07df76c1ab2fecad5dc8db5c242091b69

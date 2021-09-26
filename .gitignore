@@ -1,0 +1,10 @@
+db.sqlite3
+api/migrations
+workoutApp/migrations
+api/__pycache__
+workoutApp/__pycache__
+workoutApp/migrations/__pycache__
+api/migrations/__pycache__
+frontend/node_modules/
+frontend/package-lock.json
+git@github.com:andreas-jansson/workoutApp.git
