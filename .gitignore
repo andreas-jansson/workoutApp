@@ -7,3 +7,4 @@ workoutApp/migrations/__pycache__
 api/migrations/__pycache__
 frontend/node_modules/
 frontend/package-lock.json
+git@github.com:andreas-jansson/workoutApp.git
