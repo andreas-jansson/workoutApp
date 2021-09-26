@@ -58,7 +58,7 @@
     padding-top:10px;
 }
 
-.btn6{
+.btn-signout{
     background: none;
     border:none;
     color:white;
@@ -111,6 +111,12 @@
 }
 
 .menu-btn-icon6{
+    height:24px;
+    width:24px;
+    background-image: url('../images/navbar/manage.png');
+}
+
+.menu-btn-icon-signout{
     height:32px;
     width:32px;
     background-image: url('../images/navbar/logout-32.png');

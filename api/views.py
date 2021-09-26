@@ -119,7 +119,7 @@ class CreateWorkoutView(APIView):
         active=True
 
         #checks if user or higher role. users workouts are private
-        if(self.request.session.get('role_id') == 1):
+        if(self.request.session.get('role_id') == 2):
             shared=False
         else:
             shared=True

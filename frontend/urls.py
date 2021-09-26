@@ -9,5 +9,6 @@ urlpatterns = [
     path('signup', index),
     path('workout', index),
     path('workout-add', index),
+    path('managment', index),
 
 ]

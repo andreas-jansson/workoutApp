@@ -146,10 +146,21 @@ export default class App extends Component {
                     </div>
                 </div>
             </Link>
+            { this.state.role_id > 2? 
+                <Link to="/managment">
+                    <div className="menu-btn btn6">
+                        <div className="menu-btn-icon6">
+                            </div>
+                            <div className="menu-btn-text">
+                                Management
+                            </div>
+                        </div>
+                    </Link>
+                :null }  
         </div>
         <Link to="/login" onClick={ this.handleSignOut }>
-            <div className="menu-btn btn6">
-                <div className="menu-btn-icon6">
+            <div className="menu-btn btn-signout">
+                <div className="menu-btn-icon-signout">
                     </div>
                     <div className="menu-btn-text">
                         Sign Out
