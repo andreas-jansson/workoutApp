@@ -1,6 +1,7 @@
 import React, {Component, useEffect} from "react";
 import { BrowserRouter as Router, Switch, Route, Link, Redirect} from "react-router-dom";
 import WorkoutAddPage from "./WorkoutAddPage";
+import '../../static/css/workout.css';
 
 
 export default class WorkoutPage extends Component{

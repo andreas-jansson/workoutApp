@@ -6,6 +6,9 @@ import {
   Link,
   Redirect,
 } from "react-router-dom";
+import '../../static/css/login.css';
+import '../../static/css/header.css';
+
 
 export default class LoginPage extends Component {
   static defaultProps = {};

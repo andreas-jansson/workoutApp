@@ -6,6 +6,9 @@ import {
   Link,
   Redirect,
 } from "react-router-dom";
+import '../../static/css/dashboard.css';
+import '../../static/css/navbar.css';
+//import '../../static/css/header.css';
 
 export default class DashboardPage extends Component {
   static defaultProps = {};
