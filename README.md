@@ -1,4 +1,10 @@
 # useful commands
+Create database:
+python3 manage.py makemigrations
+
+Install node_modules:
+Change directory into /frontend/
+npm install
 
 Start frontend:
 npm run dev
