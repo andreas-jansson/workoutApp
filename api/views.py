@@ -31,7 +31,6 @@ class SessionExistView(APIView):
             print("**** session Exist ****")
             fname = self.request.session.get('first_name')
             role_id = self.request.session.get('role_id')
-
             return Response({'fname' : fname, 'role_id' : role_id}, status=status.HTTP_202_ACCEPTED)
         print("**** session Missing ****")
         return Response({'User New': 'Stay'}, status=status.HTTP_200_OK)
@@ -84,8 +83,11 @@ class LoginUserView(generics.ListAPIView):
             user = User.objects.filter(email = data['email'])[0]
             if(compare_pw_hash(data['password'], user.salt, user.pwhash)):
                 self.request.session.create()
+                self.request.session['first_name'] = user.fname
+                self.request.session['role_id'] = user.roleid_id
                 return Response({'Login OK'}, status=status.HTTP_200_OK)
         return Response({'Invalid Email Or Password'}, status=status.HTTP_401_UNAUTHORIZED)
+
 
 # Recieves exercise type and returns all exercises 
 class GetExercisesView(generics.ListAPIView):

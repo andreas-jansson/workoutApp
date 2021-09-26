@@ -28,13 +28,7 @@
     "@material-ui/lab": "^4.0.0-alpha.60",
     "bootstrap": "^5.1.1",
     "framer-motion": "^4.1.17",
-<<<<<<< HEAD
-    "react-alert": "^7.0.3",
-    "react-bootstrap": "^2.0.0-rc.0",
-    "react-router-dom": "^5.3.0"
-=======
     "react-router-dom": "^5.3.0",
     "style-loader": "^3.3.0"
->>>>>>> dbe380d07df76c1ab2fecad5dc8db5c242091b69
   }
 }

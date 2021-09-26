@@ -47,12 +47,15 @@ export default class App extends Component {
       } else {
         console.log("Session Missing");
       }
+      return response.json()
     }).then((data)=>{
+        console.log("***")
+        console.log(data.fname)
         this.setState({ 
             fname: data.fname,
             role_id: data.role_id,
-
         });
+        
     })
   }
 
