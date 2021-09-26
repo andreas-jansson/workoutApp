@@ -45,24 +45,24 @@ export default class RegisterPage extends Component {
     switch (name) {
       case "fname":
         errors.fname =
-          value.length < 3 ? "❌" : "✔️";
+          value.length < 3 ? "❌" : "";
         break;
       case "lname":
         errors.lname =
-          value.length < 3 ? "❌" : "✔️";
+          value.length < 3 ? "❌" : "";
         break;
       case "email":
         errors.email = validEmailRegex.test(value)
-          ? "✔️"
+          ? ""
           : "❌";
         break;
       case "password":
         errors.password =
-          value.length < 8 ? "❌" : "✔️";
+          value.length < 8 ? "❌" : "";
         break;
       case "confirmed_password":
-        errors.confrimed_password =
-          value.length < 8 ? "❌" : "✔️";
+        errors.confirmed_password =
+          value.length < 8 ? "❌" : "";
         break;
       default:
         break;
@@ -195,7 +195,7 @@ export default class RegisterPage extends Component {
                   <label htmlFor="password">Password</label>
                   
                   <input
-                    type="password-signup"
+                    type="password"
                     className="signup-text"
                     name="password"
                     onChange={this.handleChange}
@@ -213,7 +213,7 @@ export default class RegisterPage extends Component {
                   <label htmlFor="confirmed_password">Confirm Password</label>
                   <input
                     className="signup-text"
-                    type="password-signup"
+                    type="password"
                     name="confirmed_password"
                     onChange={this.handleChange}
                     noValidate

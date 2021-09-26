@@ -32,15 +32,17 @@ export default class LoginPage extends Component {
   }
 
   OnSignIn(event) {
-    /*if (this.state.email == "test" && this.state.password == "hej") {
-      alert("Hello World");
-    } else {
-      alert(this.state.email);
-    }*/
-
-    fetch(
-      "/api/login-user?email=" + this.state.email + "?pw=" + this.state.password
-    ).then((response) => {
+    let email = this.state.email
+    let password = this.state.password
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+          email, password,
+      }),
+    };
+    fetch("/api/login-user", requestOptions)
+    .then((response) => {
       if (response.ok) {
         console.log("Success!");
         window.location.href = "/dashboard";

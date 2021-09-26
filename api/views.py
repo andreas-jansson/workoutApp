@@ -12,6 +12,7 @@ from django.http import JsonResponse
 from .serializers import UserSerializer, ExerciseSerializer
 from .models import Role, User, Exercise, ExerciseType, Workout
 from .hashUtils import compare_pw_hash, create_pw_hash, create_salt
+from .userUtils import email_is_registered
 import io
 from rest_framework.parsers import JSONParser
 # Create your views here.
@@ -59,62 +60,32 @@ class RegisterUserView(APIView):
     def post(self, request, format=None):
         stream = io.BytesIO(request.body)
         data = JSONParser().parse(stream)
-        if (User.objects.filter(email = data['email'])):
+        if (email_is_registered(data['email'])):
             return Response({'User already exists': 'BAD'}, status=status.HTTP_226_IM_USED)
         else:
             new_salt = create_salt()
-            new_password = create_pw_hash(data['password'], new_salt)
-            u = User(fname = data['fname'],
+            hashed_password = create_pw_hash(data['password'], new_salt)
+            new_user = User(fname = data['fname'],
             lname = data['lname'],
             email = data['email'],
             salt = new_salt,
-            pwhash = new_password,
+            pwhash = hashed_password,
             roleid = Role.objects.filter(description = 'Unauthorized')[0])
-            u.save()
+            new_user.save()
             self.request.session.create()
             return Response({'User registered': 'OK'}, status=status.HTTP_200_OK)
 
 
 class LoginUserView(generics.ListAPIView):
-    lookup_url_kwarg = 'email'
-
-    def get(self, request, format=None):
-        # print("In LoginUserView!")
-        # queryset = User.objects.raw('SELECT * FROM api_user')
-        queryset = User.objects.all()
-        urlfield = request.GET.get(self.lookup_url_kwarg)
-        # Här har vi emailen som en liten, fin string.
-
-        emailstring = urlfield.split("?")[0]
-        # Här har vi lösenordet som en lite, ännu finare string.
-        pw = urlfield.split("=")[1]
-        salt = ''
-        pwhash = ''
-        # Bear with me
-        for p in User.objects.raw('SELECT * FROM api_user'):
-            if(p.email == emailstring):
-                salt = p.salt
-                pwhash = p.pwhash
-                roleId = p.roleid_id
-                fname = p.fname
-                lname = p.lname
-                break
-        # Efter det här så har vi två fina strings med salt och hash från databasen.
-        # Shoutout till Padron
-
-        isCorrect = compare_pw_hash(pw, salt, pwhash)
-
-        print(isCorrect)
-        if(isCorrect):
-            self.request.session.create() #Ta bort kommentaren om du vill att toolbaren ska hänga med
-            self.request.session['role_id'] = roleId
-            self.request.session['first_name'] = fname
-            self.request.session['last_name'] = lname
-
-
-            return Response({'Login OK'}, status=status.HTTP_200_OK)
-        else:
-            return Response({'Login NOT OK'}, status=status.HTTP_401_UNAUTHORIZED)
+    def post(self, request, format=None):
+        stream = io.BytesIO(request.body)
+        data = JSONParser().parse(stream)
+        if (email_is_registered(data['email'])):
+            user = User.objects.filter(email = data['email'])[0]
+            if(compare_pw_hash(data['password'], user.salt, user.pwhash)):
+                self.request.session.create()
+                return Response({'Login OK'}, status=status.HTTP_200_OK)
+        return Response({'Invalid Email Or Password'}, status=status.HTTP_401_UNAUTHORIZED)
 
 # Recieves exercise type and returns all exercises 
 class GetExercisesView(generics.ListAPIView):
