@@ -459,7 +459,6 @@ Button:hover{
     justify-content: center;
     align-items: center;
     color:white;
-
 }
 
 .wap-exercise-container{
@@ -483,39 +482,47 @@ Button:hover{
 
 .wap-exercise-cat-container{
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    height: 95%;
+    align-items: center;
+    height: 80%;
     width: 95%;
     overflow-y:hidden;
+    overflow-x: hidden;
 
 }
+
 .wap-exercise-cat-container-left{
-    width:110%;
+    width:90%;
     height: auto;
-    overflow-y: scroll;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
+
 }
 
 .wap-exercise-cat-container-right{
-    width:100%;
+    width:90%;
     height: auto;
-    overflow-y: scroll;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+
 
 }
 
 
 .wap-exercise-btn{
-    width:150px;
-    height:150px;
+    width:200px;
+    height:80px;
     border-radius: 5px;
     border:2px rgb(56, 55, 55) solid;
+    margin-bottom:10px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -711,6 +718,89 @@ Button:hover{
     margin-left:40%;
 
 }
+
+/***** Create Exercise ****/
+
+.wcp-container{
+    width:90%;
+    height: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+
+.wcp-title{
+    font-size: 36px;
+    font-weight: 600;
+    margin-bottom:20px;
+
+}
+
+.wcp-container form{
+    width:60%;
+    height: 40%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.wcp-container lable{
+    color:#5a5959;
+    margin-left: 20px;
+}
+.wcp-select-type{
+    background: none;
+    border:2px rgb(56, 55, 55) solid;
+    width:90px;
+    height: 50px;
+    font-size: 18px;
+    color:white;
+    border-radius: 10px;
+    margin-left:20px;
+    margin-bottom:20px;
+
+    
+}
+
+.wcp-input-name{
+    background: none;
+    width:200px;
+    height: 50px;
+    border:2px rgb(56, 55, 55) solid;
+    font-size: 24px;
+    border-radius: 10px;
+    margin-left:20px;
+    margin-bottom:20px;
+    color:white;
+
+}
+
+.wcp-button-submit{
+    background: none;
+    border:2px var(--orangeGradiant1) solid;
+    width:90px;
+    height: 55px;
+    color:white;
+    border-radius: 10px;
+    margin-left:20px;
+    font-weight: 400;
+    margin-bottom:20px;
+}
+
+.wcp-button-return{
+    background: none;
+    border:2px var(--orangeGradiant1) solid;
+    width:90px;
+    height: 55px;
+    color:white;
+    border-radius: 10px;
+    margin-left:20px;
+    font-weight: 400;
+    margin-bottom:20px;
+}
+
 
 /***** Login Page *******/
 

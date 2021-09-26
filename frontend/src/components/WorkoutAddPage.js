@@ -1,12 +1,13 @@
 import React, {Component, useEffect} from "react";
 import { BrowserRouter as Router, Switch, Route, Link, Redirect} from "react-router-dom";
 import ReactDOM from 'react-dom';
-
+import WorkoutCreateExercisePage from "./WorkoutCreateExercisePage"
 
 
 export default class WorkoutAddPage extends Component{
 
     static defaultProps = {
+        createExerciseView: false,
     };
 
     constructor(props){
@@ -21,6 +22,7 @@ export default class WorkoutAddPage extends Component{
             exersizeList: "",
             exerciseId: 0,
             workoutSaved: false,
+            createExerciseView: this.props.createExerciseView,
         };
 
         this.CreateWorkout = this.CreateWorkout.bind(this);
@@ -159,9 +161,6 @@ export default class WorkoutAddPage extends Component{
         })
     }
 
-
-   
-
     ExcercisesAdded(){
         return(
             <>
@@ -237,51 +236,66 @@ export default class WorkoutAddPage extends Component{
 
     }
 
+    CreateFunction = () =>{
+        this.setState({createExerciseView: false})
+    }
+
     ExerciseCategories(){
-        return(
-            <div className="wap-exercise-cat-container">
-                <div className="wap-exercise-cat-container-left">
-                    <button className="wap-exercise-btn" value="Abs" onClick={this.handleExerciseGroup }>
-                        Abs
-                    </button>
-                    <button className="wap-exercise-btn" value="Back" onClick={this.handleExerciseGroup }>
-                        Back
-                    </button>
-                    <button className="wap-exercise-btn" value="Biceps" onClick={this.handleExerciseGroup }>
-                        Biceps
-                    </button>
-                    <button className="wap-exercise-btn" value="Calves" onClick={this.handleExerciseGroup }>
-                        Calves
-                    </button>
-                    <button className="wap-exercise-btn" value="Cardio" onClick={this.handleExerciseGroup }>
-                        Cardio
-                    </button>
-                    <button className="wap-exercise-btn" value="Chest" onClick={this.handleExerciseGroup }>
-                        Chest
+        if( this.state.createExerciseView == false){
+            return(
+                <div className="wap-exercise-cat-container">
+                    <div className="wap-exercise-cat-container-left">
+                        <button className="wap-exercise-btn" value="Abs" onClick={this.handleExerciseGroup }>
+                            Abs
+                        </button>
+                        <button className="wap-exercise-btn" value="Back" onClick={this.handleExerciseGroup }>
+                            Back
+                        </button>
+                        <button className="wap-exercise-btn" value="Biceps" onClick={this.handleExerciseGroup }>
+                            Biceps
+                        </button>
+                        <button className="wap-exercise-btn" value="Calves" onClick={this.handleExerciseGroup }>
+                            Calves
+                        </button>
+                        <button className="wap-exercise-btn" value="Cardio" onClick={this.handleExerciseGroup }>
+                            Cardio
+                        </button>
+                        <button className="wap-exercise-btn" value="Chest" onClick={this.handleExerciseGroup }>
+                            Chest
+                        </button>
+                    </div>
+                    <div className="wap-exercise-cat-container-right">
+                        <button className="wap-exercise-btn" value="Forearms" onClick={this.handleExerciseGroup }>
+                            Forearms
+                        </button>
+                        <button className="wap-exercise-btn" value="Glutes" onClick={this.handleExerciseGroup }>
+                            Glutes
+                        </button>
+                        <button className="wap-exercise-btn" value="Legs" onClick={this.handleExerciseGroup }>
+                            Legs
+                        </button>
+                        <button className="wap-exercise-btn" value="Shoulders" onClick={this.handleExerciseGroup }>
+                            Shoulders
+                        </button>
+                        <button className="wap-exercise-btn" value="Triceps" onClick={this.handleExerciseGroup }>
+                            Triceps
+                        </button>
+                        <button className="wap-exercise-btn" value="Other" onClick={this.handleExerciseGroup }>
+                            Other
+                        </button>
+                    </div>
+                    <button className="wap-exercise-btn-create" onClick={ () => { this.setState({ createExerciseView: true})} }>
+                            Create Exercise
                     </button>
                 </div>
-                <div className="wap-exercise-cat-container-right">
-                    <button className="wap-exercise-btn" value="Forearms" onClick={this.handleExerciseGroup }>
-                        Forearms
-                    </button>
-                    <button className="wap-exercise-btn" value="Glutes" onClick={this.handleExerciseGroup }>
-                        Glutes
-                    </button>
-                    <button className="wap-exercise-btn" value="Legs" onClick={this.handleExerciseGroup }>
-                        Legs
-                    </button>
-                    <button className="wap-exercise-btn" value="Shoulders" onClick={this.handleExerciseGroup }>
-                        Shoulders
-                    </button>
-                    <button className="wap-exercise-btn" value="Triceps" onClick={this.handleExerciseGroup }>
-                        Triceps
-                    </button>
-                    <button className="wap-exercise-btn" value="Other" onClick={this.handleExerciseGroup }>
-                        Other
-                    </button>
-                </div>
-            </div>
-        );
+            );
+        }
+        else{
+            return(
+                <WorkoutCreateExercisePage CreateFunction={CreateFunction}/>
+            )
+        }
+
     }
 
     ExerciseCategory(){
