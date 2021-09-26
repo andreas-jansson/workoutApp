@@ -83,6 +83,7 @@ class LoginUserView(generics.ListAPIView):
             user = User.objects.filter(email = data['email'])[0]
             if(compare_pw_hash(data['password'], user.salt, user.pwhash)):
                 self.request.session.create()
+                self.request.session['user_id'] = user.id
                 self.request.session['first_name'] = user.fname
                 self.request.session['role_id'] = user.roleid_id
                 return Response({'Login OK'}, status=status.HTTP_200_OK)
@@ -107,25 +108,33 @@ class GetExercisesView(generics.ListAPIView):
 
 
 class CreateWorkoutView(APIView):
-    #serializer_class = CreateWorkoutInfoSerializer;
 
     def post(self, request, format=None):
         print("CreateWorkoutView Triggered!")
         #print(request.data['workoutName'])
         #print(request.data['workoutDesc'])
-        #Creates workout
+        #Creates workout        
         name = request.data['workoutName']
         description = request.data['workoutDesc']
         active=True
-        shared=False
+
+        #checks if user or higher role. users workouts are private
+        if(self.request.session.get('role_id') == 1):
+            shared=False
+        else:
+            shared=True
+
         consistsOf = 'wtf'
         workout = Workout(name=name, description=description, active=True, shared=False)
         workout.save()
         
         #Finds user and creates user_hasWorkout - mtm
-        #user_id = self.request.session.get('user_id')       
-        #user_has_workout = User.objects.get(id=user_id)
-        #user_has_workout.consistsOf.add(exercise)
+        user_id = self.request.session.get('user_id')   
+        print("user_id: " + str(user_id))    
+        user_has_workout = User.objects.get(id=user_id)
+        print("user_has_workout: " + str(user_has_workout))  
+        user_has_workout.hasWorkouts.add(workout)
+
 
         #Find all exercises that the user picked. Finds the specific exercise object and creates mtm with workout
         for exercise in request.data['exercises_list']:
@@ -137,6 +146,31 @@ class CreateWorkoutView(APIView):
             print(exercise)
             workout.consistsOf.add(exercise)
             print(workout)
+        return Response({'User registered': 'OK'}, status=status.HTTP_200_OK)
+        #return Response({'Bad request': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class CreateExerciseView(APIView):
+    #serializer_class = CreateWorkoutInfoSerializer;
+
+    def post(self, request, format=None):
+        print("CreateExerciseView Triggered!")
+        #print(request.data['workoutName'])
+        #print(request.data['workoutDesc'])
+        #Creates exercise        
+        name = request.data['exerciseName']
+        type_id= request.data['exerciseType']
+
+        exercise_type = ExerciseType.objects.get(type=type_id)
+        print(exercise_type)
+
+        exercise = Exercise(name=name, type_id = exercise_type.id)
+        exercise.save()
+        print(exercise)
+        
+    
+
         return Response({'User registered': 'OK'}, status=status.HTTP_200_OK)
         #return Response({'Bad request': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
 

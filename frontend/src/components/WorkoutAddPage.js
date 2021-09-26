@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Switch, Route, Link, Redirect} from "react-rou
 import ReactDOM from 'react-dom';
 //import WorkoutCreateExercisePage from "./WorkoutCreateExercisePage"
 import '../../static/css/workout-add.css';
-
+import WorkoutCreateExercisePage from './WorkoutCreateExercisePage';
 
 export default class WorkoutAddPage extends Component{
 
@@ -39,6 +39,7 @@ export default class WorkoutAddPage extends Component{
         this.handleAddExercise = this.handleAddExercise.bind(this);
         this.handleCreateWorkout = this.handleCreateWorkout.bind(this);
         this.SaveWorkout = this.SaveWorkout.bind(this);
+        this.handleParentUpdate = this.handleParentUpdate.bind(this);
     }
 
     handleBtnContinue= (e) =>{
@@ -238,8 +239,9 @@ export default class WorkoutAddPage extends Component{
 
     }
 
-    CreateFunction = () =>{
-        this.setState({createExerciseView: false})
+    handleParentUpdate(){
+        console.log("Pressed!");
+        this.setState({createExerciseView: false});
     }
 
     ExerciseCategories(){
@@ -294,7 +296,7 @@ export default class WorkoutAddPage extends Component{
         }
         else{
             return(
-                <WorkoutCreateExercisePage CreateFunction={CreateFunction}/>
+                <WorkoutCreateExercisePage handleParentUpdate={ this.handleParentUpdate.bind(this)}/>
             )
         }
 

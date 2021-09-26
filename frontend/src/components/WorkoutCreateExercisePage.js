@@ -26,8 +26,30 @@ export default class WorkoutCreateExercisePage extends Component {
     e.preventDefault();
     console.log(this.state.selectValue)
     console.log(this.state.exerciseName)
-    this.setState({ created : true })
 
+    var exerciseName = this.state.exerciseName;
+    var exerciseType = this.state.selectValue;
+
+    const requestOptions={
+      method: 'POST',
+      headers: {'Content-Type' : 'application/json'},
+      body: JSON.stringify({
+          exerciseName,
+          exerciseType,
+      }),
+  };
+
+  fetch("/api/create-exercise", requestOptions)
+  .then((response) => {
+      if (!response.ok){
+          console.log("Failed save exercise!");
+      }
+      else{
+          console.log("Success save exercise!");
+          this.setState({ created : true })
+
+      }
+  })
   }
 
   
@@ -59,17 +81,17 @@ export default class WorkoutCreateExercisePage extends Component {
                   <option value="Other">Other</option>
                 </select>
                 <lable> Select Exercise Name</lable>
-                  <input type="text" required className="wcp-input-name"
+                  <input type="text" className="wcp-input-name"
                   onChange={(e)=>{ this.setState({ exerciseName : e.target.value })}}/>
                   <button type="submit" 
                   className="wcp-button-submit"
                   >Create</button>
-                  <button 
+                </form>
+                <button 
                   className="wcp-button-return"
-                  onClick={ this.props.CreateFunction }>
+                  onClick={ this.props.handleParentUpdate }>
                     Return
                   </button>
-                </form>
             </div>
         )
     }
@@ -84,7 +106,7 @@ export default class WorkoutCreateExercisePage extends Component {
               <br/>
               Created!
             </div>
-            <button type="submit" onClick={ () =>{ this.setState({created: false})}}>
+            <button type="submit" onClick={ this.props.handleParentUpdate }>
               Return
             </button>
         </div>

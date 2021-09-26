@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import LoginUserView, UserView, SessionExistView, RegisterUserView, GetExercisesView, CreateWorkoutView, SignOutView
+from .views import LoginUserView, UserView, SessionExistView, RegisterUserView, GetExercisesView, CreateWorkoutView, SignOutView, CreateExerciseView
 
 urlpatterns = [
     path('', UserView.as_view()),
@@ -9,5 +9,5 @@ urlpatterns = [
     path('get-exercises', GetExercisesView.as_view()),
     path('create-workout', CreateWorkoutView.as_view()),
     path('sign-out', SignOutView.as_view()),
-
+    path('create-exercise', CreateExerciseView.as_view()),
 ]
