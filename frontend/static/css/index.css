@@ -200,7 +200,7 @@ Button:hover{
 .box-1{
     align-items: center;
     justify-content: center;
-    background: linear-gradient(0deg,rgba(0,0,0,0.9),rgba(73, 73, 73, 0.6)), url('../images/heroimage.png');
+    background: linear-gradient(0deg,rgba(0,0,0,0.9),rgba(73, 73, 73, 0.6)), url('../images/index/heroimage.png');
     background-attachment: fixed;
     background-position: center;
     background-repeat: no-repeat;
@@ -288,7 +288,7 @@ Button:hover{
 }
 
 .box-2-img{
-    background-image: url('../images/default-workout-img.jpeg');
+    background-image: url('../images/index/default-workout-img.jpeg');
     box-shadow: 10px 10px 5px rgb(34, 34, 34);
     height: 266px;
     width: 400px;
@@ -717,7 +717,7 @@ Button:hover{
 
 .lp-container {
     /*background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url("../images/login-page.jpg");*/
-    background: linear-gradient(0deg,rgba(0,0,0,0.6),rgba(73, 73, 73, 0.2)), url('../images/login-page.jpg');
+    background: linear-gradient(0deg,rgba(0,0,0,0.6),rgba(73, 73, 73, 0.2)), url('../images/login/login-page.jpg');
     background-blend-mode: luminosity;
     background-position: center;
     background-repeat: no-repeat;
@@ -823,10 +823,11 @@ Button:hover{
 .signup-box{
     background-color: #2C2B2B;
     background: linear-gradient(rgb(75, 72, 72), rgb(53, 51, 51));
-    width: 340px;
+    width: auto;
     height: auto;
     padding-top: 20px;
-    padding-bottom: 20px;
+    padding-left: 35px;
+    padding-bottom: 10px;
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
     font-weight: bold;
     font-size: 20px;
@@ -841,7 +842,7 @@ Button:hover{
   }
 
 .signup-container {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.315), rgba(0, 0, 0, 0.226)), url("../images/test.jpg");
+    background-image: linear-gradient(rgba(0, 0, 0, 0.315), rgba(0, 0, 0, 0.226)), url("../images/signup/test.jpg");
     background-blend-mode: luminosity;
     background-position: center;
     background-repeat: no-repeat;
@@ -873,13 +874,8 @@ Button:hover{
 
   @import url('https://fonts.googleapis.com/css?family=Lato:100&display=swap');
 
-body, html {
-  margin: 200;
-  background: #daa30f;
-  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-}
 
-.container {
+.container-signup-button {
   width: auto;
   height: auto;
   position: absolute;
@@ -891,14 +887,13 @@ body, html {
   align-items: center;
 }
 
-.center {
-    width: 180px;
+.center-signup-button{
+    width: 180;
     height: 60px;
-  position: absolute;
+    position: absolute;
 }
 
-.btn {
-    margin-top: 230px;
+.btn-signup-button{
   width: 180px;
   height: 60px;
   cursor: pointer;
@@ -908,10 +903,9 @@ body, html {
   transition: 1s ease-in-out;
 }
 
-svg {
-  margin-top: 230px;
+svg.signup {
   position: absolute;
-  left: 0;
+  left: 10%;
   top: 0;
   fill: none;
   stroke: #fff;
@@ -920,17 +914,49 @@ svg {
   transition: 0.5s ease-in-out;
 }
 
-.btn:hover {
+.btn-signup-button:hover {
   transition: 1s ease-in-out;
   background: #bb8c0a;
 }
 
-.btn:hover svg {
+.btn-signup-button:hover svg {
   stroke-dashoffset: -480;
 }
 
-.btn span {
-  color: white;
+.btn-signup-button span {
+  color: rgb(255, 255, 255);
   font-size: 18px;
   font-weight: 100;
 }
+
+input[type=text-signup] {
+    width: 80%;
+    height: 80%;
+    margin: 10px 5%;
+    box-sizing: border-box;
+  }
+
+input[type=email-signup] {
+    width: 80%;
+    height: 80%;
+    margin: 10px 5%;
+    box-sizing: border-box;
+}
+
+input[type=email-signup]:invalid {
+    color:red;
+}
+  
+  
+input[type=password-signup] {
+    width: 80%;
+    height: 80%;
+    margin: 10px 5%;
+    box-sizing: border-box;
+}
+
+span.small-signup {
+    font-size: smaller;
+    color: red;
+    padding-right: 15%;
+  }
