@@ -135,31 +135,6 @@ svg.signup {
   font-weight: 100;
 }
 
-input[type=text-signup] {
-    width: 80%;
-    height: 80%;
-    margin: 10px 5%;
-    box-sizing: border-box;
-  }
-
-input[type=email-signup] {
-    width: 80%;
-    height: 80%;
-    margin: 10px 5%;
-    box-sizing: border-box;
-}
-
-input[type=email-signup]:invalid {
-    color:red;
-}
-  
-  
-input[type=password] {
-    width: 80%;
-    height: 80%;
-    margin: 10px 5%;
-    box-sizing: border-box;
-}
 
 span.small-signup {
     font-size: smaller;
