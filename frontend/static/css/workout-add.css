@@ -22,7 +22,6 @@
     justify-content: center;
     align-items: center;
     color:white;
-
 }
 
 .wap-exercise-container{
@@ -35,8 +34,6 @@
     flex-direction: column;
     align-items: center;
     overflow-y: scroll;
-
-
 }
 
 .wap-exercise-container form{
@@ -53,6 +50,7 @@
     width: 95%;
     overflow-y:hidden;
     overflow-x: hidden;
+    margin-top:13%;
 
 }
 
@@ -228,7 +226,7 @@
 }
 
 .wap-create-workout-btn{
-    margin-top:10px;
+    margin-top:20px;
     border-radius:10px;
     height: 40px;
     font-size: 24px;
@@ -245,6 +243,7 @@
     align-items: center;
 
 }
+
 
 .wap-saved-prompt-box{
     height:500px;
@@ -274,5 +273,14 @@
     color:white;
     border-radius: 10px;
     margin-left:40%;
+}
 
+.wap-exercise-btn-create{
+    margin-top:10px;
+    border-radius:10px;
+    height: 36px;
+    font-size: 18px;
+    background: none;
+    border:2px white solid;
+    color: white;
 }

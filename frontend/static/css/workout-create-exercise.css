@@ -1,0 +1,127 @@
+/***** Create Exercise ****/
+
+.wcp-container{
+    width:90%;
+    height: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+}
+
+
+.wcp-title{
+    font-size: 36px;
+    font-weight: 600;
+    margin-bottom:20px;
+
+}
+
+.wcp-container form{
+    width:60%;
+    height: 40%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+
+}
+
+.wcp-container lable{
+    color:#5a5959;
+    margin-left: 20px;
+}
+.wcp-select-type{
+    background: none;
+    border:2px rgb(56, 55, 55) solid;
+    width:90px;
+    height: 50px;
+    font-size: 18px;
+    color:white;
+    border-radius: 10px;
+    margin-left:20px;
+    margin-bottom:20px;
+
+    
+}
+
+.wcp-input-name{
+    background: none;
+    width:200px;
+    height: 50px;
+    border:2px rgb(56, 55, 55) solid;
+    font-size: 24px;
+    border-radius: 10px;
+    margin-left:20px;
+    margin-bottom:20px;
+    color:white;
+
+}
+
+.wcp-button-submit{
+    background: none;
+    border:2px var(--orangeGradiant1) solid;
+    width:90px;
+    height: 55px;
+    color:white;
+    border-radius: 10px;
+    margin-left:20px;
+    font-weight: 400;
+    margin-bottom:20px;
+}
+
+.wcp-button-return-container{
+    width:60%;
+
+}
+
+.wcp-button-return{
+    background: none;
+    border:2px var(--grayDefault) solid;
+    width:90px;
+    height: 55px;
+    color:white;
+    border-radius: 10px;
+    margin-left:20px;
+    font-weight: 400;
+    margin-bottom:20px;
+}
+
+.wcep-created-message-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+.wcep-created-message-container h3{
+    margin-top: -10%;
+    font-weight: 400;
+}
+
+
+.wcep-created-message-icon{
+    background-image: url('../images/Workout-Create-Exercise/checkBig.png');
+    background-repeat: no-repeat;
+    background-size:cover;
+    width:48px;
+    height: 48px;
+}
+
+.wcep-created-message-return-btn{
+    background: none;
+    border:2px var(--grayDefault) solid;
+    width:90px;
+    height: 55px;
+    color:white;
+    border-radius: 10px;
+    font-weight: 400;
+    margin-bottom:20px;
+}
+
+.wmp-workout-elemTextContainer-btn{
+    order:1;
+    width:85%;
+    margin-left:10px;
+}

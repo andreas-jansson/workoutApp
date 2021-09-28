@@ -1,0 +1,175 @@
+
+
+/**** Workout List *****/
+.wmp-container{
+    width:100%;
+    height:100%;
+    background: var(--grayDefault);
+    display:flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: 3%;
+    border-radius: 5px;
+
+}
+
+.wmp-section{
+    width:45%;
+    height:90vh;
+    background: var(--grayDarker);
+    box-shadow: 2px 10px 20px 2px rgba(14, 14, 5, 0.8);
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color:white;
+}
+
+.wmp-workout-container{
+    border:2px var(--orangeGradiant1) solid;
+    height:70%;
+    width:80%;
+    border-radius: 10px;
+    display:flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: scroll;
+}
+
+.wmp-dynamic-workout-container{
+    width:90%;
+    height: auto;
+}
+.wmp-exercise-container{
+    border:2px rgb(56, 55, 55) solid;
+    height:70%;
+    width:80%;
+    border-radius: 10px;
+    display:flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: scroll;
+}
+
+.wmp-workout-item{
+    width:100%;
+    height:50px;
+    border:2px rgb(56, 55, 55) solid;
+    align-self: center;
+    border-radius: 5px;
+    margin-top:3%;
+    display:flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+
+.wmp-workout-elemTextContainer-btn{
+    background: none;
+    border:none;
+    color:white;
+    order:1;
+    width:85%;
+    margin-left:10px;
+    text-align: start;
+}
+
+.wmp-remove-workout-btn{
+    width:45px;
+    height: 45px;
+    font-size: 40px;
+    background: none;
+    border:none;
+    color:white;
+    order:2;
+}
+
+/***** exercises belonging to workout ****/
+
+.wmp-workout-opened-container{
+    border:2px rgb(13, 158, 0) solid;
+    height:70%;
+    width:80%;
+    border-radius: 10px;
+    display:flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: scroll;
+}
+
+
+.wmp-dynamic-exercise-container{
+    width:90%;
+    height: auto;
+}
+
+.wmp-exercise-added-item{
+    width:95%;
+    height:50px;
+    border:2px rgb(56, 55, 55) solid;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-around;
+    margin-top:3%;
+    border-radius:5px;
+}
+
+.wmp-exercise-added-elemTextContainer{
+    background: none;
+    border:none;
+    color:white;
+    order:1;
+    width:85%;
+    margin-left:10px;
+}
+
+.wmp-remove-exercise-btn{
+    width:45px;
+    height: 45px;
+    font-size: 40px;
+    background: none;
+    border:none;
+    color:white;
+    order:2;
+}
+
+.wmp-alert-container{
+    height:30px;
+    width:auto;
+    margin-top: 20px;
+}
+
+.wmp-workout-btns-container{
+    margin-top: 20px;
+    width:80%;
+}
+
+.wmp-workout-exercies-return-btn{
+    border:2px rgb(56, 55, 55) solid;
+    height:36px;
+    font-size: 20px;
+    background: none;
+    color:white;
+    border-radius: 5px;
+    order: 2;
+}
+
+.wmp-workout-exercies-save-btn{
+    border:2px rgb(13, 158, 0) solid;
+    height:36px;
+    font-size: 20px;
+    background: none;
+    color:white;
+    border-radius: 5px;
+    margin-right: 20px;
+    order:1;
+}
+
+.wmp-alert-hidden {
+    opacity: 0;
+    transition: all 250ms linear 2s;
+  }
+

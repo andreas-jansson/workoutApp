@@ -9,7 +9,7 @@ from rest_framework import response
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
-from .serializers import UserSerializer, ExerciseSerializer
+from .serializers import UserSerializer, ExerciseSerializer, WorkoutSerializer
 from .models import Role, User, Exercise, ExerciseType, Workout
 from .hashUtils import compare_pw_hash, create_pw_hash, create_salt
 from .userUtils import email_is_registered
@@ -111,9 +111,7 @@ class CreateWorkoutView(APIView):
 
     def post(self, request, format=None):
         print("CreateWorkoutView Triggered!")
-        #print(request.data['workoutName'])
-        #print(request.data['workoutDesc'])
-        #Creates workout        
+   
         name = request.data['workoutName']
         description = request.data['workoutDesc']
         active=True
@@ -125,7 +123,7 @@ class CreateWorkoutView(APIView):
             shared=True
 
         consistsOf = 'wtf'
-        workout = Workout(name=name, description=description, active=True, shared=False)
+        workout = Workout(name=name, description=description, active=True, shared=shared)
         workout.save()
         
         #Finds user and creates user_hasWorkout - mtm
@@ -155,10 +153,7 @@ class CreateExerciseView(APIView):
     #serializer_class = CreateWorkoutInfoSerializer;
 
     def post(self, request, format=None):
-        print("CreateExerciseView Triggered!")
-        #print(request.data['workoutName'])
-        #print(request.data['workoutDesc'])
-        #Creates exercise        
+        print("CreateExerciseView Triggered!")      
         name = request.data['exerciseName']
         type_id= request.data['exerciseType']
 
@@ -174,3 +169,103 @@ class CreateExerciseView(APIView):
         return Response({'User registered': 'OK'}, status=status.HTTP_200_OK)
         #return Response({'Bad request': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
 
+class GetWorkoutView(APIView):
+    def get(self, request, format=None):
+        print("GetWorkoutView Triggered!")
+        queryset = Workout.objects.raw('select * from api_user_hasWorkouts as uhw '
+        +'inner join api_workout as w on uhw.workout_id = w.id where uhw.user_id = \'{}\' and active =1'.format(self.request.session.get('user_id')))
+        if len(queryset)>0:
+            data = WorkoutSerializer(queryset, many=True).data
+            print(data)                    
+            return Response(data, status=status.HTTP_200_OK)
+        return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class GetWorkoutExercisesView(APIView):
+    lookup_url_kwarg = 'name'
+    def get(self, request, format=None):
+        name = request.GET.get(self.lookup_url_kwarg)
+        print("name: " + name)
+        print("GetWorkoutExerciseView Triggered!")
+        queryset = Workout.objects.raw('select e.id, e.name, e.type_id from api_user_hasWorkouts as uhw '
+        +'inner join api_workout as w on uhw.workout_id = w.id '
+        +'inner join api_workout_consistsOf as wco on wco.workout_id = uhw.workout_id '
+        +'inner join api_exercise as e on e.id = wco.exercise_id '
+        +'where uhw.user_id = \'{}\' and  active = 1  and w.name = \'{}\''.format(self.request.session.get('user_id'), name))
+        
+        if len(queryset)>0:
+            data = WorkoutSerializer(queryset, many=True).data
+            print(data)                    
+            return Response(data, status=status.HTTP_200_OK)
+        return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+class UpdateWorkoutView(APIView):
+    
+    def post(self, request, format=None):
+        print("UpdateWorkoutView Triggered!")
+        print(request.data['workoutName'])
+        name = request.data['workoutName']
+
+        #finds the ID of the excercise that is active and belongs to this user
+        query_workout = Exercise.objects.raw('select w.id, w.description from api_workout as w '
+        +'inner join api_user_hasWorkouts as uhw '
+        +'on w.id = uhw.workout_id inner join api_user as u '
+        +'on uhw.user_id = u.id where u.id = \'{}\' and w.name = \'{}\' and w.active = 1'.format(self.request.session.get('user_id') , name))
+
+        print(query_workout[0].id)
+
+        #updates old workout to inactive
+        workout = Workout.objects.get(id=query_workout[0].id)
+        workout.active=0
+        workout.save()
+
+        if(self.request.session.get('role_id') == 2):
+            shared=False
+        else:
+            shared=True
+
+        workout_new = Workout(name=name, description=query_workout[0].description, active=True, shared=shared)
+        workout_new.save()
+      
+        
+        #Finds user and creates user_hasWorkout - mtm
+        user_id = self.request.session.get('user_id')   
+        print("user_id: " + str(user_id))    
+        user_has_workout = User.objects.get(id=user_id)
+        print("user_has_workout: " + str(user_has_workout))  
+        user_has_workout.hasWorkouts.add(workout_new)
+
+
+        #Find all exercises that the user picked. Finds the specific exercise object and creates mtm with workout
+        for exercise in request.data['exercises_list']:
+            queryset = Exercise.objects.raw('select e.id, e.name, e.type_id from api_exercise as e where name = \'{}\' limit 1'.format(exercise))
+            #var_type = queryset[0].type_id
+            var_name = queryset[0].name
+
+            exercise = Exercise.objects.get(name=var_name)
+            print(exercise)
+            workout_new.consistsOf.add(exercise)
+            print(workout_new)
+        return Response({'User registered': 'OK'}, status=status.HTTP_200_OK)
+        #return Response({'Bad request': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class DeleteWorkoutView(APIView):
+    def post(self, request, format=None):
+        print("DeleteWorkoutView Triggered!")
+        name = request.data['workoutName']
+
+        query_workout = Exercise.objects.raw('select w.id, w.description from api_workout as w '
+        +'inner join api_user_hasWorkouts as uhw '
+        +'on w.id = uhw.workout_id inner join api_user as u '
+        +'on uhw.user_id = u.id where u.id = \'{}\' and w.name = \'{}\' and w.active = 1'.format(self.request.session.get('user_id') , name))
+        print(query_workout[0].id)
+        workout = Workout.objects.get(id=query_workout[0].id)
+        workout.active = False   
+        workout.save()     
+        return Response({'Workout Deleted': 'OK'}, status=status.HTTP_200_OK)
+
+     

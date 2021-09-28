@@ -21,30 +21,6 @@ export default class DashboardPage extends Component {
     };
   }
 
-  /* runs on page load*/
-  componentDidMount = () => {
-    this.sessionExist();
-  };
-
-  /* redirects if session exists */
-  sessionExist = () => {
-    const requestOptions = {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    };
-
-    fetch("/api/session-exist", requestOptions).then((response) => {
-      if (response.status == 202) {
-        console.log("session exists");
-        this.setState({ sessionActive: true });
-      } else {
-        console.log("Session Missing");
-        /* Remove the "//" comment to make localhost:8000/dashboard redirect to the index */
-        //this.props.history.push("/");
-      }
-    });
-  };
-
   DashboardPage() {
     return (
       /* main container*/

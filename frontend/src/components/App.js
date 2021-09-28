@@ -13,6 +13,7 @@ import LoginPage from "./LoginPage";
 import RegisterPage from "./RegisterPage";
 import WorkoutPage from "./WorkoutPage";
 import WorkoutAddPage from "./WorkoutAddPage";
+import WorkoutManagmentPage from "./WorkoutManagmentPage";
 import ReactDOM from 'react-dom';
 
 
@@ -200,6 +201,7 @@ export default class App extends Component {
               <Route path="/signup" component={RegisterPage} />
               <Route path="/workout" component={WorkoutPage} />
               <Route path="/workout-add" component={WorkoutAddPage} />
+              <Route path="/workout-managment" component={WorkoutManagmentPage} />
             </Switch>
             </div>
           </Router>

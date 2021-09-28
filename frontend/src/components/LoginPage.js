@@ -23,6 +23,31 @@ export default class LoginPage extends Component {
     this.PasswordChange = this.PasswordChange.bind(this);
   }
 
+    /* runs on page load*/
+    componentDidMount = () => {
+      this.sessionExist();
+    };
+  
+    /* redirects if session exists */
+    sessionExist = () => {
+      const requestOptions = {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      };
+  
+      fetch("/api/session-exist", requestOptions).then((response) => {
+        if (response.status == 202) {
+          console.log("session exists");
+          window.location.href = "/dashboard";
+          return response.json()
+        } else {
+          console.log("Session Missing");
+        }
+        return response.json()
+      })
+    }
+
+    
   EmailChange(event) {
     this.setState({ email: event.target.value });
   }
@@ -82,7 +107,6 @@ export default class LoginPage extends Component {
               Email
             </div>
             <form>
-              <label>
                 <input
                   className="login-text"
                   type="text"
@@ -90,11 +114,9 @@ export default class LoginPage extends Component {
                   onChange={this.EmailChange}
                   maxLength="50"
                 />
-              </label>
               <div align="center" className="login-padding">
                 Password
               </div>
-              <label>
                 <input
                   className="login-text"
                   type="password"
@@ -102,9 +124,7 @@ export default class LoginPage extends Component {
                   onChange={this.PasswordChange}
                   maxLength="30"
                 />
-              </label>
               <div align="center">
-                <p>
                   <button
                     className="myButton"
                     variant="contained"
@@ -112,7 +132,6 @@ export default class LoginPage extends Component {
                   >
                     Sign In
                   </button>
-                </p>
               </div>
             </form>
           </div>
@@ -125,3 +144,5 @@ export default class LoginPage extends Component {
     return this.LoginPage();
   }
 }
+
+

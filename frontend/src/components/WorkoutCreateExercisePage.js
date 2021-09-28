@@ -6,7 +6,15 @@ import {
   Link,
   Redirect,
 } from "react-router-dom";
+import '../../static/css/workout-create-exercise.css';
 
+
+
+/*
+  1. Create a handler in parent view named "handleParentUpdate"
+  2. call it from parent as such: <WorkoutCreateExercisePage handleParentUpdate={ this.handleParentUpdate.bind(this)}/>
+
+*/
 
 export default class WorkoutCreateExercisePage extends Component {
   static defaultProps = {};
@@ -69,7 +77,7 @@ export default class WorkoutCreateExercisePage extends Component {
                 >
                   <option value="Abs">Abs</option>
                   <option value="Back">Back</option>
-                  <option value="Bicep">Bicep</option>
+                  <option value="Biceps">Biceps</option>
                   <option value="Calves">Calves</option>
                   <option value="Cardio">Cardio</option>
                   <option value="Chest">Chest</option>
@@ -87,11 +95,13 @@ export default class WorkoutCreateExercisePage extends Component {
                   className="wcp-button-submit"
                   >Create</button>
                 </form>
-                <button 
-                  className="wcp-button-return"
-                  onClick={ this.props.handleParentUpdate }>
-                    Return
-                  </button>
+                <div className="wcp-button-return-container">
+                  <button 
+                    className="wcp-button-return"
+                    onClick={ this.props.handleParentUpdate }>
+                      Return
+                    </button>
+                  </div>
             </div>
         )
     }
@@ -99,14 +109,13 @@ export default class WorkoutCreateExercisePage extends Component {
       return(
         <div className="wcep-created-message-container">
             <div className="wcep-created-message-icon">
-              Check icon
             </div>
             <div className="wcep-created-message">
-              Exsercise {this.state.exerciseName}
+              <h2>{this.state.exerciseName}</h2>
               <br/>
-              Created!
+              <h3>Created!</h3>
             </div>
-            <button type="submit" onClick={ this.props.handleParentUpdate }>
+            <button type="submit" className="wcep-created-message-return-btn" onClick={ this.props.handleParentUpdate }>
               Return
             </button>
         </div>

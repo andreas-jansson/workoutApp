@@ -69,7 +69,7 @@ export default class WorkoutAddPage extends Component{
 
 
         const formTest = document.createElement('form');
-        formTest.onclick = this.handleRemoveExercise
+        formTest.onclick = this.handleRemoveExercise;
 
         const elemAddedItem = document.createElement('div');
         elemAddedItem.className = "wap-dynamic-exercise-added-item";
@@ -193,7 +193,7 @@ export default class WorkoutAddPage extends Component{
             return response.json()}
             ).then((data)=>{
                 const elemContainer = document.createElement('div');
-                elemContainer.className = "wap-dynamic-exercise-container"
+                elemContainer.className = "wap-dynamic-exercise-container";
 
                 const formTest = document.createElement('form');
                 formTest.onclick = this.handleAddExercise
@@ -220,7 +220,7 @@ export default class WorkoutAddPage extends Component{
                     elemPlus.id = i;
 
                     elemContainer.appendChild(elemItem);
-                    elemItem.appendChild(elemTextContainer)
+                    elemItem.appendChild(elemTextContainer);
                     elemItem.appendChild(elemPlus);
                     elemTextContainer.appendChild(elemText);
                     //this.setState({exerciseId : this.state.exerciseId + 1});
@@ -407,7 +407,7 @@ export default class WorkoutAddPage extends Component{
                         workoutDesc={this.state.workoutDesc}
                         onChange={this.DescChange}/>
                         <br/>
-                        <button type="submit" className="wap-cwi-btn" onClick={this.handleBtnContinue}>Create</button>
+                        <button type="submit" className="wap-cwi-btn" onClick={this.handleBtnContinue}>Continue</button>
                     </form>
                 </div>
             </div>
