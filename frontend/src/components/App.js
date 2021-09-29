@@ -15,6 +15,7 @@ import WorkoutPage from "./WorkoutPage";
 import WorkoutAddPage from "./WorkoutAddPage";
 import WorkoutManagmentPage from "./WorkoutManagmentPage";
 import ReactDOM from 'react-dom';
+import ManagementPage from "./ManagementPage";
 
 
 export default class App extends Component {
@@ -148,7 +149,7 @@ export default class App extends Component {
                 </div>
             </Link>
             { this.state.role_id > 2? 
-                <Link to="/managment">
+                <Link to="/management">
                     <div className="menu-btn btn6">
                         <div className="menu-btn-icon6">
                             </div>
@@ -202,6 +203,7 @@ export default class App extends Component {
               <Route path="/workout" component={WorkoutPage} />
               <Route path="/workout-add" component={WorkoutAddPage} />
               <Route path="/workout-managment" component={WorkoutManagmentPage} />
+              <Route path="/management" component={ManagementPage} />
             </Switch>
             </div>
           </Router>
