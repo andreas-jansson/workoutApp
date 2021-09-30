@@ -38,13 +38,19 @@
     {
         "model": "api.exercisetype",
         "fields": {
-            "type": "Arms"
+            "type": "Biceps"
         }
     },
     {
         "model": "api.exercisetype",
         "fields": {
-            "type": "Abdominals"
+            "type": "Triceps"
+        }
+    },
+    {
+        "model": "api.exercisetype",
+        "fields": {
+            "type": "Abs"
         }
     },
     {
@@ -177,51 +183,6 @@
             "created" : "2021-09-20T12:50:26.137755Z",
             "roleid" : "4",
             "hasWorkouts": ["1", "2"]
-        }
-    },
-    {
-        "model": "api.scheduledworkout",
-        "fields": {
-            "user": "1",
-            "workout": "1",
-            "scheduledDate" : "2021-09-20T12:50:26.137755Z"
-        }
-    },
-    {
-        "model": "api.scheduledworkout",
-        "fields": {
-            "user": "2",
-            "workout": "2",
-            "scheduledDate" : "2021-09-20T12:50:26.137755Z"
-        }
-    },
-    {
-        "model": "api.scheduledworkout",
-        "fields": {
-            "user": "3",
-            "workout": "3",
-            "scheduledDate" : "2021-09-20T12:50:26.137755Z"
-        }
-    },
-    {
-        "model": "api.log",
-        "fields": {
-            "sets" : 12,
-            "reps" : 3,
-            "weight" : 200,
-            "time" : "11:11:00",
-            "scheduledWorkout" : "1",
-            "exercise" : 2
-        }
-    },{
-        "model": "api.log",
-        "fields": {
-            "sets" : 40,
-            "reps" : 60,
-            "weight" : 292929,
-            "time" : "11:11:00",
-            "scheduledWorkout" : "2",
-            "exercise" : 1
         }
     }
 ]

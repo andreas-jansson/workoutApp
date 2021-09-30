@@ -88,6 +88,11 @@
     font-size: 18px;
 }
 
+.wap-exercise-btn:hover{
+    background: var(--grayDefault);
+    text-decoration: none;
+}
+
 .wap-cwi-box{
     width:300px;
     height:300px;

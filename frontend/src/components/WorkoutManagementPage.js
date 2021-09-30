@@ -6,7 +6,7 @@ import '../../static/css/workout-managment.css';
 import WorkoutCreateExercisePage from './WorkoutCreateExercisePage';
 import Alert from "@material-ui/lab/Alert";
 
-export default class WorkoutManagmentPage extends Component{
+export default class WorkoutManagementPage extends Component{
 
     static defaultProps = {
         createExerciseView: false,
@@ -60,12 +60,16 @@ export default class WorkoutManagmentPage extends Component{
     handleReturn = (e) =>{
         e.preventDefault();
         console.log("Return!");
+        this.setState({workoutOpened: false})
         window.location.reload();
     }
 
     handleRemoveExercise(e){
         e.preventDefault();
         console.log("removing id: " + e.target.id);
+        console.log("removing value: " + e.target.value);
+        console.log(e.target);
+
 
         const removeItem = document.getElementById(e.target.id)
         removeItem.remove();
@@ -157,6 +161,7 @@ export default class WorkoutManagmentPage extends Component{
     }
 
     handleExerciseGroup(e){
+        e.preventDefault();
         console.log("handleExerciseGroup");
         this.setState({ category: e.target.value });
         const exercise = e.target.value;
@@ -215,6 +220,10 @@ export default class WorkoutManagmentPage extends Component{
 
     }
 
+    handleBtnReturn = () =>{
+        this.setState({category: "None"})
+        var element = document.getElementsByClassName("wmp-dynamic-exercise-container")[0].remove();
+    }
 
     handleViewWorkout = (e) =>{
         e.preventDefault();
@@ -234,19 +243,20 @@ export default class WorkoutManagmentPage extends Component{
             return response.json()}
             ).then((data)=>{
                 const elemContainer = document.createElement('div');
-                elemContainer.className = "wmp-dynamic-exercise-container";
-                elemContainer.id = "wmp-dynamic-exercise-container";
+                elemContainer.className = "wmp-dynamic-exercise-added-container";
+                elemContainer.id = "wmp-dynamic-exercise-added-container";
                 //const formTest = document.createElement('form');
                 //formTest.onclick = this.handleDeleteWorkout
-                //var unique_id
+                var unique_id
                 for(var i = 0; i < data.length; i++) {
-                    //unique_id = this.state.exerciseId;
+                    unique_id = this.state.exerciseId;
+                    console.log(unique_id);
                     //console.log(data[i].name);
                     var exerciseName = data[i].name.toString();
                     
                     var elemItem = document.createElement('div');
                     elemItem.className = "wmp-exercise-added-item";
-                    elemItem.id = i;
+                    elemItem.id = unique_id;
                     elemItem.value = exerciseName;
 
                     var elemTextContainer = document.createElement('div');
@@ -260,13 +270,15 @@ export default class WorkoutManagmentPage extends Component{
                     elemMinus.innerHTML = "-";
                     elemMinus.value = exerciseName;
                     elemMinus.type = "submit";
-                    elemMinus.id = i;
+                    elemMinus.id = unique_id;
                     elemMinus.onclick = this.handleRemoveExercise;
 
                     elemContainer.appendChild(elemItem);
                     elemItem.appendChild(elemTextContainer);
                     elemItem.appendChild(elemMinus);
                     elemTextContainer.appendChild(elemText);
+                    this.setState({exerciseId : this.state.exerciseId + 1});
+
                 }
                 //console.log(elemContainer)
                 //formTest.appendChild(elemContainer);
@@ -275,6 +287,46 @@ export default class WorkoutManagmentPage extends Component{
                 let workoutExerciseList = document.getElementsByClassName("wmp-workout-opened-container")[0].appendChild(elemContainer);
             });
     }
+
+    handleAddExercise=(e)=>{
+        e.preventDefault();
+        var unique_id = this.state.exerciseId;
+
+        console.log("add value: " + e.target.value);
+        console.log("add id: " + e.target.id);
+        console.log("unique_id: " + unique_id);
+
+        //const formTest = document.createElement('form');
+        //formTest.onclick = this.handleRemoveExercise;
+
+        const elemAddedItem = document.createElement('div');
+        elemAddedItem.className = "wmp-exercise-added-item";
+        elemAddedItem.value = e.target.value;
+        //elemAddedItem.innerHTML = e.target.value;
+        elemAddedItem.id = unique_id;
+
+        var elemTextContainer = document.createElement('div');
+        elemTextContainer.className = "wmp-exercise-added-elemTextContainer";
+        var elemText = document.createTextNode(e.target.value);
+
+        const elemMinus = document.createElement('Button');
+        elemMinus.className = "wmp-remove-exercise-btn";
+        elemMinus.innerHTML = "-";
+        elemMinus.value = unique_id;
+        elemMinus.id = unique_id;
+        elemMinus.type = "submit";
+        elemMinus.onclick = this.handleRemoveExercise;
+
+        elemTextContainer.appendChild(elemText);
+        elemAddedItem.appendChild(elemMinus);
+        elemAddedItem.appendChild(elemTextContainer);
+        //formTest.appendChild(elemAddedItem);
+
+        let targetNode = document.getElementsByClassName("wmp-dynamic-exercise-added-container")[0].appendChild(elemAddedItem)
+        this.setState({exerciseId : this.state.exerciseId + 1});
+
+    }
+
 
     LoadAllWorkouts = () =>{
         console.log("loading workouts")
@@ -332,54 +384,59 @@ export default class WorkoutManagmentPage extends Component{
 
     ExerciseCategories(){
         if( this.state.createExerciseView == false){
-            return(
-                <div className="wmp-exercise-cat-container">
-                    <div className="wmp-exercise-cat-container-left">
-                        <button className="wmp-exercise-btn" value="Abs" onClick={this.handleExerciseGroup }>
-                            Abs
-                        </button>
-                        <button className="wmp-exercise-btn" value="Back" onClick={this.handleExerciseGroup }>
-                            Back
-                        </button>
-                        <button className="wmp-exercise-btn" value="Biceps" onClick={this.handleExerciseGroup }>
-                            Biceps
-                        </button>
-                        <button className="wmp-exercise-btn" value="Calves" onClick={this.handleExerciseGroup }>
-                            Calves
-                        </button>
-                        <button className="wmp-exercise-btn" value="Cardio" onClick={this.handleExerciseGroup }>
-                            Cardio
-                        </button>
-                        <button className="wmp-exercise-btn" value="Chest" onClick={this.handleExerciseGroup }>
-                            Chest
+                return(
+                    <>
+                    <div className="wmp-exercise-cat-container">
+                        <div className="wmp-exercise-cat-container-left">
+                            <button className="wmp-exercise-btn" value="Abs" onClick={this.handleExerciseGroup }>
+                                Abs
+                            </button>
+                            <button className="wmp-exercise-btn" value="Back" onClick={this.handleExerciseGroup }>
+                                Back
+                            </button>
+                            <button className="wmp-exercise-btn" value="Biceps" onClick={this.handleExerciseGroup }>
+                                Biceps
+                            </button>
+                            <button className="wmp-exercise-btn" value="Calves" onClick={this.handleExerciseGroup }>
+                                Calves
+                            </button>
+                            <button className="wmp-exercise-btn" value="Cardio" onClick={this.handleExerciseGroup }>
+                                Cardio
+                            </button>
+                            <button className="wmp-exercise-btn" value="Chest" onClick={this.handleExerciseGroup }>
+                                Chest
+                            </button>
+                        </div>
+                        <div className="wmp-exercise-cat-container-right">
+                            <button className="wmp-exercise-btn" value="Forearms" onClick={this.handleExerciseGroup }>
+                                Forearms
+                            </button>
+                            <button className="wmp-exercise-btn" value="Glutes" onClick={this.handleExerciseGroup }>
+                                Glutes
+                            </button>
+                            <button className="wmp-exercise-btn" value="Legs" onClick={this.handleExerciseGroup }>
+                                Legs
+                            </button>
+                            <button className="wmp-exercise-btn" value="Shoulders" onClick={this.handleExerciseGroup }>
+                                Shoulders
+                            </button>
+                            <button className="wmp-exercise-btn" value="Triceps" onClick={this.handleExerciseGroup }>
+                                Triceps
+                            </button>
+                            <button className="wmp-exercise-btn" value="Other" onClick={this.handleExerciseGroup }>
+                                Other
+                            </button>
+                        </div>
+                        <button className="wmp-exercise-btn-create" onClick={ () => { this.setState({ createExerciseView: true})} }>
+                                Create Exercise
                         </button>
                     </div>
-                    <div className="wmp-exercise-cat-container-right">
-                        <button className="wmp-exercise-btn" value="Forearms" onClick={this.handleExerciseGroup }>
-                            Forearms
-                        </button>
-                        <button className="wmp-exercise-btn" value="Glutes" onClick={this.handleExerciseGroup }>
-                            Glutes
-                        </button>
-                        <button className="wmp-exercise-btn" value="Legs" onClick={this.handleExerciseGroup }>
-                            Legs
-                        </button>
-                        <button className="wmp-exercise-btn" value="Shoulders" onClick={this.handleExerciseGroup }>
-                            Shoulders
-                        </button>
-                        <button className="wmp-exercise-btn" value="Triceps" onClick={this.handleExerciseGroup }>
-                            Triceps
-                        </button>
-                        <button className="wmp-exercise-btn" value="Other" onClick={this.handleExerciseGroup }>
-                            Other
-                        </button>
+                    <div className="wmp-alert-container">
+
                     </div>
-                    <button className="wmp-exercise-btn-create" onClick={ () => { this.setState({ createExerciseView: true})} }>
-                            Create Exercise
-                    </button>
-                </div>
-            );
-        }
+                    </>
+                );
+            }
         else{
             return(
                 <WorkoutCreateExercisePage handleParentUpdate={ this.handleParentUpdate.bind(this)}/>
@@ -394,10 +451,12 @@ export default class WorkoutManagmentPage extends Component{
                     <button type="submit" className="wmp-cwi-btn-return" onClick={this.handleBtnReturn}>Back
                     </button>
                         <p>{ this.state.category }</p>
-                     </div>
-                <div className="wmp-exercise-ec-container">
-                        {/* Dynamic list fills this */}
-
+                </div>
+                <div className="wmp-exercise-container">
+                    {/* Dynamic list fills this */}
+                </div>
+                <div className="wmp-container-padding">
+                            
                 </div>
             </>
         );
@@ -405,36 +464,66 @@ export default class WorkoutManagmentPage extends Component{
 
     RenderWorkoutFlow(){
         if(this.state.workoutOpened == true){
-            return(
-                <div className="wmp-container">
-                    <div className="wmp-section wmp-box1">
-                        <div className="wmp-box1-title">
-                            Your Workouts
-                        </div>                        
-                        <div className="wmp-workout-opened-container">
-                             
-                        </div>
+            if(this.state.category=="None"){
+                return(
+                    <div className="wmp-container">
+                        <div className="wmp-section wmp-box1">
+                            <div className="wmp-box1-title">
+                                Your Workouts
+                            </div>                        
+                            <div className="wmp-workout-opened-container">
+                                 
+                            </div>
                                 <div className="wmp-workout-btns-container">
-                                <button onClick = {this.handleCreateWorkout } className="wmp-workout-exercies-save-btn">
-                                    Save Workout
-                                </button>
-                                <button onClick ={ this.handleReturn } className="wmp-workout-exercies-return-btn">
-                                    Return
-                                </button>
-                                <div className="wmp-alert-container">
-                                    <div className={`alert alert-success ${this.state.workoutSaved ? 'wmp-alert-shown' : 'wmp-alert-hidden'}`}>
-                                        <Alert severity="success">Workout Saved!</Alert>
+                                    <button onClick = {this.handleCreateWorkout } className="wmp-workout-exercies-save-btn">
+                                        Save Workout
+                                    </button>
+                                    <button onClick ={ this.handleReturn } className="wmp-workout-exercies-return-btn">
+                                        Return
+                                    </button>
+                                    <div className="wmp-alert-container">
+                                        <div className={`alert alert-success ${this.state.workoutSaved ? 'wmp-alert-shown' : 'wmp-alert-hidden'}`}>
+                                            <Alert severity="success">Workout Saved!</Alert>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                    </div>
-                    <div className="wmp-section wmp-box2">
-                        <div className="wmp-exercise-container">
-                                {this.ExerciseCategory()}
+                        </div>
+                        <div className="wmp-section wmp-box2">
+                            {this.ExerciseCategories()}
                         </div>
                     </div>
-                </div>
-            );
+                );
+            }
+            else{
+                return(
+                    <div className="wmp-container">
+                        <div className="wmp-section wmp-box1">
+                            <div className="wmp-box1-title">
+                                Your Workouts
+                            </div>                        
+                            <div className="wmp-workout-opened-container">
+                                 
+                            </div>
+                                <div className="wmp-workout-btns-container">
+                                    <button onClick = {this.handleCreateWorkout } className="wmp-workout-exercies-save-btn">
+                                        Save Workout
+                                    </button>
+                                    <button onClick ={ this.handleReturn } className="wmp-workout-exercies-return-btn">
+                                        Return
+                                    </button>
+                                    <div className="wmp-alert-container">
+                                        <div className={`alert alert-success ${this.state.workoutSaved ? 'wmp-alert-shown' : 'wmp-alert-hidden'}`}>
+                                            <Alert severity="success">Workout Saved!</Alert>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        <div className="wmp-section wmp-box2">
+                            {this.ExerciseCategory()}
+                        </div>
+                    </div>
+                );
+            }
         }
         else{
             return(
@@ -446,11 +535,12 @@ export default class WorkoutManagmentPage extends Component{
                         <div className="wmp-workout-container">
                             
                         </div>
+                        <div className="wmp-workout-btns-container">
+                        
+                        </div>
                     </div>
                     <div className="wmp-section wmp-box2">
-                        <div className="wmp-exercise-contai">
-                        {this.ExerciseCategory()}
-                        </div>
+                      
                     </div>
                 </div>
             )

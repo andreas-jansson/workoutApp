@@ -13,7 +13,7 @@ import LoginPage from "./LoginPage";
 import RegisterPage from "./RegisterPage";
 import WorkoutPage from "./WorkoutPage";
 import WorkoutAddPage from "./WorkoutAddPage";
-import WorkoutManagmentPage from "./WorkoutManagmentPage";
+import WorkoutManagementPage from "./WorkoutManagementPage";
 import ReactDOM from "react-dom";
 export default class PendingAccountsPage extends Component {
   static defaultProps = {};

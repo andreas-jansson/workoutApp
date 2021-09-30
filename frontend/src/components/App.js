@@ -13,7 +13,7 @@ import LoginPage from "./LoginPage";
 import RegisterPage from "./RegisterPage";
 import WorkoutPage from "./WorkoutPage";
 import WorkoutAddPage from "./WorkoutAddPage";
-import WorkoutManagmentPage from "./WorkoutManagementPage";
+import WorkoutManagementPage from "./WorkoutManagementPage";
 import ReactDOM from 'react-dom';
 import ManagementPage from "./ManagementPage";
 
@@ -26,7 +26,9 @@ export default class App extends Component {
       sessionActive: false,
       fname: "",
       role_id: 0,
+      selectedNavbar: "",
     };
+
   }
 
   /* runs on page load*/
@@ -78,15 +80,22 @@ export default class App extends Component {
       });
   }
 
+  handleNavigation=(e)=>{
+    e.preventDefault();
+    this.setState({selectedNavbar: e.target.value});
+    console.log("clicked: " + e.target.value);
+  }
+
+
   renderNav() {
     var role
-    if(this.state.role_id == 1){
+    if(this.state.role_id == 2){
         role = "Client"
     }
-    else if(this.state.role_id == 2){
+    else if(this.state.role_id == 3){
         role = "Coach"
     }
-    else if(this.state.role_id == 3){
+    else if(this.state.role_id == 4){
         role = "Admin"
     }
     
@@ -101,33 +110,40 @@ export default class App extends Component {
             <p id="menu-user-info">Role: </p><p id="menu-user-info-var">{ role }</p>
             </p>
           </div>
-            <Link to="/dashboard">
-                <div className="menu-btn btn1">
-                    <div className="menu-btn-icon1">
-                        
+          <Link to="/dashboard"
+           value="dashboard"
+           onClick={ (e)=>this.setState({selectedNavbar: e.target.value})}>
+              <div className={this.state.selectedNavbar == "dashboard"? "menu-btn-selected btn1":"menu-btn btn1"} >
+                  <div className="menu-btn-icon1">
+                      
+                  </div>
+                  <div className="menu-btn-text">
+                  Dashboard
+                  </div>
+              </div>
+              </Link>
+              <Link to="/workout"
+                value="workout"
+                onClick={ (e)=>this.setState({selectedNavbar: e.target.value})}
+                >
+                  <div className={this.state.selectedNavbar=="workout"? "menu-btn-selected btn2":"menu-btn btn2"} >
+                    <div className="menu-btn-icon2">      
                     </div>
                     <div className="menu-btn-text">
-                    Dashboard
+                      Workout
                     </div>
-                </div>
-            </Link>
-            <Link to="/workout">
-                <div className="menu-btn btn2">
-                <div className="menu-btn-icon2">
-                        
-                </div>
-                <div className="menu-btn-text">
-                    Workout
-                </div>
-                </div>
-            </Link>
-            <Link to="/dashboard">
-                <div className="menu-btn btn3">
-                <div className="menu-btn-icon3">
-                </div>
-                <div className="menu-btn-text">
-                    Workout Planner
-                </div>
+                  </div>
+                </Link>
+                <Link to="/dashboard"
+                value="workout-planner"
+                onClick={ (e)=>this.setState({selectedNavbar: e.target.value})}
+                >
+                  <div className={this.state.selectedNavbar=="workout-planner"? "menu-btn-selected btn3":"menu-btn btn3"} >
+                  <div className="menu-btn-icon3">
+                  </div>
+                  <div className="menu-btn-text">
+                      Workout Planner
+                  </div>
                 </div>
             </Link>
             <Link to="/dashboard">
@@ -202,7 +218,7 @@ export default class App extends Component {
               <Route path="/signup" component={RegisterPage} />
               <Route path="/workout" component={WorkoutPage} />
               <Route path="/workout-add" component={WorkoutAddPage} />
-              <Route path="/workout-managment" component={WorkoutManagmentPage} />
+              <Route path="/workout-management" component={WorkoutManagementPage} />
               <Route path="/management" component={ManagementPage} />
             </Switch>
             </div>

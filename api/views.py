@@ -60,8 +60,10 @@ class RegisterUserView(APIView):
         stream = io.BytesIO(request.body)
         data = JSONParser().parse(stream)
         if (email_is_registered(data['email'])):
+            print("if")
             return Response({'User already exists': 'BAD'}, status=status.HTTP_226_IM_USED)
         else:
+            print("else")
             new_salt = create_salt()
             hashed_password = create_pw_hash(data['password'], new_salt)
             new_user = User(fname = data['fname'],
@@ -70,7 +72,9 @@ class RegisterUserView(APIView):
             salt = new_salt,
             pwhash = hashed_password,
             roleid = Role.objects.filter(description = 'Unauthorized')[0])
+            print("roleid")
             new_user.save()
+            print("save")
             self.request.session.create()
             return Response({'User registered': 'OK'}, status=status.HTTP_200_OK)
 
@@ -141,8 +145,9 @@ class CreateWorkoutView(APIView):
             var_name = queryset[0].name
 
             exercise = Exercise.objects.get(name=var_name)
-            print(exercise)
+            print(exercise.name)
             workout.consistsOf.add(exercise)
+            workout.save()
             print(workout)
         return Response({'User registered': 'OK'}, status=status.HTTP_200_OK)
         #return Response({'Bad request': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
@@ -245,7 +250,7 @@ class UpdateWorkoutView(APIView):
             var_name = queryset[0].name
 
             exercise = Exercise.objects.get(name=var_name)
-            print(exercise)
+            print(exercise.name)
             workout_new.consistsOf.add(exercise)
             print(workout_new)
         return Response({'User registered': 'OK'}, status=status.HTTP_200_OK)

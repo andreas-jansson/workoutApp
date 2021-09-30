@@ -41,7 +41,7 @@ export default class WorkoutPage extends Component{
         this.setState({
             mainSelector: 2,
         });
-        this.props.history.push("/workout-managment");
+        this.props.history.push("/workout-management");
 
     }
 

@@ -59,6 +59,12 @@
     padding-top:10px;
 }
 
+.menu-btn-selected{
+    background-color: var(--grayDefault);
+    border:none;
+    color:red;
+}
+
 .btn-signout{
     background: none;
     border:none;
