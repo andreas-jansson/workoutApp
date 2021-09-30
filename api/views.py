@@ -79,6 +79,29 @@ class RegisterUserView(APIView):
             return Response({'User registered': 'OK'}, status=status.HTTP_200_OK)
 
 
+class RegisterCoachView(APIView):
+    def post(self, request, format=None):
+        stream = io.BytesIO(request.body)
+        data = JSONParser().parse(stream)
+        if (email_is_registered(data['email'])):
+            print("if")
+            return Response({'User already exists': 'BAD'}, status=status.HTTP_226_IM_USED)
+        else:
+            print("else")
+            new_salt = create_salt()
+            hashed_password = create_pw_hash(data['password'], new_salt)
+            new_user = User(fname = data['fname'],
+            lname = data['lname'],
+            email = data['email'],
+            salt = new_salt,
+            pwhash = hashed_password,
+            roleid = Role.objects.filter(description = 'Coach')[0])
+            print("roleid")
+            new_user.save()
+            print("save")
+            self.request.session.create()
+            return Response({'User registered': 'OK'}, status=status.HTTP_200_OK)
+
 class LoginUserView(generics.ListAPIView):
     def post(self, request, format=None):
         stream = io.BytesIO(request.body)
