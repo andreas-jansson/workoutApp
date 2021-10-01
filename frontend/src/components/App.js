@@ -65,7 +65,6 @@ export default class App extends Component {
     else if(result.includes('management')==true){
       this.setState({selectedNavbar: 'management'});
     }
-    
   }
 
   /* redirects if session exists */
