@@ -12,6 +12,36 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
     <link href = "https://fonts.googleapis.com/icon?family=Material+Icons" rel = "stylesheet">
+
+      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+      <script type="text/javascript">
+        google.charts.load("current", {packages:["corechart"]});
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
+          var data = google.visualization.arrayToDataTable([
+            ['Volume', 'This week'],
+            ['Chest',     200],
+            ['Legs',      78],
+            ['Bicpes',  25],
+            ['Triceps', 49],
+            ['Abs',    60]
+          ]);
+
+          var options = {
+            title: 'Volume Lifted',
+            pieHole: 0.6,
+            backgroundColor:{ fill:'transparent' },
+            titleTextStyle: { color: '#FFF' },
+            legendTextStyle: { color: '#FFF' },
+
+          };
+
+          var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+          chart.draw(data, options);
+        }
+      </script>
+
+
   </head>
   <body> 
     <div id="main">

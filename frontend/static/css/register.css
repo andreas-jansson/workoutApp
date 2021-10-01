@@ -61,6 +61,15 @@
     align-content: center;
   }
 
+  .reg-password{
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    color:rgb(255, 255, 255);
+    background: rgb(182, 127, 7);
+    font-weight: bold;
+    font-size: 20px;
+    padding-bottom: 5px;
+    padding-top: 10px;
+  }
   .signup-text{
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
     color:rgb(255, 255, 255);
@@ -110,7 +119,7 @@
 }
 
 svg.signup {
-  position: absolute;
+  position: relative;
   left: 10%;
   top: 0;
   fill: none;

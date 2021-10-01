@@ -23,8 +23,8 @@
 
 .wp-section:hover{
     background:var(--grayDefault);
+    transition: all 50ms linear 0.05s;
 }
-
 
 .wp-btn{
     font-size: 25px;

@@ -21,17 +21,30 @@ export default class DashboardPage extends Component {
     };
   }
 
+
   DashboardPage() {
     return (
       /* main container*/
       <div className="db-container">
         <div className="db-section1">
-          <div className="db-section1-img" />
-        </div>
+          <div className="db-section1-box1">
+          <p className="db-section1-big-text">Wednesday</p>
+            <p className="db-section1-small-text">Next Workout</p>
+          </div>
+          <div className="db-section1-box2">
+          <p className="db-section1-big-text">Squats 140 Kg</p>
+          <p className="db-section1-small-text">Latest Personal Record</p>
+          </div>
+          <div className="db-section1-box3">
+            <p className="db-section1-big-text">Jennifer</p>
+            <p className="db-section1-small-text">Personal Coach</p>
+          </div>
+          </div>
         <div className="db-container2">
           <div className="db-section2">
           </div>
           <div className="db-section3">
+          <div id="donutchart"></div>
           </div>
         </div>
       </div>

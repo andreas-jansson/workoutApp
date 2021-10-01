@@ -190,7 +190,8 @@ export default class WorkoutManagementPage extends Component{
                     elemItem.value = exerciseName;
 
                     var elemTextContainer = document.createElement('div');
-                    elemTextContainer.className = "wmp-exercise-elemTextContainer"
+                    elemTextContainer.className = "wmp-exercise-elemTextContainer";
+                    elemTextContainer.value = exerciseName;
                     var elemText = document.createTextNode(exerciseName);
                     elemText.value = exerciseName
 

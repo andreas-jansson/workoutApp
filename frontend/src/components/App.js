@@ -16,6 +16,9 @@ import WorkoutAddPage from "./WorkoutAddPage";
 import WorkoutManagementPage from "./WorkoutManagementPage";
 import ReactDOM from 'react-dom';
 import ManagementPage from "./ManagementPage";
+import WorkoutPlannerPage from "./WorkoutPlannerPage";
+import WorkoutPlannerViewPage from "./WorkoutPlannerViewPage";
+import WorkoutPlannerManagePage from "./WorkoutPlannerManagePage";
 
 
 export default class App extends Component {
@@ -34,7 +37,36 @@ export default class App extends Component {
   /* runs on page load*/
   componentDidMount = () => {
     this.sessionExist();
+    this.selectedNavbarController();
   };
+
+
+  selectedNavbarController =()=>{
+    console.log(window.location.href);
+    const urlPath = window.location.href;
+    const result = urlPath.toString().split('/').pop();
+    this.setState({selectedNavbar: result});
+
+    if(result.includes('dashboard')==true){
+      this.setState({selectedNavbar: 'dashboard'});
+    }
+    else if(result.includes('workout-planner')==true){
+      this.setState({selectedNavbar: 'workout-planner'});
+    }
+    else if(result.includes('workout')==true){
+      this.setState({selectedNavbar: 'workout'});
+    }
+    else if(result.includes('active')==true){
+      this.setState({selectedNavbar: 'active'});
+    }
+    else if(result.includes('social')==true){
+      this.setState({selectedNavbar: 'social'});
+    }
+    else if(result.includes('management')==true){
+      this.setState({selectedNavbar: 'management'});
+    }
+    
+  }
 
   /* redirects if session exists */
   sessionExist = () => {
@@ -110,68 +142,84 @@ export default class App extends Component {
             <p id="menu-user-info">Role: </p><p id="menu-user-info-var">{ role }</p>
             </p>
           </div>
+
           <Link to="/dashboard"
-           value="dashboard"
-           onClick={ (e)=>this.setState({selectedNavbar: e.target.value})}>
-              <div className={this.state.selectedNavbar == "dashboard"? "menu-btn-selected btn1":"menu-btn btn1"} >
+           onClick={ (e)=>{this.setState({selectedNavbar: "dashboard"})}}>
+              <div className="menu-btn btn1" >
                   <div className="menu-btn-icon1">
                       
                   </div>
                   <div className="menu-btn-text">
                   Dashboard
                   </div>
+                  <div className={this.state.selectedNavbar=="dashboard"? "menu-btn-dot":"menu-btn-no-dot"}>
+                </div>
               </div>
               </Link>
               <Link to="/workout"
-                value="workout"
-                onClick={ (e)=>this.setState({selectedNavbar: e.target.value})}
+                onClick={ ()=>{this.setState({selectedNavbar: "workout"})}}
                 >
-                  <div className={this.state.selectedNavbar=="workout"? "menu-btn-selected btn2":"menu-btn btn2"} >
+                  <div className="menu-btn btn2">
                     <div className="menu-btn-icon2">      
                     </div>
                     <div className="menu-btn-text">
                       Workout
                     </div>
+                    <div className={this.state.selectedNavbar=="workout"? "menu-btn-dot":"menu-btn-no-dot"}>
+                </div>
                   </div>
                 </Link>
-                <Link to="/dashboard"
-                value="workout-planner"
-                onClick={ (e)=>this.setState({selectedNavbar: e.target.value})}
+                <Link to="/workout-planner"
+                onClick={ ()=>{this.setState({selectedNavbar: "workout-planner"})}}
                 >
-                  <div className={this.state.selectedNavbar=="workout-planner"? "menu-btn-selected btn3":"menu-btn btn3"} >
+                  <div className="menu-btn btn3">
                   <div className="menu-btn-icon3">
                   </div>
                   <div className="menu-btn-text">
                       Workout Planner
                   </div>
+                  <div className={this.state.selectedNavbar=="workout-planner"? "menu-btn-dot":"menu-btn-no-dot"}>
+                </div>
                 </div>
             </Link>
-            <Link to="/dashboard">
-                <div className="menu-btn btn4">
+            <Link to="/dashboard"
+              onClick={ ()=>{this.setState({selectedNavbar: "active-workout"})}}
+              >
+                <div className="menu-btn btn4" >
                 <div className="menu-btn-icon4">
                 </div>
                 <div className="menu-btn-text">
                     Active Workout
                 </div>
+                <div className={this.state.selectedNavbar=="active-workout"? "menu-btn-dot":"menu-btn-no-dot"}>
+                </div>
                 </div>
             </Link>
-            <Link to="/dashboard">
-                <div className="menu-btn btn5">
+            <Link to="/dashboard"
+              onClick={ ()=>{this.setState({selectedNavbar: "social"})}}
+              >
+            <div className="menu-btn btn5" >
                 <div className="menu-btn-icon5">
                     </div>
                     <div className="menu-btn-text">
                         Instagram 2.0
                     </div>
+                    <div className={this.state.selectedNavbar=="social"? "menu-btn-dot":"menu-btn-no-dot"}>
+                </div>
                 </div>
             </Link>
             { this.state.role_id > 2? 
-                <Link to="/management">
-                    <div className="menu-btn btn6">
+                 <Link to="/management"
+                 onClick={ ()=>{this.setState({selectedNavbar: "management"})}}
+                 >
+            <div className="menu-btn btn6" >
                         <div className="menu-btn-icon6">
                             </div>
                             <div className="menu-btn-text">
                                 Management
                             </div>
+                            <div className={this.state.selectedNavbar=="management"? "menu-btn-dot":"menu-btn-no-dot"}>
+                          </div>
                         </div>
                     </Link>
                 :null }  
@@ -220,6 +268,10 @@ export default class App extends Component {
               <Route path="/workout-add" component={WorkoutAddPage} />
               <Route path="/workout-management" component={WorkoutManagementPage} />
               <Route path="/management" component={ManagementPage} />
+              <Route path="/workout-planner" component={WorkoutPlannerPage} />
+              <Route path="/workout-planner-view" component={WorkoutPlannerViewPage} />
+              <Route path="/workout-planner-manage" component={WorkoutPlannerManagePage} />
+
             </Switch>
             </div>
           </Router>

@@ -79,6 +79,7 @@ export default class WorkoutAddPage extends Component{
 
         var elemTextContainer = document.createElement('div');
         elemTextContainer.className = "wap-exercise-added-elemTextContainer";
+        elemTextContainer.value=e.target.value;
         var elemText = document.createTextNode(e.target.value);
 
         const elemMinus = document.createElement('Button');
@@ -208,7 +209,8 @@ export default class WorkoutAddPage extends Component{
                     elemItem.value = exerciseName;
 
                     var elemTextContainer = document.createElement('div');
-                    elemTextContainer.className = "wap-exercise-elemTextContainer"
+                    elemTextContainer.className = "wap-exercise-elemTextContainer";
+                    elemTextContainer.value = exerciseName;
                     var elemText = document.createTextNode(exerciseName);
                     elemText.value = exerciseName
 

@@ -19,12 +19,41 @@
     padding-top: 1.95%;
 
 }
-.db-section1-img{
-    background: url("../images/dashboard/chart.png");
-    background-size: contain;
-    height: 200px;
-    width: 200px;
+
+
+.db-section1-big-text{
+font-size: 32px;
+font-family: 'Anton', sans-serif;
+font-weight: bolder;
 }
+
+.db-section1-small-text{
+    font-size: 18px;
+
+}
+
+.db-section1-box1{
+    color:rgb(189, 3, 189);
+    width:33%;
+    text-align: center;
+    margin-top: 5%;
+}
+
+.db-section1-box2{
+    color:greenyellow;
+    width:33%;
+    text-align: center;
+    margin-top: 5%;
+}
+
+.db-section1-box3{
+    color:red;
+    width:33%;
+    text-align: center;
+    margin-top: 5%;
+
+}
+
 .db-container2{
     display: flex;
     justify-content: space-evenly;
@@ -50,3 +79,9 @@
 }
 
 
+/**** google chart ****/
+
+#donutchart{
+    margin-top: 15%;
+    margin-left:5%;
+}

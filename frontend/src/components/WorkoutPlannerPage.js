@@ -20,9 +20,35 @@ export default class WorkoutPlannerPage extends Component {
     };
   }
 
+  handleMainOption = (e) =>{
+    if(e.target.value == "manage"){
+      this.props.history.push("/workout-planner-manage");
+    }
+    else{
+      this.props.history.push("/workout-planner-view");
+    }
+}
 
 
+renderPlannerFlow(){
+  return(
+    <div className="wpp-container">
+      <button className="wpp-navigation nav-box1" value="manage" onClick={ this.handleMainOption }>
+        Manage Schedule
+        <div className="wpp-lineStyle" />
+      </button>
+      <button className="wpp-navigation nav-box2" value="view" onClick={ this.handleMainOption }>
+        View Schedule
+        <div className="wpp-lineStyle" />
+      </button>
+    </div>
+  );
+
+}
+
+
+//id scheduledDate user_id workout_id
   render() {
-    return(<></>);
+    return(this.renderPlannerFlow());
   }
 }
