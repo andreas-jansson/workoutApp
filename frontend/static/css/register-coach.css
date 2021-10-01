@@ -1,0 +1,63 @@
+/****** Coach creation Page ******/
+
+.cap-container{
+  width:100%;
+  height:100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--grayDefault);
+}
+
+.cap-section{
+  height: 40%;
+  margin: 0% 18%;
+  border-radius: 5px;
+  box-shadow: 2px 10px 20px 2px rgba(14, 14, 5, 0.8);
+  background: rgb(26, 24, 24);
+  display: flex;
+  justify-content: space-evenly;
+  padding-top: 1.95%;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  color:var(--orangeGradiant1);
+  font-weight: bold;
+  font-size: 20px;
+  padding-bottom: 5px;
+  padding-top: 50px;
+}
+
+.cap-create-btn{
+  border-radius:10px;
+  height: 40px;
+  margin-left: 27.445px; /* Ignorera det här tack :) */
+  font-size: 24px;
+  background: none;
+  border:2px var(--orangeGradiant1) solid;
+  color:var(--orangeGradiant1)
+}
+
+.cap-signup-text{
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  color:black;
+  background-color: lightgray;
+  font-weight: bold;
+  font-size: 20px;
+  padding-bottom: 5px;
+  padding-top: 10px;
+}
+
+.cap-select-type{
+  background: none;
+  border:2px rgb(56, 55, 55) solid;
+  width:90px;
+  height: 50px;
+  font-size: 18px;
+  color:var(--orangeGradiant1);
+  background-color: rgb(26, 24, 24);
+  border-radius: 10px;
+  margin-left: 72.5px;
+  margin-top: 5px;
+}
+
+.cap-text-spacing{
+  margin-top: 7px;
+}

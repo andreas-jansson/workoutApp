@@ -1,24 +1,10 @@
 import React, { Component } from "react";
-import { render } from "react-dom";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  Redirect,
-} from "react-router-dom";
-import StartPage from "./StartPage";
-import DashboardPage from "./DashboardPage";
-import LoginPage from "./LoginPage";
-import RegisterPage from "./RegisterPage";
-import WorkoutPage from "./WorkoutPage";
-import WorkoutAddPage from "./WorkoutAddPage";
-import WorkoutManagementPage from "./WorkoutManagementPage";
-import ReactDOM from "react-dom";
 import ClientManagementPage from "./ClientManagementPage";
 import CreateAccountsPage from "./CreateAccountsPage";
 import ManageAccountsPage from "./ManageAccountsPage";
 import PendingAccountsPage from "./PendingAccountsPage";
+import '../../static/css/management-page.css';
+
 export default class ManagementPage extends Component {
   static defaultProps = {};
 
@@ -39,35 +25,37 @@ export default class ManagementPage extends Component {
       //TODO:
       //Buttons should be rendered based on which role the user is logged in as
     return (
-      <div>
+      <div className="ma-container">
+        <div className="ma-header">
         <button
           value="pending_accounts"
           onClick={this.handleNavigationState}
-          className="wap-create-workout-btn"
+          className="ma-create-workout-btn"
         >
           Pending Accounts
         </button>
         <button
           value="manage_accounts"
           onClick={this.handleNavigationState}
-          className="wap-create-workout-btn"
+          className="ma-create-workout-btn"
         >
           Manage Accounts
         </button>
         <button
           value="create_accounts"
           onClick={this.handleNavigationState}
-          className="wap-create-workout-btn"
+          className="ma-create-workout-btn"
         >
           Create Account
         </button>
         <button
           value="client_management"
           onClick={this.handleNavigationState}
-          className="wap-create-workout-btn"
+          className="ma-create-workout-btn"
         >
           Client Management
         </button>
+        </div>
       </div>
     );
   }

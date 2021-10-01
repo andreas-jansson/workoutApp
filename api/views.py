@@ -9,7 +9,7 @@ from rest_framework import response
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
-from .serializers import UserSerializer, ExerciseSerializer, WorkoutSerializer
+from .serializers import UserSerializer, ExerciseSerializer, WorkoutSerializer, UserSerializerPending
 from .models import Role, User, Exercise, ExerciseType, Workout
 from .hashUtils import compare_pw_hash, create_pw_hash, create_salt
 from .userUtils import email_is_registered
@@ -72,6 +72,30 @@ class RegisterUserView(APIView):
             salt = new_salt,
             pwhash = hashed_password,
             roleid = Role.objects.filter(description = 'Unauthorized')[0])
+            print("roleid")
+            new_user.save()
+            print("save")
+            self.request.session.create()
+            return Response({'User registered': 'OK'}, status=status.HTTP_200_OK)
+
+
+class RegisterCoachView(APIView):
+    def post(self, request, format=None):
+        stream = io.BytesIO(request.body)
+        data = JSONParser().parse(stream)
+        if (email_is_registered(data['email'])):
+            print("if")
+            return Response({'User already exists': 'BAD'}, status=status.HTTP_226_IM_USED)
+        else:
+            print("else")
+            new_salt = create_salt()
+            hashed_password = create_pw_hash(data['password'], new_salt)
+            new_user = User(fname = data['fname'],
+            lname = data['lname'],
+            email = data['email'],
+            salt = new_salt,
+            pwhash = hashed_password,
+            roleid = Role.objects.filter(description = data['role'])[0]) # Role.objects.filter(description = 'Coach')[0] ,,,role
             print("roleid")
             new_user.save()
             print("save")
@@ -273,4 +297,26 @@ class DeleteWorkoutView(APIView):
         workout.save()     
         return Response({'Workout Deleted': 'OK'}, status=status.HTTP_200_OK)
 
-     
+
+class GetPendingUsers(APIView):
+    def get(self, request, format=None):
+        user_list = User.objects.filter(roleid = Role.objects.filter(description = 'Unauthorized')[0])
+        serialized_users = UserSerializerPending(user_list, many=True).data
+        print(serialized_users)
+        return Response(serialized_users, status=status.HTTP_200_OK)
+
+
+class DenyPendingUsers(APIView):
+    def post(self, request, format=None):
+        user_id = request.data['id']
+        User.objects.filter(id = user_id).delete()
+        return Response({'User denied': 'OK'}, status=status.HTTP_200_OK)   
+
+
+class ApprovePendingUsers(APIView):
+    def post(self, request, format=None):
+        user_id = request.data['id']
+        approvedUser = User.objects.get(id = user_id)
+        approvedUser.roleid = Role.objects.filter(description = 'Client')[0]
+        approvedUser.save()
+        return Response({'User approved': 'OK'}, status=status.HTTP_200_OK)
