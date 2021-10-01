@@ -198,7 +198,6 @@ export default class RegisterPage extends Component {
                     type="password"
                     className="signup-text"
                     name="password"
-                    className="reg-password"
                     onChange={this.handleChange}
                     noValidate
                   />

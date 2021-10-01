@@ -59,10 +59,19 @@
     padding-top:10px;
 }
 
-.menu-btn-selected{
-    background-color: var(--grayDefault);
-    border:none;
-    color:red;
+
+.menu-btn-dot{
+    width:10px;
+    height: 10px;
+    border-radius:5px;
+    background:rgb(226, 226, 226);
+    float:right;
+}
+
+.menu-btn-no-dot{
+    width:10px;
+    height: 10px;
+    border-radius:5px;
 }
 
 .btn-signout{
@@ -79,6 +88,7 @@
 
 .menu-btn-text{
     padding-left:10px;
+    width:70%;
 }
 
 .menu-btn-icon1{
