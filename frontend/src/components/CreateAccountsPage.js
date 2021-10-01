@@ -27,6 +27,7 @@ export default class CreateAccountsPage extends Component {
       email: null,
       password: null,
       confirmed_password: null,
+      role: 'client',
       errors: {
         fname: "",
         lname: "",
@@ -71,10 +72,12 @@ export default class CreateAccountsPage extends Component {
   };
 
   sendDetailsToServer = () => {
+    console.log(this.state.role);
     let fname = this.state.fname;
     let lname = this.state.lname;
     let email = this.state.email;
     let password = this.state.password;
+    let role = this.state.role;
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -83,12 +86,14 @@ export default class CreateAccountsPage extends Component {
         lname,
         email,
         password,
+        role,
       }),
     };
     console.log(requestOptions.body);
     fetch("/api/register-coach", requestOptions).then((response) => {
       if (response.ok) {
-        window.location.href = "/";
+        console.log("All is good in the hood")
+        window.location.href = "/management";
       } else {
         console.log("Failed!");
       }
@@ -101,7 +106,7 @@ export default class CreateAccountsPage extends Component {
       validateForm(this.state.errors) &&
       this.state.password === this.state.confirmed_password
     ) {
-      console.info("Valid Form");
+      console.info("Passwords match");
       this.sendDetailsToServer();
     } else {
       console.error("Invalid Form");
@@ -113,12 +118,12 @@ export default class CreateAccountsPage extends Component {
   render() {
     const { errors } = this.state;
     return (
-      <div className="cap-signup-section cap-signup-container">
-        <div className="cap-box-centering">
-          <div className="cap-signup-box cap-box-centering">
-            <div align="center" className="cap-signup-padding">
+      <div className="cap-container">
+        <div className="cap-section">
+          <div>
+            <div>
               <form onSubmit={this.handleSubmit} noValidate>
-                <div align="left" className="fname">
+                <div>
                   <i class="material-icons">account_circle</i>
                   <label htmlFor="fname">First Name</label>
                   <br />
@@ -126,7 +131,6 @@ export default class CreateAccountsPage extends Component {
                     type="text-signup"
                     className="cap-signup-text"
                     name="fname"
-                    placeholder="First name"
                     onChange={this.handleChange}
                     noValidate
                   />
@@ -135,7 +139,7 @@ export default class CreateAccountsPage extends Component {
                   )}
                 </div>
 
-                <div align="left" className="lname">
+                <div align="left" className="lname" className='cap-text-spacing'>
                   <i class="material-icons">account_circle</i>
                   <label htmlFor="lname">Last Name</label>
                   <br />
@@ -144,7 +148,6 @@ export default class CreateAccountsPage extends Component {
                     type="text-signup"
                     className="cap-signup-text"
                     name="lname"
-                    placeholder="Last name"
                     onChange={this.handleChange}
                     noValidate
                   />
@@ -153,7 +156,7 @@ export default class CreateAccountsPage extends Component {
                   )}
                 </div>
 
-                <div align="left" className="email">
+                <div align="left" className="email" className='cap-text-spacing'>
                   <i class="material-icons">contact_mail</i>
                   <label htmlFor="email">Email</label>
                   <br />
@@ -161,7 +164,6 @@ export default class CreateAccountsPage extends Component {
                     type="email-signup"
                     className="cap-signup-text"
                     name="email"
-                    placeholder="Email"
                     onChange={this.handleChange}
                     noValidate
                   />
@@ -170,7 +172,7 @@ export default class CreateAccountsPage extends Component {
                   )}
                 </div>
 
-                <div align="left" className="password">
+                <div align="left" className="password" className='cap-text-spacing'>
                   <i class="material-icons">vpn_key</i>
                   <label htmlFor="password">Password</label>
                   <br/>
@@ -189,14 +191,14 @@ export default class CreateAccountsPage extends Component {
 
                 <div className="info">
                 </div>
-                <div align="left" className="confirmed_password">
+                <div align="left" className="confirmed_password" className='cap-text-spacing'>
                   <i class="material-icons">repeat</i>
                   <label htmlFor="confirmed_password">Confirm Password</label>
                   <br/>
 
                   <input
-                    className="cap-signup-text"
                     type="password"
+                    className="cap-signup-text"
                     name="confirmed_password"
                     onChange={this.handleChange}
                     noValidate
@@ -205,32 +207,23 @@ export default class CreateAccountsPage extends Component {
                       <span className="error">{errors.confirmed_password}</span>
                       )}
                 </div>
-                      <span class="small-signup" > Password must be eight characters in length.</span>
+
+                <div className='cap-text-spacing'>
+                    <label>Choose user role: </label>
+                    <br/>
+                    <select defaultValue={this.state.role} onChange={(e)=>{ this.setState({ role : e.target.value })}} className='cap-select-type'>
+                      <option value="Client">Client</option>
+                      <option value="Coach">Coach</option>
+                    </select>
+                </div>
+
                 <div class="container">
                     <br/> 
                   <div class="center">
-                    <button class="cap-btn-signup-button" type="submit">
-                      <svg 
-                        width="180px"
-                        height="60px"
-                        viewBox="0 0 180 60"
-                        class="signup"
-                      >
-                        <polyline
-                          points="179,1 179,59 1,59 1,1 179,1"
-                          class="bg-line"
-                        />
-                        <polyline
-                          points="179,1 179,59 1,59 1,1 179,1"
-                          class="hl-line"
-                        />
-                      </svg>
-                      <span>Sign Up</span>
+                    <button class="cap-create-btn" type="submit" align="center">
+                      <span>Create Account</span>
                     </button>
                     <br /> <br />
-                    <div className="mt-3">
-                      <a href="/login">Already have an account? </a>
-                    </div>
                     <br/>
                   </div>
                 </div>

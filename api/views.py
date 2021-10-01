@@ -9,7 +9,7 @@ from rest_framework import response
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
-from .serializers import UserSerializer, ExerciseSerializer, WorkoutSerializer
+from .serializers import RoleSerializer, UserSerializer, ExerciseSerializer, WorkoutSerializer
 from .models import Role, User, Exercise, ExerciseType, Workout
 from .hashUtils import compare_pw_hash, create_pw_hash, create_salt
 from .userUtils import email_is_registered
@@ -95,12 +95,13 @@ class RegisterCoachView(APIView):
             email = data['email'],
             salt = new_salt,
             pwhash = hashed_password,
-            roleid = Role.objects.filter(description = 'Coach')[0])
+            roleid = Role.objects.filter(description = data['role'])[0]) # Role.objects.filter(description = 'Coach')[0] ,,,role
             print("roleid")
             new_user.save()
             print("save")
             self.request.session.create()
             return Response({'User registered': 'OK'}, status=status.HTTP_200_OK)
+
 
 class LoginUserView(generics.ListAPIView):
     def post(self, request, format=None):
