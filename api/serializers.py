@@ -42,3 +42,11 @@ class LogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Log
         fields = '__all__'
+
+
+#created this in case of braking the original UserSerializer
+#beacuse parameter is ModelSerializer instead of Serializer on this one
+class UserSerializerPending(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
