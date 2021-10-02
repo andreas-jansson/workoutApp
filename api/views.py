@@ -9,12 +9,16 @@ from rest_framework import response
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
-from .serializers import UserSerializer, ExerciseSerializer, WorkoutSerializer, UserSerializerPending
-from .models import Role, User, Exercise, ExerciseType, Workout
+from .serializers import UserSerializer, ExerciseSerializer, WorkoutSerializer, UserSerializerPending, RoleSerializer, scheduledWorkoutSerializer
+from .models import Role, User, Exercise, ExerciseType, Workout, scheduledWorkout
 from .hashUtils import compare_pw_hash, create_pw_hash, create_salt
 from .userUtils import email_is_registered
 import io
 from rest_framework.parsers import JSONParser
+from datetime import date
+from datetime import datetime as dt
+import datetime
+import calendar
 # Create your views here.
 
 
@@ -269,7 +273,8 @@ class UpdateWorkoutView(APIView):
 
         #Find all exercises that the user picked. Finds the specific exercise object and creates mtm with workout
         for exercise in request.data['exercises_list']:
-            queryset = Exercise.objects.raw('select e.id, e.name, e.type_id from api_exercise as e where name = \'{}\' limit 1'.format(exercise))
+            queryset = Exercise.objects.raw('select e.id, e.name, e.type_id from api_exercise as ' 
+            +'e where name = \'{}\' limit 1'.format(exercise))
             #var_type = queryset[0].type_id
             var_name = queryset[0].name
 
@@ -320,3 +325,159 @@ class ApprovePendingUsers(APIView):
         approvedUser.roleid = Role.objects.filter(description = 'Client')[0]
         approvedUser.save()
         return Response({'User approved': 'OK'}, status=status.HTTP_200_OK)
+
+
+class CreatePlannedWorkoutView(APIView):
+    def post(self, request, format=None):
+        print("CreatePlannedWorkout Triggered!")
+        monday = bool(request.data['mon'])
+        tuesday = bool(request.data['tue'])
+        wednesday = bool(request.data['wed'])
+        thursday = bool(request.data['thu'])
+        friday = bool(request.data['fri'])
+        saturday = bool(request.data['sat'])
+        sunday = bool(request.data['sun'])
+        dateStart = request.data['dateStart']
+        dateEnd = request.data['dateEnd']
+        restWeek = request.data['restWeek']
+        if(restWeek ==''): #just in case
+            restWeek = 0
+        else:
+            restWeek = int(restWeek)
+        
+        name = request.data['workoutName']
+
+
+        start_yyyy=int(dateStart[0:4])
+        start_mm=int(dateStart[5:7])
+        start_dd=int(dateStart[8:])
+
+        end_yyyy=int(dateEnd[0:4])
+        end_mm=int(dateEnd[5:7])
+        end_dd=int(dateEnd[8:])
+
+        start = date(start_yyyy, start_mm, start_dd)
+        end = date(end_yyyy, end_mm, end_dd)
+
+        delta = end - start
+
+        start_week = date(start_yyyy, start_mm, start_dd).isocalendar()[1]
+        print(start_week)
+        week = start_week
+
+        #returns rest_weeks_list
+        rest_weeks_list = []
+        flag = True
+        counter = 1
+        for days in range(int(delta.days)+1):
+            current = start + datetime.timedelta(days=days)
+            #print("current: " + str(current))
+            current_yyyy = current.year
+            current_mm = current.month
+            current_dd = current.day
+            current_week = datetime.date(current_yyyy, current_mm, current_dd).isocalendar()[1]
+            #print("current week: " + str(current_week))
+
+            if(week == start_week and flag == True and restWeek >= 2):
+                flag = False
+                counter = counter + 1 
+                print(str(counter) + " " + str(current) + " week: " + str(week))
+
+            
+            if (week != current_week):
+                week = current_week
+                print("comparing counter: " + str(counter) + " == " + str(restWeek) + " Rest Week")
+                if(counter == restWeek):
+                    counter = 1
+                    print(str(counter) + " " + str(current) + " week: " + str(week) + " Rest Week")
+                    rest_weeks_list.append(week)
+                else:
+                    print(str(counter) + " " + str(current) + " week: " + str(week))
+                    counter = counter + 1
+
+
+
+        #find correct workout id
+        query_workout = Exercise.objects.raw('select w.id, w.description from api_workout as w '
+        +'inner join api_user_hasWorkouts as uhw '
+        +'on w.id = uhw.workout_id inner join api_user as u '
+        +'on uhw.user_id = u.id where u.id = \'{}\' and w.name = \'{}\' and w.active = 1'.format(self.request.session.get('user_id') , name))
+        #print(query_workout[0].id)
+
+        print(rest_weeks_list)
+        print(delta.days)
+        for days in range(int(delta.days+1)):
+            current = start + datetime.timedelta(days=days)
+            current_yyyy = current.year
+            current_mm = current.month
+            current_dd = current.day
+            current_week = datetime.date(current_yyyy, current_mm, current_dd).isocalendar()[1]
+            if(current_week not in rest_weeks_list):
+                if(current.strftime("%A") == "Monday" and monday == True):
+                    print(str(current.strftime("%A")) + " " + str(current) + " adding" )
+                    scheduled = scheduledWorkout(scheduledDate=current, user_id=self.request.session.get('user_id'), workout_id=query_workout[0].id)
+                    scheduled.save()
+                elif(current.strftime("%A") == "Tuesday" and tuesday == True):
+                    scheduled = scheduledWorkout(scheduledDate=current, user_id=self.request.session.get('user_id'), workout_id=query_workout[0].id)
+                    scheduled.save()
+                    print(str(current.strftime("%A")) + " " + str(current) + " adding" )
+                elif(current.strftime("%A") == "Wednesday" and wednesday == True):
+                    scheduled = scheduledWorkout(scheduledDate=current, user_id=self.request.session.get('user_id'), workout_id=query_workout[0].id)
+                    scheduled.save()
+                    print(str(current.strftime("%A")) + " " + str(current) + " adding" )
+                elif(current.strftime("%A") == "Thursday" and thursday == True):
+                    scheduled = scheduledWorkout(scheduledDate=current, user_id=self.request.session.get('user_id'), workout_id=query_workout[0].id)
+                    scheduled.save()
+                    print(str(current.strftime("%A")) + " " + str(current) + " adding" )
+                elif(current.strftime("%A") == "Friday" and friday == True):
+                    scheduled = scheduledWorkout(scheduledDate=current, user_id=self.request.session.get('user_id'), workout_id=query_workout[0].id)
+                    scheduled.save()
+                    print(str(current.strftime("%A")) + " " + str(current) + " adding" )
+                elif(current.strftime("%A") == "Saturday" and saturday == True):
+                    scheduled = scheduledWorkout(scheduledDate=current, user_id=self.request.session.get('user_id'), workout_id=query_workout[0].id)
+                    scheduled.save()
+                    print(str(current.strftime("%A")) + " " + str(current) + " adding" )
+                elif(current.strftime("%A") == "Sunday" and sunday == True):
+                    scheduled = scheduledWorkout(scheduledDate=current, user_id=self.request.session.get('user_id'), workout_id=query_workout[0].id)
+                    scheduled.save()
+                    print(str(current.strftime("%A")) + " " + str(current) + " adding" )
+            
+
+        #hitta rätt workout id för denna kund baserat på userid och workout namn
+        #beräkna vilken vecka som går bort baserat på restweek
+
+        #beräkna antal dagar mellan start och slutdatum
+        #loopa igenom alla dagar
+            #kolla om veckan är skippveckan
+                #kolla datument för varje dag och jämför om vår dag(mon,tue etc) är true
+                    #om true så sparas datum, workout id och user id 
+        
+        return Response({'User approved': 'OK'}, status=status.HTTP_200_OK)
+
+
+class GetScheduledWorkoutsView(APIView):
+    def get(self, request, format=None):
+        print("******GetScheduledWorkoutsView Triggered!****")
+        first_day_of_month = str(dt.today().replace(day=1))
+        print(first_day_of_month[:10])
+
+        yyyy = int(first_day_of_month[0:4])
+        mm = int(first_day_of_month[5:7])
+        print(yyyy)
+        print(mm)
+        days_in_month = calendar.monthrange(yyyy, mm)[1]
+        last_day_of_month = str(dt.today().replace(day=days_in_month))
+        print(last_day_of_month)
+
+
+
+        queryset = scheduledWorkout.objects.raw('select * from api_scheduledworkout '
+        +'where user_id = \'{}\' and scheduledDate >= \'{}\' and scheduledDate <= \'{}\' order by scheduledDate'.format(self.request.session.get('user_id'), first_day_of_month, last_day_of_month))
+        if len(queryset)>0:
+            data = scheduledWorkoutSerializer(queryset, many=True).data
+            print(data)                    
+            return Response(data, status=status.HTTP_200_OK)
+        return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
+
+
+    

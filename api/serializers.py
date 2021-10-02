@@ -2,10 +2,10 @@ from rest_framework import serializers
 from .models import Role, ExerciseType, Exercise, Workout, \
     User, scheduledWorkout, Log 
 
-class UserSerializer(serializers.Serializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'fname', 'lname', 'email', 'pwhash', 'salt', 'roleid', 'created')
+        fields = '__all__'
 
 
 class RoleSerializer(serializers.ModelSerializer):

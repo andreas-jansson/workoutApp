@@ -19,9 +19,7 @@ export default class WorkoutPlannerViewPage extends Component {
 
     };
   }
-
-
-
+  
 
 renderPlannerView(){
   return(
