@@ -1,24 +1,39 @@
 from django.urls import path
-from .views import LoginUserView, UserView, SessionExistView, RegisterUserView, RegisterCoachView \
+from .views import DeleteUserView, LoginUserView, UserView, SessionExistView, RegisterUserView, RegisterCoachView \
     , GetExercisesView, CreateWorkoutView, SignOutView, CreateExerciseView, GetPendingUsers \
     , GetWorkoutView, GetWorkoutExercisesView,UpdateWorkoutView, DeleteWorkoutView, DenyPendingUsers \
-    , ApprovePendingUsers
+    , ApprovePendingUsers, GetUserView, UpdateUserView, DeleteUserView
 
 urlpatterns = [
+
+    ##     Initalize      ##
     path('', UserView.as_view()),
+
+    ##      User          ##
+    path('sign-out', SignOutView.as_view()),
+    path('login-user', LoginUserView.as_view()),
     path('session-exist', SessionExistView.as_view()),
     path('register-user', RegisterUserView.as_view()),
     path('register-coach', RegisterCoachView.as_view()),
-    path('login-user', LoginUserView.as_view()),
+
+    ##      Exercise       ##
     path('get-exercises', GetExercisesView.as_view()),
-    path('create-workout', CreateWorkoutView.as_view()),
-    path('sign-out', SignOutView.as_view()),
     path('create-exercise', CreateExerciseView.as_view()),
+
+    ##      Workout        ##
     path('get-workouts', GetWorkoutView.as_view()),
-    path('get-workout-exercises', GetWorkoutExercisesView.as_view()),
+    path('create-workout', CreateWorkoutView.as_view()),
     path('update-workout', UpdateWorkoutView.as_view()),
     path('delete-workout', DeleteWorkoutView.as_view()),
-    path('get-pending-users', GetPendingUsers.as_view()),
+    path('get-workout-exercises', GetWorkoutExercisesView.as_view()),
+
+    ##     Pending User    ## 
     path('deny-user', DenyPendingUsers.as_view()),
     path('approve-user', ApprovePendingUsers.as_view()),
+    path('get-pending-users', GetPendingUsers.as_view()),
+
+    ##     Management      ##
+    path('get-user', GetUserView.as_view()),
+    path('update-user', UpdateUserView.as_view()),
+    path('delete-user', DeleteUserView.as_view()),
 ]

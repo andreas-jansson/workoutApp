@@ -320,3 +320,50 @@ class ApprovePendingUsers(APIView):
         approvedUser.roleid = Role.objects.filter(description = 'Client')[0]
         approvedUser.save()
         return Response({'User approved': 'OK'}, status=status.HTTP_200_OK)
+
+
+########### USER MANAGEMENT [TABLE]  #################################
+class GetUserView(APIView):
+    def get(self, request, format=None):
+        print("GetUserView Triggered!")
+        queryset = User.objects.raw('select * from api_user')
+
+        #for i in range(len(queryset)):
+            #print('\nID:',queryset[i].id,'\nFname:',queryset[i].fname,'\nLname:',queryset[i].lname,'\nEmail:',queryset[i].email,'\nCreated:',queryset[i].created,'\nWorkouts?:',queryset[i].hasWorkouts,'\n\n')
+            #print(queryset[i])
+        
+        if len(queryset)>0:
+            data = UserSerializer(queryset, many=True).data
+            return Response(data, status=status.HTTP_200_OK) 
+        return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
+
+class UpdateUserView(APIView):
+    
+    def post(self, request, format=None):
+        print("UpdateUserView Triggered!")
+
+        #finds the ID of the modifed User
+        query = User.objects.raw('select * from api_user where id= \'{p}\'')
+
+        print(query[0].id)
+
+        #updates old User to inactive
+        user = User.objects.get(id=query[0].id)
+        user.active=0
+        user.save()
+
+        user_new = User(roleid=roleid, id=id, fname=fname, lname=lname, email=email)
+        user_new.save()
+        return Response({'User Updated': 'OK'}, status=status.HTTP_200_OK)
+
+class DeleteUserView(APIView):
+    def post(self, request, format=None):
+        print("DeleteUserView Triggered!")
+        query = User.objects.get('select * from api_user where id= \'{pk}\'')
+
+        print(query[0].id)
+        user_id = request.data['id']
+        user = User.objects.filter(id = user_id).delete()
+        user.delete()     
+        return Response({'User Deleted': 'OK'}, status=status.HTTP_200_OK)
+#############################################################################
