@@ -65,7 +65,92 @@ export default class CalendarPage extends PureComponent {
     .then((response) => {
         if (!response.ok){
             console.log("Failed get scheduled workouts!");
-        }
+              //Create main container and headers
+              const elemContainer = document.createElement('div');
+              elemContainer.className = "calendar-dynamic-container";
+              const elemDayHeader = document.createElement('div');
+              elemDayHeader.className = "calendar-dynamic-day-header";
+  
+              const elemDayMonday = document.createElement('div');
+              elemDayMonday.innerHTML= "Monday";
+              const elemDayTuesday = document.createElement('div');
+              elemDayTuesday.innerHTML= "Tuesday";
+              const elemDayWednesday = document.createElement('div');
+              elemDayWednesday.innerHTML= "Wednesday";
+              const elemDayThursday = document.createElement('div');
+              elemDayThursday.innerHTML= "Thursday";
+              const elemDayFriday = document.createElement('div');
+              elemDayFriday.innerHTML= "Friday";
+              const elemDaySaturday = document.createElement('div');
+              elemDaySaturday.innerHTML= "Saturday";
+              const elemDaySunday = document.createElement('div');
+              elemDaySunday.innerHTML= "Sunday";
+  
+  
+              elemDayHeader.className = "calendar-dynamic-day-header";
+  
+              elemContainer.appendChild(elemDayHeader);
+              elemDayHeader.appendChild(elemDayMonday);
+              elemDayHeader.appendChild(elemDayTuesday);
+              elemDayHeader.appendChild(elemDayWednesday);
+              elemDayHeader.appendChild(elemDayThursday);
+              elemDayHeader.appendChild(elemDayFriday);
+              elemDayHeader.appendChild(elemDaySaturday);
+              elemDayHeader.appendChild(elemDaySunday);
+  
+  
+              // find which day first day of current month is
+              // if monday: insert 0 dead items, if tuesday: insert 1 etc
+              //var date = new Date();
+              var fday = new Date(date.getFullYear(), date.getMonth(), 1);
+              var first_day = fday.toString().slice(0,3)
+              console.log("first day: " + first_day)
+  
+              var dayDict = {
+                  "Mon": 0,
+                  "Tue": 2,
+                  "Wed": 3,
+                  "Thu": 4,
+                  "Fri": 5,
+                  "Sat": 6,
+                  "Sun": 7,
+              }
+              //console.log("Dict!")
+              console.log("dict first day: " + dayDict[first_day])
+              for(var i=0;i<dayDict[first_day]-1;i++){
+                  //console.log("creating padding blocks")
+                  var elemPadding = document.createElement('div');
+                  elemPadding.className = "calendar-padding-item";
+                  elemPadding.id = 0;
+                  elemContainer.appendChild(elemPadding);
+              }
+  
+              //itterate through the data and create items
+              var saved_i = 0;
+              var day_nr = 1;
+              var schedule_exist = [];
+                for(var i = saved_i; i < monthLen; i++) {
+                    //if day of month is scheduled
+                    //console.log("day: " + day_nr + " no hit" + " planned: " + day_scheduled)
+                    var empty = "empty"
+                    var elemItem = document.createElement('div');
+                    elemItem.className = "calendar-day-item";
+                    elemItem.id = day_nr;
+                    elemItem.value = empty;
+
+                    var elemTextContainer = document.createElement('div');
+                    elemTextContainer.className = "calendar-day-elemTextContainer"
+
+                    var elemTextNumber = document.createTextNode(day_nr);
+
+                    elemContainer.appendChild(elemItem);
+                    elemItem.appendChild(elemTextContainer)
+                    elemTextContainer.appendChild(elemTextNumber)
+                    day_nr++;
+
+                }
+                let targetNode = document.getElementsByClassName("calendar-container")[0].appendChild(elemContainer);
+                }
         return response.json()}
         ).then((data)=>{
 
