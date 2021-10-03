@@ -76,16 +76,16 @@ export default class App extends Component {
 
     fetch("/api/session-exist", requestOptions).then((response) => {
       if (response.status == 202) {
-        console.log("session exists");
+        //console.log("session exists");
         this.setState({ sessionActive: true });
         return response.json()
       } else {
-        console.log("Session Missing");
+        //console.log("Session Missing");
       }
       return response.json()
     }).then((data)=>{
-        console.log("***")
-        console.log(data.fname)
+        //console.log("***")
+        //console.log(data.fname)
         this.setState({ 
             fname: data.fname,
             role_id: data.role_id,
@@ -238,10 +238,10 @@ export default class App extends Component {
 
   containerSessionName() {
     if (this.state.sessionActive) {
-      console.log("content-container-session");
+      //console.log("content-container-session");
       return "content-container-session";
     } else {
-      console.log("content-container-no-session");
+      //console.log("content-container-no-session");
       return "content-container-no-session";
     }
   }

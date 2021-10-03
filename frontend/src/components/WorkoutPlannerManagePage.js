@@ -59,7 +59,7 @@ componentDidMount = () =>{
                     
                     var elemItem = document.createElement('div');
                     elemItem.className = "wpmp-workout-item";
-                    elemItem.id = i;
+                    elemItem.id = i+100;
                     elemItem.value = exerciseName;
                     elemItem.onclick = this.handleSelectWorkout;
 
@@ -273,7 +273,7 @@ componentDidMount = () =>{
             </div>
             <div className="wpmp-restweek-picker">
                 Enter a rest week every X weeks(optional) 
-            <input type="number" onChange={ (e)=>{ this.setState({restWeek: e.target.value})}}/>
+            <input type="number" min="0" onChange={ (e)=>{ this.setState({restWeek: e.target.value})}}/>
             <button type="submit">
                 Add to calendar
             </button>

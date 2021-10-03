@@ -18,9 +18,14 @@ export default class CalendarPage extends PureComponent {
 
     this.state = {
         editItem: false,
+        date: new Date().toLocaleDateString(), 
+        month: "",
+        month2: new Date().getMonth(),
+        monthOffset: 0,
     };
   
   }
+
 
   handleRemoveCalendarItem = (e) =>{
       e.preventDefault();
@@ -28,19 +33,42 @@ export default class CalendarPage extends PureComponent {
       this.setState({editItem:true})
   }
 
-  createCalendar=()=>{
-       
-    var monthLen = this.getDayInMonth();
-    console.log("len: " + monthLen);
+  createCalendar=(e)=>{
+    e.preventDefault();
+
+    var change_value = parseInt(e.target.value, 10);
+
+    if(change_value == 1 || change_value == -1){
+        var valueOffset = this.state.monthOffset + change_value;
+        this.setState({monthOffset: this.state.monthOffset + change_value})
+        //this.setState({monthOffset: value})
+        console.log(valueOffset)
+    }
+    else{
+        var valueOffset = this.state.monthOffset;
+    }
+ 
+
+    let targetNode = document.querySelector(".calendar-dynamic-container")
+    if(targetNode != null){
+        //console.log("Deleting")
+        targetNode.remove();
+    }
+
+    var date = this.getMonth(valueOffset);
+    console.log("month: " + date);
+    var monthLen = this.getDayInMonth(date);
+    //console.log("len: " + monthLen);
 
 
-    fetch("/api/get-scheduled-workouts")
+    fetch("/api/get-scheduled-workouts?date=" + date.toLocaleDateString())
     .then((response) => {
         if (!response.ok){
             console.log("Failed get scheduled workouts!");
         }
         return response.json()}
         ).then((data)=>{
+
             //Create main container and headers
             const elemContainer = document.createElement('div');
             elemContainer.className = "calendar-dynamic-container";
@@ -77,24 +105,24 @@ export default class CalendarPage extends PureComponent {
 
             // find which day first day of current month is
             // if monday: insert 0 dead items, if tuesday: insert 1 etc
-            var date = new Date();
+            //var date = new Date();
             var fday = new Date(date.getFullYear(), date.getMonth(), 1);
             var first_day = fday.toString().slice(0,3)
-            console.log(first_day)
+            console.log("first day: " + first_day)
 
             var dayDict = {
                 "Mon": 0,
-                "Tue": 1,
+                "Tue": 2,
                 "Wed": 3,
                 "Thu": 4,
                 "Fri": 5,
                 "Sat": 6,
                 "Sun": 7,
             }
-            console.log("Dict!")
-            console.log(dayDict[first_day])
+            //console.log("Dict!")
+            console.log("dict first day: " + dayDict[first_day])
             for(var i=0;i<dayDict[first_day]-1;i++){
-                console.log("creating padding blocks")
+                //console.log("creating padding blocks")
                 var elemPadding = document.createElement('div');
                 elemPadding.className = "calendar-padding-item";
                 elemPadding.id = 0;
@@ -124,11 +152,11 @@ export default class CalendarPage extends PureComponent {
                             //day of month
                             var elemTextContainer = document.createElement('div');
                             elemTextContainer.className = "calendar-day-elemTextContainer";
-                            elemTextContainer.id = workout_id;
+                            elemTextContainer.id = day_nr;
                             elemTextContainer.value = workout_id;
                             
                             //add name of workout - todo
-                            var elemText = document.createTextNode("M");
+                            var elemText = document.createTextNode("*");
                             
                             elemTextContainer.appendChild(elemText)
 
@@ -143,7 +171,7 @@ export default class CalendarPage extends PureComponent {
 
                             // 5 datum, 4. om j inte är 4 så skippa. Annars minska day_nr med 1  
                             if((data.length-1) != j){
-                                console.log("breaking loop: " + data.length + " != " + j)
+                                //console.log("breaking loop: " + data.length + " != " + j)
                                 day_nr= day_nr-1;
                             }
                             
@@ -223,33 +251,94 @@ export default class CalendarPage extends PureComponent {
         });
   }
 
-  getDayInMonth(){
-    var date = new Date();
-    var month = date.getMonth() + 1;
+  getDayInMonth(date){
+    //var date = new Date();
+    //var month = date.getMonth() + 1;
+    var month = date.getMonth();
     var year = date.getFullYear();
     var daysInMonth = new Date(year, month, 0).getDate();
     return daysInMonth;    
   }
 
+  getMonth=(valueOffset)=>{
+    var current = new Date();
+    var date = new Date(current.getFullYear(), current.getMonth()+ valueOffset, 1);
+    var month = date.toString().slice(4,7)
+    var year = date.toString().slice(11,15)
+    console.log("///////")
+    console.log("month(get):" + month)
+
+    var monthDict = {
+        "Jan": "January",
+        "Feb": "Februari",
+        "Mar": "March",
+        "Apr": "April",
+        "May": "May",
+        "Jun": "June",
+        "Jul": "July",
+        "Aug": "August",
+        "Sep": "September",
+        "Oct": "October",
+        "Nov": "November",
+        "Dec": "December",
+    }
+    
+    var monthDict2 = {
+        "Jan": 1,
+        "Feb": 2,
+        "Mar": 3,
+        "Apr": 4,
+        "May": 5,
+        "Jun": 6,
+        "Jul": 7,
+        "Aug": 8,
+        "Sep": 9,
+        "Oct": 10,
+        "Nov": 11,
+        "Dec": 12,
+    }
+
+
+    this.setState({
+        month: monthDict[month],
+        month2: monthDict2[month],
+        year: year,
+        date: date.toLocaleDateString(),
+    })
+  
+    return date;    
+
+  }
+
   renderCalendar(){
+
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"];
+    console.log("m2: " + this.state.month2)
 
     if(this.state.editItem == false){
       return(
           <>
+            <button className="calendar-nav-next-btn" onClick={ this.createCalendar }>
+                    Refresh
+                </button>
             <div className="calendar-title">
                 Scheduled Workouts
             </div>
             <div className="calendar-container">
-                {this.createCalendar()}
+
             </div>
             <div className="calendar-nav">
-                <button className="calendar-nav-prev-btn">
+                <button className="calendar-nav-prev-btn" value="-1" onClick={ this.createCalendar }>
                     Prev
                 </button>
                 <div className="calendar-nav-month">
-                    This Month
+                    { /*monthNames[this.state.month2] */}
+                    { this.state.month }
+                    <br/>
+                    { this.state.year }
                 </div>
-                <button className="calendar-nav-next-btn">
+                <button className="calendar-nav-next-btn" value="1" onClick={ this.createCalendar }>
                     Next
                 </button>
             </div>
@@ -268,6 +357,7 @@ export default class CalendarPage extends PureComponent {
   }
 
     render(){
+
         return(this.renderCalendar())
     }
 

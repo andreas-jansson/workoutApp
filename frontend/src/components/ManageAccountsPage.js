@@ -32,6 +32,7 @@ export default function ManageAccountsPage() {
         })
   };
 
+  //fetch("/api/get-workout-exercises?name=" + e.target.innerHTML)
 
   const handleRowDelete = (oldData, resolve) => {
     patch(`/api/delete-user/${oldData.id}`).then((resp) => {

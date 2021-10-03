@@ -455,27 +455,69 @@ class CreatePlannedWorkoutView(APIView):
         return Response({'User approved': 'OK'}, status=status.HTTP_200_OK)
 
 
-class GetScheduledWorkoutsView(APIView):
+class GetScheduledWorkoutsView2(APIView):
     def get(self, request, format=None):
+
         print("******GetScheduledWorkoutsView Triggered!****")
         first_day_of_month = str(dt.today().replace(day=1))
         print(first_day_of_month[:10])
 
+        #extract year and month as ints
         yyyy = int(first_day_of_month[0:4])
         mm = int(first_day_of_month[5:7])
         print(yyyy)
         print(mm)
+        #get the number of months for the given year and month
         days_in_month = calendar.monthrange(yyyy, mm)[1]
+        #get date of last day of current month
         last_day_of_month = str(dt.today().replace(day=days_in_month))
         print(last_day_of_month)
-
-
 
         queryset = scheduledWorkout.objects.raw('select * from api_scheduledworkout '
         +'where user_id = \'{}\' and scheduledDate >= \'{}\' and scheduledDate <= \'{}\' order by scheduledDate'.format(self.request.session.get('user_id'), first_day_of_month, last_day_of_month))
         if len(queryset)>0:
             data = scheduledWorkoutSerializer(queryset, many=True).data
-            print(data)                    
+            #print(data)                    
+            return Response(data, status=status.HTTP_200_OK)
+        return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class GetScheduledWorkoutsView(APIView):
+    lookup_url_kwarg= 'date'
+    def get(self, request, format=None):
+
+        print("******GetScheduledWorkoutsView Triggered!****")
+
+        dynamic_date = request.GET.get(self.lookup_url_kwarg)
+        print("test: " + dynamic_date)
+
+        dyn_yyyy = int(dynamic_date[0:4])
+        dyn_mm = int(dynamic_date[5:7])
+        dyn_dd = int(dynamic_date[8:])
+        print(dyn_yyyy)
+        print(dyn_mm)
+        print(dyn_dd)
+
+        #get date of the first day in the current month
+        first_day_of_month = str(dt(dyn_yyyy,dyn_mm,dyn_dd).replace(day=1))
+        print(first_day_of_month)
+   
+        #extract year and month as ints
+        yyyy = int(first_day_of_month[0:4])
+        mm = int(first_day_of_month[5:7])
+     
+        #get the number of months for the given year and month
+        days_in_month = calendar.monthrange(dyn_yyyy, dyn_mm)[1]
+        #get date of last day of current month
+        last_day_of_month = str(dt(dyn_yyyy,dyn_mm,dyn_dd).replace(day=days_in_month))
+        #last_day_of_month = str(dt.today().replace(day=days_in_month))
+        print(last_day_of_month)
+
+        queryset = scheduledWorkout.objects.raw('select * from api_scheduledworkout '
+        +'where user_id = \'{}\' and scheduledDate >= \'{}\' and scheduledDate <= \'{}\' order by scheduledDate'.format(self.request.session.get('user_id'), first_day_of_month, last_day_of_month))
+        if len(queryset)>0:
+            data = scheduledWorkoutSerializer(queryset, many=True).data
+            #print(data)                    
             return Response(data, status=status.HTTP_200_OK)
         return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -525,4 +567,3 @@ class DeleteUserView(APIView):
         user = User.objects.filter(id = user_id).delete()
         user.delete()     
         return Response({'User Deleted': 'OK'}, status=status.HTTP_200_OK)
-#############################################################################

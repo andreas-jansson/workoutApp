@@ -58,6 +58,10 @@
     border-radius: 5px;
 }
 
+.calendar-day-elemTextContainer{
+    margin-top:5px;
+}
+
 .calendar-remove-schduled-workout-btn{
     border: 2px var(--grayDefault) solid;
     background:none;
