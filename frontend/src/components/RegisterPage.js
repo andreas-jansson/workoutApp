@@ -193,7 +193,7 @@ export default class RegisterPage extends Component {
                 <div align="left" className="password">
                   <i class="material-icons">vpn_key</i>
                   <label htmlFor="password">Password</label>
-                  
+                  <br/>
                   <input
                     type="password"
                     className="signup-text"
@@ -211,6 +211,7 @@ export default class RegisterPage extends Component {
                 <div align="left" className="confirmed_password">
                   <i class="material-icons">repeat</i>
                   <label htmlFor="confirmed_password">Confirm Password</label>
+                  <br/>
                   <input
                     className="signup-text"
                     type="password"
