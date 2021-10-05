@@ -1,80 +1,73 @@
 import React, { Component } from "react";
 import {
   BrowserRouter as Router,
-  Switch,
-  withRouter,
-  Route,
   Link,
-  Redirect,
 } from "react-router-dom";
 import '../../static/css/register.css';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import ValidateRegistration from "./ValidateRegistration";
+import { MuiThemeProvider } from "@material-ui/core";
+import { createTheme } from "@material-ui/core/styles";
+import { orange, white, green, red } from "@material-ui/core/colors";
 
-const validEmailRegex = RegExp(
-  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
-);
-const validateForm = (errors) => {
-  let valid = true;
-  Object.values(errors).forEach((val) => val.length > 0 && (valid = false));
-  return valid;
-};
+import '../../static/css/register.css';
+import '../../static/css/header.css';
+
+const validateSignUpForm = ValidateRegistration.validateSignUpForm;
+
+const my_theme = createTheme({ 
+  palette: { primary: {
+    main: "#e66a04"
+  }, secondary: {
+    light: '#0066ff',
+    main: '#0044ff',
+  }},
+  overrides: {
+    MuiFilledInput: {
+      root: {
+        backgroundColor: "rgb(232, 241, 250)",
+        "&:hover": {
+          backgroundColor: "rgb(250, 232, 241)",
+          "@media (hover: none)": {
+            backgroundColor: "rgb(232, 241, 250)"
+          }
+        },
+        "&.Mui-focused": {
+          backgroundColor: "rgb(250, 241, 232)"
+        }
+      }
+    }
+  }
+  })
 
 export default class RegisterPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      fname: null,
-      lname: null,
-      email: null,
-      password: null,
-      confirmed_password: null,
-      errors: {
-        fname: "",
-        lname: "",
-        email: "",
-        password: "",
-        confirmed_password: "",
+      user: {
+        fname: null,
+        lname: null,
+        email: null,
+        password: null,
+        confirmed_password: null,
       },
+      errors: {
+      },
+      type: "password",
+      btnTxt: "show",
     };
+    this.handleChange = this.handleChange.bind(this);
+    //this.handleSubmit = this.handleSubmit.bind(this);
+    this.pwMask = this.pwMask(this);
+    //this.validateForm = this.validateForm(this);
   }
 
-  handleChange = (event) => {
-    event.preventDefault();
-    const { name, value } = event.target;
-    let errors = this.state.errors;
-
-    switch (name) {
-      case "fname":
-        errors.fname =
-          value.length < 3 ? "❌" : "";
-        break;
-      case "lname":
-        errors.lname =
-          value.length < 3 ? "❌" : "";
-        break;
-      case "email":
-        errors.email = validEmailRegex.test(value)
-          ? ""
-          : "❌";
-        break;
-      case "password":
-        errors.password =
-          value.length < 8 ? "❌" : "";
-        break;
-      case "confirmed_password":
-        errors.confirmed_password =
-          value.length < 8 ? "❌" : "";
-        break;
-      default:
-        break;
-    }
-    this.setState({ errors, [name]: value });
-  };
-
   sendDetailsToServer = () => {
-    let fname = this.state.fname;
-    let lname = this.state.lname;
-    let email = this.state.email;
-    let password = this.state.password;
+    let fname = this.state.user.fname;
+    let lname = this.state.user.lname;
+    let email = this.state.user.email;
+    let password = this.state.user.password;
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -88,25 +81,22 @@ export default class RegisterPage extends Component {
     console.log(requestOptions.body);
     fetch("/api/register-user", requestOptions).then((response) => {
       if (response.ok) {
-        window.location.href = "/";
+        window.location.href = "/login";
       } else {
         console.log("Failed!");
       }
     });
   };
 
-  handleSubmit = (event) => {
-    event.preventDefault();
-    if (
-      validateForm(this.state.errors) &&
-      this.state.password === this.state.confirmed_password
-    ) {
-      console.info("Valid Form");
-      this.sendDetailsToServer();
-    } else {
-      console.error("Invalid Form");
-    }
-  };
+  handleChange(e) {
+    const {name, value} = e.target
+    this.setState({
+      user: {
+        ...this.state.user,
+        [name]: value
+      }
+    })
+  }
 
   RenderHeader() {
     return (
@@ -126,136 +116,129 @@ export default class RegisterPage extends Component {
     );
   }
 
-  render() {
-    const { errors } = this.state;
-    return (
-      <div className="signup-section signup-container">
-        <div align="center" className="signup-text-title">
-          Create an Account
-        </div>
-        {this.RenderHeader()}
-        <div className="box-centering">
-          <div className="signup-box box-centering">
-            <div align="center" className="signup-padding">
-              <form onSubmit={this.handleSubmit} noValidate>
-                <div align="left" className="fname">
-                  <i class="material-icons">account_circle</i>
-                  <label htmlFor="fname">First Name</label>
-                  <br />
-                  <input
-                    type="text-signup"
-                    className="signup-text"
-                    name="fname"
-                    placeholder="First name"
-                    onChange={this.handleChange}
-                    noValidate
-                  />
-                  {errors.fname.length > 0 && (
-                    <span className="error">{errors.fname}</span>
-                  )}
-                </div>
-
-                <div align="left" className="lname">
-                  <i class="material-icons">account_circle</i>
-                  <label htmlFor="lname">Last Name</label>
-                  <br />
-                  <input
-                  minlength="8"
-                    type="text-signup"
-                    className="signup-text"
-                    name="lname"
-                    placeholder="Last name"
-                    onChange={this.handleChange}
-                    noValidate
-                  />
-                  {errors.lname.length > 0 && (
-                    <span className="error">{errors.lname}</span>
-                  )}
-                </div>
-
-                <div align="left" className="email">
-                  <i class="material-icons">contact_mail</i>
-                  <label htmlFor="email">Email</label>
-                  <br />
-                  <input
-                    type="email-signup"
-                    className="signup-text"
-                    name="email"
-                    placeholder="Email"
-                    onChange={this.handleChange}
-                    noValidate
-                  />
-                  {errors.email.length > 0 && (
-                    <span className="error">{errors.email}</span>
-                  )}
-                </div>
-
-                <div align="left" className="password">
-                  <i class="material-icons">vpn_key</i>
-                  <label htmlFor="password">Password</label>
-                  
-                  <input
-                    type="password"
-                    className="signup-text"
-                    name="password"
-                    onChange={this.handleChange}
-                    noValidate
-                  />
-                  {errors.password.length > 0 && (
-                    <span className="error">{errors.password}</span>
-                  )}
-                </div>
-
-                <div className="info">
-                </div>
-                <div align="left" className="confirmed_password">
-                  <i class="material-icons">repeat</i>
-                  <label htmlFor="confirmed_password">Confirm Password</label>
-                  <input
-                    className="signup-text"
-                    type="password"
-                    name="confirmed_password"
-                    onChange={this.handleChange}
-                    noValidate
-                  />
-                  {errors.confirmed_password.length > 0 && (
-                      <span className="error">{errors.confirmed_password}</span>
-                      )}
-                </div>
-                      <span class="small-signup" > Password must be eight characters in length.</span>
-                <div class="container">
-                    <br/> 
-                  <div class="center">
-                    <button class="btn-signup-button" type="submit">
-                      <svg 
-                        width="180px"
-                        height="60px"
-                        viewBox="0 0 180 60"
-                        class="signup"
-                      >
-                        <polyline
-                          points="179,1 179,59 1,59 1,1 179,1"
-                          class="bg-line"
-                        />
-                        <polyline
-                          points="179,1 179,59 1,59 1,1 179,1"
-                          class="hl-line"
-                        />
-                      </svg>
-                      <span>Sign Up</span>
-                    </button>
-                    <br /> <br />
-                    <div className="mt-3">
-                      <a href="/login">Already have an account? </a>
-                    </div>
-                    <br/>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+  pwMask(e) {
+    this.setState({
+      type : this.state.type === "password" ? "input" : "password",
+      btnTxt: this.state.btnTxt === "show" ? "hide" : "show"
+    }
+    )
   }
+
+  validateForm = (e) => {
+    e.preventDefault()
+    var payload = validateSignUpForm(this.state.user);
+    if (payload.success) {
+      this.setState({
+        errors: {}
+      });
+      console.info("Valid Form");
+      this.sendDetailsToServer();
+    } else {
+      const payloaderrors = payload.errors;
+      this.setState({
+        errors : payloaderrors
+      });
+      console.error("Invalid Form");
+    }
+  }
+
+  render() {
+    return (
+    <div className="reg-Picture">
+      {this.RenderHeader()}
+      
+      <MuiThemeProvider theme={my_theme}>
+      <div className="loginBox">
+        <h1>Sign Up</h1>
+        {this.state.errors.message && <p style={{ color: "red" }}>{this.state.errors.message}</p>}
+  
+        <form onSubmit={this.validateForm}>
+          <TextField
+            color="primary"
+            label="First Name"
+            variant="filled"
+            margin = 'normal'
+            name="fname"
+            className='regTextField'
+            value={this.state.user.fname}
+            onChange={this.handleChange}
+            error={this.state.errors.fname}
+            helperText={this.state.errors.fname}
+          />
+          <br/>
+          <TextField
+            color="primary"
+            label="Last Name"
+            variant="filled"
+            margin = 'normal'
+            name="lname"
+            className='regTextField'
+            value={this.state.user.lname}
+            onChange={this.handleChange}
+            error={this.state.errors.lname}
+            helperText={this.state.errors.lname}
+          />
+          <br/>
+          <TextField
+            color="primary"
+            label="Email"
+            variant="filled"
+            margin = 'normal'
+            name="email"
+            className='regTextField'
+            value={this.state.user.email}
+            onChange={this.handleChange}
+            error={this.state.errors.email}
+            helperText={this.state.errors.email}
+          />
+          <br/>
+          <TextField
+            color="primary"
+            type={this.state.type}
+            label="Password"
+            variant="filled"
+            margin = 'normal'
+            name = "password"
+            className='regTextField'
+            value={this.state.user.password}
+            onChange={this.handleChange}
+            error={this.state.errors.password}
+            helperText={this.state.errors.password}
+          />
+          <br/>
+          <TextField
+            color="primary"
+            type={this.state.type}
+            label="Confirm Password"
+            variant="filled"
+            margin = 'normal'
+            name = "confirmed_password"
+            className='regTextField'
+            value={this.state.user.confirmed_password}
+            onChange={this.handleChange}
+            error={this.state.errors.confirmed_password}
+            helperText={this.state.errors.confirmed_password}
+          />
+          <br />
+          <Button
+            primary={true}
+            color = 'primary'
+            variant='contained'
+            size='large'
+            type="submit"
+            label="submit"
+            margin="normal"
+          >
+          Submit
+          </Button>
+        </form>
+        <p>
+          Aleady have an account? <br />
+          <a href="/login">Log in here</a>
+        </p>
+      </div>
+      </MuiThemeProvider>
+    </div>
+    );
+  };
 }

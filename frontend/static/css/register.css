@@ -1,152 +1,66 @@
-/****** Register Page ******/
-
-.signup-text-title {
-    
-    font-size:30px;
-    font-family:"Roboto", "Helvetica", "Arial", sans-serif;
-    font-weight:bold;
-    padding-top: 5px;
-    padding-bottom: 10px;
-    border-radius: 5px;
-    width: 40;
-    height: 20;
-    background: linear-gradient(rgb(196, 151, 4), rgb(245, 149, 24));
-    color: rgb(255, 254, 253);
-  }
-
-
-.signup-container{
-    display:flex;
-    flex-direction: column;
+.regform {
+  width: 100%;
 }
 
-
-.signup-section{
-    width:100vw;
-    height: 100vh;
-}
-
-.signup-box{
-    background-color: #2C2B2B;
-    background: linear-gradient(rgb(75, 72, 72), rgb(53, 51, 51));
-    width: auto;
-    height: auto;
-    padding-top: 20px;
-    padding-left: 35px;
-    padding-bottom: 10px;
-    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-    font-weight: bold;
-    font-size: 20px;
-    background: #292727;
-    color: #FF9D00;
-    border-radius: 5px;
-    box-shadow: 5px 5px 5px 5px rgba(34, 32, 32, 0.623);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-
-.signup-container {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.315), rgba(0, 0, 0, 0.226)), url("../images/signup/test.jpg");
-    background-blend-mode: luminosity;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size:cover;
-  }
-
-  .signup-padding {
-    padding-bottom: 2px;
-    padding-top: 10px;
-    align-content: center;
-  }
-
-  .reg-password{
-    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-    color:rgb(255, 255, 255);
-    background: rgb(182, 127, 7);
-    font-weight: bold;
-    font-size: 20px;
-    padding-bottom: 5px;
-    padding-top: 10px;
-  }
-  .signup-text{
-    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-    color:rgb(255, 255, 255);
-    background: rgb(182, 127, 7);
-    font-weight: bold;
-    font-size: 20px;
-    padding-bottom: 5px;
-    padding-top: 10px;
-  }
-
-::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: rgb(255, 255, 255);
-    opacity: 0.77; /* Firefox */
-  }
-
-  /* För knappen I sign up [animering] */
-
-  @import url('https://fonts.googleapis.com/css?family=Lato:100&display=swap');
-
-
-.container-signup-button {
-  width: auto;
-  height: auto;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.center-signup-button{
-    width: 180;
-    height: 60px;
-    position: absolute;
-}
-
-.btn-signup-button{
-  width: 180px;
-  height: 60px;
-  cursor: pointer;
-  background: transparent;
-  border: 1px solid #ffffff;
-  outline: none;
-  transition: 1s ease-in-out;
-}
-
-svg.signup {
+.loginBox {
+  
+  min-width:300px;
+  width: 30%;
+  text-align: center;
   position: relative;
-  left: 10%;
-  top: 0;
-  fill: none;
-  stroke: #fff;
-  stroke-dasharray: 150 480;
-  stroke-dashoffset: 150;
-  transition: 0.5s ease-in-out;
+  left: 50%;
+  transform: translate(-50%, 20%);
+  padding: 20px;
+  background: rgb(26, 24, 24);
+  box-shadow: 0 0 20px 2px rgba(0, 0, 0, 0.4);
+  color: rgb(255, 254, 253);
 }
 
-.btn-signup-button:hover {
-  transition: 1s ease-in-out;
-  background: #bb8c0a;
+.regTextField input {
+  padding: 25px;
+  min-width: 240px;
 }
 
-.btn-signup-button:hover svg {
-  stroke-dashoffset: -480;
+.signUpSubmit {
+  margin: 25px 0 15px 0;
 }
 
-.btn-signup-button span {
-  color: rgb(255, 255, 255);
-  font-size: 18px;
-  font-weight: 100;
+.pwStrRow {
+  width: 63%;
+  text-align: left;
+  margin: auto;
+  padding: 0;
+  font-size: 12px;
 }
 
+.pwStrWeak {
+  display: inline-block;
+  position: relative;
+  left: 0;
+  padding: 0;
+  margin: 0;
+  color: gray;
+}
 
-span.small-signup {
-    font-size: smaller;
-    color: red;
-    padding-right: 15%;
+.pwStrStrong {
+  display: inline-block;
+  position: relative;
+  left: 77%;
+  padding: 0;
+  margin: 0;
+  color: gray;
+}
+
+.reg-Picture {
+  background: url("../images/signup/barbell.jpg") no-repeat;
+  overflow: hidden;
+  background-size: cover;
+  width: 100%;
+  height: 100vh;
+}
+
+@media screen and (max-width: 550px) {
+  .loginBox {
+    width: 85%;
   }
+}

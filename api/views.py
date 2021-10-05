@@ -64,10 +64,8 @@ class RegisterUserView(APIView):
         stream = io.BytesIO(request.body)
         data = JSONParser().parse(stream)
         if (email_is_registered(data['email'])):
-            print("if")
             return Response({'User already exists': 'BAD'}, status=status.HTTP_226_IM_USED)
         else:
-            print("else")
             new_salt = create_salt()
             hashed_password = create_pw_hash(data['password'], new_salt)
             new_user = User(fname = data['fname'],
@@ -76,10 +74,7 @@ class RegisterUserView(APIView):
             salt = new_salt,
             pwhash = hashed_password,
             roleid = Role.objects.filter(description = 'Unauthorized')[0])
-            print("roleid")
             new_user.save()
-            print("save")
-            self.request.session.create()
             return Response({'User registered': 'OK'}, status=status.HTTP_200_OK)
 
 
