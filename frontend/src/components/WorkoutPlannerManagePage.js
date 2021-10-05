@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useMemo } from "react";
+import React, { Component, useEffect, useMemo, history } from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -11,10 +11,13 @@ import Alert from "@material-ui/lab/Alert";
 import CalendarPage from './CalendarPage'
 
 export default class WorkoutPlannerManagePage extends Component {
-  static defaultProps = {};
+  static defaultProps = {
+      
+  };
 
   constructor(props) {
     super(props);
+    this.props = props;
 
     this.state = {
         selctedWorkout: "None",
@@ -31,12 +34,51 @@ export default class WorkoutPlannerManagePage extends Component {
         errorInput: false,
         errorMsg: "",
         updateCalendar: false,
+        reRender:false,
+        roleType: 1,
+        userId: this.props.history.location.state.userId,
+        userInfo: this.props.history.location.state.textValue,
     };
+    console.log(typeof this.state.userId)
+    //console.log(this.props.history.location.state.userId);
   }
 
-componentDidMount = () =>{
-    this.LoadAllWorkouts()
-}
+    componentDidMount = () =>{
+        this.LoadAllWorkouts();
+        this.sessionExist();
+    }
+
+    /* redirects if session exists */
+    sessionExist = () => {
+        const requestOptions = {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        };
+    
+        fetch("/api/session-exist", requestOptions).then((response) => {
+          if (response.status == 202) {
+            //console.log("session exists");
+            this.setState({ sessionActive: true });
+            return response.json()
+          } else {
+            //console.log("Session Missing");
+          }
+          return response.json()
+        }).then((data)=>{
+            if(this.state.userId != ""){
+                this.setState({ 
+                    roleType: data.role_id,
+                });
+            }
+            else{
+                //this.props.history.push("/workout-planner");
+            }
+            
+            
+        })
+           
+      }
+
 
     LoadAllWorkouts = () =>{
         //console.log("loading workouts")
@@ -177,6 +219,8 @@ componentDidMount = () =>{
         var dateEnd = this.state.dateEnd;
         var restWeek = this.state.restWeek;
         var workoutName = this.state.selctedWorkout
+        var user = this.state.userId
+        console.log("user: " + user)
         /*
         this.setState({ 
             mon: false,
@@ -203,6 +247,7 @@ componentDidMount = () =>{
                 dateStart,
                 dateEnd,
                 restWeek,
+                user,
             }),
         };
 
@@ -234,6 +279,11 @@ componentDidMount = () =>{
         <div className="wpmp-workout-selection-container">
         </div>
     );
+    }
+
+    handleReturn =(e)=>{
+        e.preventDefault();
+        window.location.reload();
     }
 
     renderViewPlanner(){
@@ -279,6 +329,9 @@ componentDidMount = () =>{
             </button>
             </div>
             </form>
+            <button className="wpmp-planner-return-btn" onClick={ this.handleReturn }>
+                return
+            </button>
             <div className="wpmp-alert-container">
                 <div className={`alert alert-success ${this.state.errorInput? 'wpmp-alert-shown' : 'wpmp-alert-hidden'}`}>
                     <Alert severity="error">{ this.state.errorMsg }</Alert>
@@ -297,7 +350,7 @@ componentDidMount = () =>{
             <div className="wpmp-created-message">
               <h2>{this.state.selctedWorkout}</h2>
               <br/>
-              <h3>Updated!</h3>
+              <h3>Schedule Updated!</h3>
             </div>
             <button type="submit" className="wpmp-created-message-return-btn" onClick={ () => { this.setState({selctedWorkout: "None"})} }>
               Return
@@ -307,20 +360,22 @@ componentDidMount = () =>{
 
     }
 
+
+
     renderPlannerManage(){
         if(this.state.selctedWorkout == "None" ){
             return(
                 <div className="wpmp-container">
                 
                     <div className="wpmp-section wpmp-box1">
-                    <div className="wpmp-planner-title">
-                        Workout Planner
-                    </div>
-                        { this.renderViewWorkouts() }
-
+                        <div className="wpmp-planner-title">
+                            <p>Workout Planner</p>
+                            {this.state.userInfo != ""?  <p className="wpmp-planner-userinfo">Planning for user {this.state.userInfo }</p>: ""}
+                        </div>
+                            { this.renderViewWorkouts() }
                     </div>
                     <div className="wpmp-section wpmp-box2">
-                    {<CalendarPage/>}
+                    {<CalendarPage user={this.state.userId}/>}
                     </div>
                 </div>
                 );
@@ -334,7 +389,7 @@ componentDidMount = () =>{
                     { this.renderViewSuccess() }
                 </div>
                 <div className="wpmp-section wpmp-box2">
-                    {<CalendarPage/>}
+                    {<CalendarPage user={this.state.userId}/>}
                 </div>
             </div>
             );
@@ -345,12 +400,13 @@ componentDidMount = () =>{
                 <div className="wpmp-container">
                     <div className="wpmp-section wpmp-box1">
                     <div className="wpmp-planner-title">
-                        Workout Planner
+                        <p>Workout Planner</p>
+                        {this.state.userInfo != ""?  <p className="wpmp-planner-userinfo">Planning for user {this.state.userInfo }</p>:""}
                     </div>
                         { this.renderViewPlanner() }
                     </div>
                     <div className="wpmp-section wpmp-box2">
-                        {<CalendarPage/>}
+                        {<CalendarPage user={this.state.userId}/>}
                     </div>
                 </div>
                 );

@@ -19,6 +19,7 @@ import ManagementPage from "./ManagementPage";
 import WorkoutPlannerPage from "./WorkoutPlannerPage";
 import WorkoutPlannerViewPage from "./WorkoutPlannerViewPage";
 import WorkoutPlannerManagePage from "./WorkoutPlannerManagePage";
+import WorkoutStandardPage from "./WorkoutStandardPage";
 
 
 export default class App extends Component {
@@ -270,7 +271,7 @@ export default class App extends Component {
               <Route path="/workout-planner" component={WorkoutPlannerPage} />
               <Route path="/workout-planner-view" component={WorkoutPlannerViewPage} />
               <Route path="/workout-planner-manage" component={WorkoutPlannerManagePage} />
-
+              <Route path="/workout-standard" component={WorkoutStandardPage} />
             </Switch>
             </div>
           </Router>

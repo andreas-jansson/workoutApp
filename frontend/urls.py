@@ -14,4 +14,6 @@ urlpatterns = [
     path('workout-planner', index),
     path('workout-planner-view', index),
     path('workout-planner-manage', index),
+    path('workout-standard', index),
+
 ]

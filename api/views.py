@@ -19,6 +19,8 @@ from datetime import date
 from datetime import datetime as dt
 import datetime
 import calendar
+from itertools import chain
+
 # Create your views here.
 
 
@@ -205,10 +207,24 @@ class CreateExerciseView(APIView):
 class GetWorkoutView(APIView):
     def get(self, request, format=None):
         print("GetWorkoutView Triggered!")
+        shared = False
+        if(User.objects.filter(id=self.request.session.get('user_id'))[0].roleid_id > 2):
+            print("coach")
+            queryset_shared = Workout.objects.raw('select * from api_workout where active = 1')
+            shared = True
+
+
         queryset = Workout.objects.raw('select * from api_user_hasWorkouts as uhw '
         +'inner join api_workout as w on uhw.workout_id = w.id where uhw.user_id = \'{}\' and active =1'.format(self.request.session.get('user_id')))
+        
+        if(shared == True):
+            result_list = list(chain(queryset_shared, queryset))
+        else:
+            result_list = queryset
+        
+
         if len(queryset)>0:
-            data = WorkoutSerializer(queryset, many=True).data
+            data = WorkoutSerializer(result_list, many=True).data
             print(data)                    
             return Response(data, status=status.HTTP_200_OK)
         return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
@@ -286,7 +302,9 @@ class UpdateWorkoutView(APIView):
         #return Response({'Bad request': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-
+#
+#   Todo: delete scheduled workouts based on the workout id in question
+#
 class DeleteWorkoutView(APIView):
     def post(self, request, format=None):
         print("DeleteWorkoutView Triggered!")
@@ -340,6 +358,8 @@ class CreatePlannedWorkoutView(APIView):
         dateStart = request.data['dateStart']
         dateEnd = request.data['dateEnd']
         restWeek = request.data['restWeek']
+        client = request.data['user']
+
         if(restWeek ==''): #just in case
             restWeek = 0
         else:
@@ -395,14 +415,20 @@ class CreatePlannedWorkoutView(APIView):
                     print(str(counter) + " " + str(current) + " week: " + str(week))
                     counter = counter + 1
 
-
-
-        #find correct workout id
-        query_workout = Exercise.objects.raw('select w.id, w.description from api_workout as w '
-        +'inner join api_user_hasWorkouts as uhw '
-        +'on w.id = uhw.workout_id inner join api_user as u '
-        +'on uhw.user_id = u.id where u.id = \'{}\' and w.name = \'{}\' and w.active = 1'.format(self.request.session.get('user_id') , name))
-        #print(query_workout[0].id)
+        user = self.request.session.get('user_id')
+        if(client == 0):
+            #find correct workout id from personal workouts - client
+            query_workout = Exercise.objects.raw('select w.id, w.description from api_workout as w '
+            +'inner join api_user_hasWorkouts as uhw '
+            +'on w.id = uhw.workout_id inner join api_user as u '
+            +'on uhw.user_id = u.id where u.id = \'{}\' and w.name = \'{}\' and w.active = 1'.format(user , name))
+            #print(query_workout[0].id)
+        else:
+            user = client
+            #find correct workout id from shared - coach view
+            query_workout = Exercise.objects.raw('select w.id, w.description from api_workout as w '
+            +'where  w.name = \'{}\' and w.active = 1'.format(name))
+            #print(query_workout[0].id)
 
         print(rest_weeks_list)
         print(delta.days)
@@ -415,30 +441,30 @@ class CreatePlannedWorkoutView(APIView):
             if(current_week not in rest_weeks_list):
                 if(current.strftime("%A") == "Monday" and monday == True):
                     print(str(current.strftime("%A")) + " " + str(current) + " adding" )
-                    scheduled = scheduledWorkout(scheduledDate=current, user_id=self.request.session.get('user_id'), workout_id=query_workout[0].id)
+                    scheduled = scheduledWorkout(scheduledDate=current, user_id=user, workout_id=query_workout[0].id)
                     scheduled.save()
                 elif(current.strftime("%A") == "Tuesday" and tuesday == True):
-                    scheduled = scheduledWorkout(scheduledDate=current, user_id=self.request.session.get('user_id'), workout_id=query_workout[0].id)
+                    scheduled = scheduledWorkout(scheduledDate=current, user_id=user, workout_id=query_workout[0].id)
                     scheduled.save()
                     print(str(current.strftime("%A")) + " " + str(current) + " adding" )
                 elif(current.strftime("%A") == "Wednesday" and wednesday == True):
-                    scheduled = scheduledWorkout(scheduledDate=current, user_id=self.request.session.get('user_id'), workout_id=query_workout[0].id)
+                    scheduled = scheduledWorkout(scheduledDate=current, user_id=user, workout_id=query_workout[0].id)
                     scheduled.save()
                     print(str(current.strftime("%A")) + " " + str(current) + " adding" )
                 elif(current.strftime("%A") == "Thursday" and thursday == True):
-                    scheduled = scheduledWorkout(scheduledDate=current, user_id=self.request.session.get('user_id'), workout_id=query_workout[0].id)
+                    scheduled = scheduledWorkout(scheduledDate=current, user_id=user, workout_id=query_workout[0].id)
                     scheduled.save()
                     print(str(current.strftime("%A")) + " " + str(current) + " adding" )
                 elif(current.strftime("%A") == "Friday" and friday == True):
-                    scheduled = scheduledWorkout(scheduledDate=current, user_id=self.request.session.get('user_id'), workout_id=query_workout[0].id)
+                    scheduled = scheduledWorkout(scheduledDate=current, user_id=user, workout_id=query_workout[0].id)
                     scheduled.save()
                     print(str(current.strftime("%A")) + " " + str(current) + " adding" )
                 elif(current.strftime("%A") == "Saturday" and saturday == True):
-                    scheduled = scheduledWorkout(scheduledDate=current, user_id=self.request.session.get('user_id'), workout_id=query_workout[0].id)
+                    scheduled = scheduledWorkout(scheduledDate=current, user_id=user, workout_id=query_workout[0].id)
                     scheduled.save()
                     print(str(current.strftime("%A")) + " " + str(current) + " adding" )
                 elif(current.strftime("%A") == "Sunday" and sunday == True):
-                    scheduled = scheduledWorkout(scheduledDate=current, user_id=self.request.session.get('user_id'), workout_id=query_workout[0].id)
+                    scheduled = scheduledWorkout(scheduledDate=current, user_id=user, workout_id=query_workout[0].id)
                     scheduled.save()
                     print(str(current.strftime("%A")) + " " + str(current) + " adding" )
             
@@ -483,13 +509,17 @@ class GetScheduledWorkoutsView2(APIView):
 
 
 class GetScheduledWorkoutsView(APIView):
-    lookup_url_kwarg= 'date'
+    lookup_url_kwarg= ('date','user')
     def get(self, request, format=None):
 
         print("******GetScheduledWorkoutsView Triggered!****")
 
-        dynamic_date = request.GET.get(self.lookup_url_kwarg)
-        print("test: " + dynamic_date)
+        #dynamic_date = request.GET.get(self.lookup_url_kwarg)
+        dynamic_date = request.GET['date']
+        client = int(request.GET['user'])
+
+        print("test: " + str(dynamic_date))
+        print(client)
 
         dyn_yyyy = int(dynamic_date[0:4])
         dyn_mm = int(dynamic_date[5:7])
@@ -512,15 +542,49 @@ class GetScheduledWorkoutsView(APIView):
         last_day_of_month = str(dt(dyn_yyyy,dyn_mm,dyn_dd).replace(day=days_in_month))
         #last_day_of_month = str(dt.today().replace(day=days_in_month))
         print(last_day_of_month)
+        
+        #decides if it should get the users or clients schedule
+        if(client == 0):
+            user_id = self.request.session.get('user_id')
+        else:
+            user_id = client
+
 
         queryset = scheduledWorkout.objects.raw('select * from api_scheduledworkout '
-        +'where user_id = \'{}\' and scheduledDate >= \'{}\' and scheduledDate <= \'{}\' order by scheduledDate'.format(self.request.session.get('user_id'), first_day_of_month, last_day_of_month))
+        +'where user_id = \'{}\' and scheduledDate >= \'{}\' and scheduledDate <= \'{}\' order by scheduledDate'.format(user_id, first_day_of_month, last_day_of_month))
         if len(queryset)>0:
             data = scheduledWorkoutSerializer(queryset, many=True).data
-            #print(data)                    
+            print(data)                    
             return Response(data, status=status.HTTP_200_OK)
         return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
 
+
+class GetWorkoutDailyView(APIView):
+    lookup_url_kwarg= ('date','user')
+    def get(self, request, format=None):
+        print("******GetWorkoutDailyViewTriggered!****")
+
+        date = request.GET['date'] + "%"
+        print("date: " + date)
+        client = request.GET['user']
+        print("user: " + client)
+
+        user = self.request.session.get('user_id')
+        if(client == 0):
+            queryset = Workout.objects.raw('select * from api_scheduledworkout as sw '
+            'inner join api_workout as w on sw.workout_id = w.id '
+            +'where user_id = \'{}\' and scheduledDate like \'{}\''.format(user, date))
+        else:
+            user = client
+            queryset = Workout.objects.raw('select * from api_scheduledworkout as sw '
+            'inner join api_workout as w on sw.workout_id = w.id '
+            +'where user_id = \'{}\' and scheduledDate like \'{}\''.format(user, date))
+
+        if len(queryset)>0:
+            data = WorkoutSerializer(queryset, many=True).data
+            print(data)                    
+            return Response(data, status=status.HTTP_200_OK)
+        return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
 
     
 ########### USER MANAGEMENT [TABLE]  #################################
@@ -567,3 +631,38 @@ class DeleteUserView(APIView):
         user = User.objects.filter(id = user_id).delete()
         user.delete()     
         return Response({'User Deleted': 'OK'}, status=status.HTTP_200_OK)
+
+class DeleteScheduledWorkout(APIView):
+       def post(self, request, format=None):
+        print("DeleteScheduledWorkoutView Triggered!")
+        name = request.data['workoutName']
+        date = request.data['date'] + '%'
+        client = request.data['user']
+        print(name)
+        print(date)
+
+        user = self.request.session.get('user_id')
+        if(client == 0 ):
+            #finds correct workout id to remove  - client view
+            to_delete = scheduledWorkout.objects.raw('select sw.id from api_workout as w '
+            +'inner join api_user_hasWorkouts as uhw on w.id = uhw.workout_id '
+            +'inner join api_scheduledworkout as sw on w.id = sw.workout_id '
+            +'where sw.user_id = \'{}\' and w.name = \'{}\' and sw.scheduledDate like \'{}\';'.format(user , name, date))
+        else:
+            user = client
+            #finds correct workout id to remove - coach view
+            to_delete = scheduledWorkout.objects.raw('select sw.id from api_workout as w '
+            +'inner join api_user_hasWorkouts as uhw on w.id = uhw.workout_id '
+            +'inner join api_scheduledworkout as sw on w.id = sw.workout_id '
+            +'where sw.user_id = \'{}\' and w.name = \'{}\' and sw.scheduledDate like \'{}\';'.format(user , name, date))
+
+
+        print(to_delete[0].id)
+
+
+        scheduledWorkout.objects.filter(id=to_delete[0].id).delete()
+
+        #delete_workout = scheduledWorkout.objects.raw('delete from api_scheduledworkout '
+        #+'where user_id = \'{}\' and workout_id = \'{}\' and scheduledDate like \'{}\';'.format(self.request.session.get('user_id') , query_workout[0].id, date))
+        #print(delete_workout[0].id)
+        return Response({'Workout Deleted': 'OK'}, status=status.HTTP_200_OK)

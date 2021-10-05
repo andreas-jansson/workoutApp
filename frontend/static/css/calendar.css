@@ -10,6 +10,13 @@
     flex-wrap: wrap;
 }
 
+.calendar-title{
+    font-size: 18px;
+    font-weight: 700;
+    color:white;
+    text-align: center;
+}
+
 
 .calendar-dynamic-container{
     width:100%;
@@ -104,10 +111,6 @@
     border: 2px rgb(255, 166, 0) solid;
 }
 
-.calendar-nav-month{
-    font-size: 18px;
-    font-weight: 700;
-}
 
 
 .calendar-nav-next-btn{
@@ -122,4 +125,83 @@
 .calendar-nav-next-btn:hover{
     background-color:rgb(46, 45, 45);
     border: 2px rgb(255, 166, 0) solid;
+}
+
+
+/****** edit calendar item *****/
+
+.calendar-edit-container{
+    width:80%;
+    height:80%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: center;
+    color:white;
+}
+
+.calendar-edit-workout-container{
+    border:2px red solid;
+    width: 90%;
+    height:60%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 5px;
+}
+
+.calendar-dynamic-workout-container{
+    width:100%;
+    height: auto;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: center;
+}
+
+.calendar-workout-item{
+    width:90%;
+    height:50px;
+    border:2px rgb(56, 55, 55) solid;
+    align-self: center;
+    border-radius: 5px;
+    margin-top:3%;
+    display:flex;
+    align-items: center;
+    justify-content: space-around;
+    cursor:pointer;
+    color: white;
+}
+
+.calendar-workout-item:hover{
+    background-color: var(--grayDefault);
+}
+
+.calendar-workout-elemTextContainer-btn{
+    width:80%;
+}
+
+.calendar-remove-workout-btn{
+    width: 45px;
+    height: 45px;
+    font-size: 40px;
+    background: none;
+    border: none;
+    color: white;
+    order: 2;
+}
+
+.calendar-edit-return-btn{
+    margin-top:40px;
+    width: 80px;
+    height: 40px;
+    border: 2px var(--grayDefault) solid;
+    background:none;
+    color: white;
+    border-radius: 5px;
+}
+
+.calendar-edit-return-btn:hover{
+    background:rgb(59, 59, 59);
 }

@@ -22,16 +22,61 @@ export default class CalendarPage extends PureComponent {
         month: "",
         month2: new Date().getMonth(),
         monthOffset: 0,
+        editDate: "",
     };
+    console.log("xxxxx")
+    console.log(this.props.user)
   
   }
 
 
   handleRemoveCalendarItem = (e) =>{
-      e.preventDefault();
-      console.log(e.target.value);
-      this.setState({editItem:true})
+    e.preventDefault();
+    this.setState({editItem:true, editDate: e.target.value})
+    console.log(e.target.value);
+
   }
+
+  handleRemoveWorkout = (e) =>{
+    e.preventDefault();
+    console.log("Delete workouts!");
+    console.log(e.target.value);
+    var confirm_choice = confirm('Are you sure you wish to remove ' + e.target.value +'?')
+
+    if(confirm_choice == true){
+        console.log("Deleted!");
+        this.DeleteWorkout(e.target.value);
+    }
+    else{
+        console.log("No can do");
+    }
+  }
+
+    DeleteWorkout=(workoutName)=>{
+
+    var date = this.state.editDate;
+    var user = this.props.user
+    const requestOptions={
+        method: 'POST',
+        headers: {'Content-Type' : 'application/json'},
+        body: JSON.stringify({
+            workoutName,
+            date,
+            user,
+        }),
+    };
+
+    fetch("/api/delete-scheduled-workout", requestOptions)
+    .then((response) => {
+        if (!response.ok){
+            console.log("Failed to delete workout!");
+        }
+        else{
+            console.log("Success deleteing workout!");
+            window.location.reload();
+        }
+    })
+}
 
   createCalendar=(e)=>{
     e.preventDefault();
@@ -61,7 +106,7 @@ export default class CalendarPage extends PureComponent {
     //console.log("len: " + monthLen);
 
 
-    fetch("/api/get-scheduled-workouts?date=" + date.toLocaleDateString())
+    fetch("/api/get-scheduled-workouts?date=" + date.toLocaleDateString()+"&user="+ this.props.user)
     .then((response) => {
         if (!response.ok){
             console.log("Failed get scheduled workouts!");
@@ -395,20 +440,83 @@ export default class CalendarPage extends PureComponent {
 
   }
 
-  renderCalendar(){
 
-    const monthNames = ["January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"];
-    console.log("m2: " + this.state.month2)
+  LoadDailyWorkouts = () =>{
+    //console.log("edit date: " + this.state.editDate)
+
+    fetch("/api/get-workouts-daily?date=" + this.state.editDate +"&user="+ this.props.user)
+    .then((response) => {
+        if (!response.ok){
+            //console.log("Failed get workouts!");
+        }
+        return response.json()}
+        ).then((data)=>{
+            const elemContainer = document.createElement('div');
+            elemContainer.className = "calendar-dynamic-workout-container"
+
+    
+            for(var i = 0; i < data.length; i++) {
+                //unique_id = this.state.exerciseId;
+                //console.log(data[i].name);
+                var exerciseName = data[i].name.toString();
+                
+                var elemItem = document.createElement('div');
+                elemItem.className = "calendar-workout-item";
+                elemItem.id = i+1000;
+                elemItem.value = exerciseName;
+                //elemItem.onclick = this.handleSelectWorkout;
+
+                var elemTextContainer = document.createElement('div');
+                elemTextContainer.className = "calendar-workout-elemTextContainer-btn"
+                elemTextContainer.value = exerciseName;
+
+                var elemText = document.createTextNode(exerciseName);
+                //elemText.value = exerciseName
+
+                var elemMinus = document.createElement('Button');
+                elemMinus.className = "calendar-remove-workout-btn";
+                elemMinus.innerHTML = "-";
+                elemMinus.value = exerciseName;
+                elemMinus.type = "submit";
+                elemMinus.id = exerciseName;
+                elemMinus.onclick = this.handleRemoveWorkout;
+
+
+                elemContainer.appendChild(elemItem);
+                elemItem.appendChild(elemTextContainer);
+                elemItem.appendChild(elemMinus);
+                elemTextContainer.appendChild(elemText);
+
+            }
+            //console.log(elemContainer)
+
+            let targetNode = document.getElementsByClassName("calendar-edit-workout-container")[0].appendChild(elemContainer);
+
+        });
+}
+
+  renderEditCalendar=()=>{
+
+      return(
+        <div className="calendar-edit-container">
+            <p>These are the scheduled workouts for {this.state.editDate}</p>
+            <div className="calendar-edit-workout-container">
+                { this.LoadDailyWorkouts()}
+            </div>
+            <button className="calendar-edit-return-btn" onClick={ ()=>{this.setState({editItem: false})}}>Return</button>
+        </div>
+      );
+  }
+
+  renderCalendar=()=>{
 
     if(this.state.editItem == false){
       return(
           <>
-            <button className="calendar-nav-next-btn" onClick={ this.createCalendar }>
-                    Refresh
-                </button>
             <div className="calendar-title">
                 Scheduled Workouts
+                <br/>
+                { this.state.month } { this.state.year }
             </div>
             <div className="calendar-container">
 
@@ -417,12 +525,9 @@ export default class CalendarPage extends PureComponent {
                 <button className="calendar-nav-prev-btn" value="-1" onClick={ this.createCalendar }>
                     Prev
                 </button>
-                <div className="calendar-nav-month">
-                    { /*monthNames[this.state.month2] */}
-                    { this.state.month }
-                    <br/>
-                    { this.state.year }
-                </div>
+                <button className="calendar-nav-next-btn" onClick={ this.createCalendar }>
+                    Refresh
+                </button>
                 <button className="calendar-nav-next-btn" value="1" onClick={ this.createCalendar }>
                     Next
                 </button>
@@ -432,12 +537,8 @@ export default class CalendarPage extends PureComponent {
     }
     else{
         return(
-            <>
-              <div className="calendar-edit-container">
-                Edit
-              </div>
-          </>
-        );
+             this.renderEditCalendar() 
+        );  
     }
   }
 

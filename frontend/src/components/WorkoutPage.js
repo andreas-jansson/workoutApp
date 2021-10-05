@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route, Link, Redirect} from "react-rou
 import WorkoutAddPage from "./WorkoutAddPage";
 import '../../static/css/workout.css';
 import WorkoutManagmentPage from "./WorkoutManagementPage";
+import WorkoutStandardPage from "./WorkoutStandardPage";
 
 
 export default class WorkoutPage extends Component{
@@ -16,7 +17,7 @@ export default class WorkoutPage extends Component{
         this.state={
             sessionActive: false,
             mainSelector: 0, /* 0: default 1: add workout,2: manage workouts,3: standardworkouts.*/
-
+            roleType:0,
         };
 
         this.handleSubmit1 = this.handleSubmit1.bind(this);
@@ -28,6 +29,39 @@ export default class WorkoutPage extends Component{
         this.WorkoutRender = this.WorkoutRender.bind(this);
 
     }
+
+    componentDidMount = () =>{
+        this.sessionExist();
+    }
+    
+    
+        /* redirects if session exists */
+        sessionExist = () => {
+          const requestOptions = {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          };
+      
+          fetch("/api/session-exist", requestOptions).then((response) => {
+            if (response.status == 202) {
+              //console.log("session exists");
+              this.setState({ sessionActive: true });
+              return response.json()
+            } else {
+              //console.log("Session Missing");
+            }
+            return response.json()
+          }).then((data)=>{
+              //console.log("***")
+              console.log(data.fname)
+              this.setState({ 
+                  roleType: data.role_id,
+              });
+              
+          })
+        }
+
+        
     /* handles the 3 main buttons and sets the state variable */
     handleSubmit1 = () =>{
         this.setState({
@@ -49,6 +83,7 @@ export default class WorkoutPage extends Component{
         this.setState({
             mainSelector: 3,
         });
+        this.props.history.push("/workout-standard");
     }
 
     /* Depending on state variable, renders different functions*/
@@ -77,35 +112,59 @@ export default class WorkoutPage extends Component{
   
     /* starting page of workouts*/
     WorkoutLanding(){
-        return(
-            <div className="wp-container">
-                <div className="wp-section wp-box1">
-                    <form onSubmit={ this.handleSubmit1 }>
-                        <button type="submit" className="wp-btn">
-                            ADD WORKOUT +
-                        </button>
-                    </form>
-                    <div className="wp-lineStyle" />
+        if(this.state.roleType == 2){
+            return(
+                <div className="wp-container">
+                    <div className="wp-section wp-box1">
+                        <form onSubmit={ this.handleSubmit1 }>
+                            <button type="submit" className="wp-btn">
+                                ADD WORKOUT +
+                            </button>
+                        </form>
+                        <div className="wp-lineStyle" />
+                    </div>
+                    <div className="wp-section wp-box1">
+                        <form onSubmit={ this.handleSubmit2 }>
+                            <button type="submit" className="wp-btn">
+                                MANAGE WORKOUTS +
+                            </button>
+                        </form>
+                        <div className="wp-lineStyle" />
+                    </div>
+                    <div className="wp-section wp-box1">
+                        <form onSubmit={ this.handleSubmit3 }>
+                            <button type="submit" className="wp-btn">
+                                STANDARD WORKOUTS +
+                            </button>
+                        </form>
+                        <div className="wp-lineStyle" />
+                    </div>
                 </div>
-                <div className="wp-section wp-box1">
-                    <form onSubmit={ this.handleSubmit2 }>
-                        <button type="submit" className="wp-btn">
-                            MANAGE WORKOUTS +
-                        </button>
-                    </form>
-                    <div className="wp-lineStyle" />
+            );
+            }
+        else{
+            return(
+                <div className="wp-container">
+                    <div className="wp-section wp-box1">
+                        <form onSubmit={ this.handleSubmit1 }>
+                            <button type="submit" className="wp-btn">
+                                ADD WORKOUT +
+                            </button>
+                        </form>
+                        <div className="wp-lineStyle" />
+                    </div>
+                    <div className="wp-section wp-box1">
+                        <form onSubmit={ this.handleSubmit2 }>
+                            <button type="submit" className="wp-btn">
+                                MANAGE WORKOUTS +
+                            </button>
+                        </form>
+                        <div className="wp-lineStyle" />
+                    </div>
                 </div>
-                <div className="wp-section wp-box1">
-                    <form onSubmit={ this.handleSubmit3 }>
-                        <button type="submit" className="wp-btn">
-                            STANDARD WORKOUTS +
-                        </button>
-                    </form>
-                    <div className="wp-lineStyle" />
-                </div>
-            </div>
-        );
-        
+                );
+            
+        }
     }
 
 
