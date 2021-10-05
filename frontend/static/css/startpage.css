@@ -1,124 +1,138 @@
 /****************** Start Page *************************/
 
-.sp-container{
-    display:flex;
-    flex-direction: column;
+.sp-container {
+  display: flex;
+  flex-direction: column;
 }
 
-
-.sp-section{
-    width:100vw;
-    height: 100vh;
+.sp-section {
+  width: 100vw;
+  height: 100vh;
 }
 
-
-.box-1{
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(0deg,rgba(0,0,0,0.9),rgba(73, 73, 73, 0.6)), url('../images/index/heroimage.png');
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+.box-1 {
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.9), rgba(73, 73, 73, 0.6)),
+    url("../images/index/heroimage.png");
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
-.sp-box1-info{
-    display:flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width:auto;
-    height: calc(100vh - 50px);
+.sp-box1-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: calc(100vh - 50px);
 }
 
-
-.box-1 img{
-    object-fit: cover;
-    opacity: 0.4;
+.box-1 img {
+  object-fit: cover;
+  opacity: 0.4;
 }
 
-.title{
-    display: inline-block;
-    font-size: 180px;
-    font-weight: bold;
-    text-align: center;
-    height: 400px;
-
-
+.title {
+  display: inline-block;
+  font-size: 180px;
+  font-weight: bold;
+  text-align: center;
+  height: 400px;
 }
 
-.title p{
-    background: -webkit-linear-gradient(360deg,#e66a04, #fcef45);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-family: Arial, Helvetica, sans-serif;
-    font-variant: normal;
+.title p {
+  background: -webkit-linear-gradient(360deg, #e66a04, #fcef45);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-family: Arial, Helvetica, sans-serif;
+  font-variant: normal;
 }
 
-.box-2{
-    background-color: var(--grayDefault);
-    display:flex;
-    flex-direction: column;
-    justify-content:center;
+.box-2 {
+  background-color: var(--grayDefault);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.box-2-top{
-    display:flex;
-    align-items: center;
-    justify-content:space-evenly;
+.box-2-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
 }
 
-.box-2-img{
-    background-image: url('../images/index/default-workout-img.jpeg');
-    box-shadow: 10px 10px 5px rgb(34, 34, 34);
-    height: 266px;
-    width: 400px;
-    background-size:contain;
-    background-repeat: no-repeat;
-    border-radius: 20px;
+.box-2-img {
+  background-image: url("../images/index/default-workout-img.jpeg");
+  box-shadow: 10px 10px 5px rgb(34, 34, 34);
+  height: 266px;
+  width: 400px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  border-radius: 20px;
 }
 
-.box-2-info{
-    color:white;
+.box-2-info {
+  color: white;
 }
 
-.box-2-bottom{
-    width:90vw;
-    height: 3px;
-    margin-left: 5%;
-    background: var(--orangeGradiant1);
-    background: var(--orangeGradiant2);
-    border-radius: 5px;
-    margin-top: 40px;
+.box-2-bottom {
+  width: 90vw;
+  height: 3px;
+  margin-left: 5%;
+  background: var(--orangeGradiant1);
+  background: var(--orangeGradiant2);
+  border-radius: 5px;
+  margin-top: 40px;
 }
 
-.box-3{
-    background-color: #e4e3e1;
-    height: 50vh;
+.box-3 {
+  background-color: #e4e3e1;
+  height: 50vh;
 }
 
-
-.sp-text-info{
-    color:white;
-    padding-bottom: 20px;
+.sp-text-info {
+  color: white;
+  padding-bottom: 20px;
 }
 
-.sp-btn-join{
-    background:var(--orangeGradiant1);
-    background: var(--orangeGradiant2); 
-    border: none;
-    border-radius: 35px;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 32px;
-    margin-right:10px;
+.sp-btn-join {
+  background: var(--orangeGradiant1);
+  background: var(--orangeGradiant2);
+  border: none;
+  border-radius: 35px;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 32px;
+  margin-right: 10px;
 }
 
 /* försöker få call to action knappens text att bli lite metallisk- funkar inte atm*/
-.sp-btn-join p{
-    background: -webkit-linear-gradient(360deg,#ffffff, #b9b9b9);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+.sp-btn-join p {
+  background: -webkit-linear-gradient(360deg, #ffffff, #b9b9b9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+
+@media only screen and (max-width: 600px) {
+  /* For tablets: */
+  div.title {
+    font-size: 50px;
+    height: 100px;
+    margin-bottom: 20%;
+  }
+
+  div.sp-box1-info {
+    font-size: 15px;
+  }
+
+  div.box2-info {
+    font-size: 15px;
+  }
 }
