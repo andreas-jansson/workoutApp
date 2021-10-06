@@ -44,11 +44,11 @@ const validateSignUpForm = payload => {
     }
     if (payload.lname.trim().length === 0) {
       isFormValid = false;
-      errors.lname = "Please provide a first name.";
+      errors.lname = "Please provide a last name.";
     }
     if (payload.lname.trim().length > 0 && payload.lname.trim().length < 3) {
       isFormValid = false;
-      errors.lname = "First name must contain at least 3 characters.";
+      errors.lname = "Last name must contain at least 3 characters.";
     }
   }
 
