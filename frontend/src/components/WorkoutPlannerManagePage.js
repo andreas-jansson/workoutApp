@@ -295,25 +295,25 @@ export default class WorkoutPlannerManagePage extends Component {
             <form onSubmit={ this.handleAddCalendar }>
             <div className="wpmp-day-picker">
                 <span><p>mon</p>
-                <input className="wpmp-checkbox" type="checkbox" onChange={ (e)=>{ this.setState({mon: e.target.value})}}/>
+                <input className="wpmp-checkbox" type="checkbox" onChange={ (e)=>{ this.setState({mon: !this.state.mon})}}/>
                 </span>
                 <span><p>tue</p>
-                <input className="wpmp-checkbox" type="checkbox" onChange={ (e)=>{ this.setState({tue: e.target.value})}}/>
+                <input className="wpmp-checkbox" type="checkbox" onChange={ (e)=>{ this.setState({tue: !this.state.tue})}}/>
                 </span>
                 <span><p>wed</p>
-                <input className="wpmp-checkbox" type="checkbox" onChange={ (e)=>{ this.setState({wed: e.target.value})}}/>
+                <input className="wpmp-checkbox" type="checkbox" onChange={ (e)=>{ this.setState({wed: !this.state.wed})}}/>
                 </span>
                 <span><p>thu</p>
-                <input className="wpmp-checkbox" type="checkbox" onChange={ (e)=>{ this.setState({thu: e.target.value})}}/>
+                <input className="wpmp-checkbox" type="checkbox" onChange={ (e)=>{ this.setState({thu: !this.state.thu})}}/>
                 </span>
                 <span><p>fri</p>
-                <input className="wpmp-checkbox" type="checkbox" onChange={ (e)=>{ this.setState({fri: e.target.value})}}/>
+                <input className="wpmp-checkbox" type="checkbox" onChange={ (e)=>{ this.setState({fri: !this.state.fri})}}/>
                 </span>
                 <span><p>sat</p>
-                <input className="wpmp-checkbox" type="checkbox" onChange={ (e)=>{ this.setState({sat: e.target.value})}}/>
+                <input className="wpmp-checkbox" type="checkbox" onChange={ (e)=>{ this.setState({sat: !this.state.sat})}}/>
                 </span>
                 <span><p>sun</p>
-                <input className="wpmp-checkbox" type="checkbox" onChange={ (e)=>{ this.setState({sun: e.target.value})}}/>
+                <input className="wpmp-checkbox" type="checkbox" onChange={ (e)=>{ this.setState({sun: !this.state.sun})}}/>
                 </span>
             </div>
             <div className="wpmp-date-picker">

@@ -20,6 +20,7 @@ import WorkoutPlannerPage from "./WorkoutPlannerPage";
 import WorkoutPlannerViewPage from "./WorkoutPlannerViewPage";
 import WorkoutPlannerManagePage from "./WorkoutPlannerManagePage";
 import WorkoutStandardPage from "./WorkoutStandardPage";
+import ActiveWorkoutPage from "./ActiveWorkoutPage";
 
 
 export default class App extends Component {
@@ -182,7 +183,7 @@ export default class App extends Component {
                 </div>
                 </div>
             </Link>
-            <Link to="/dashboard"
+            <Link to="/active-workout"
               onClick={ ()=>{this.setState({selectedNavbar: "active-workout"})}}
               >
                 <div className="menu-btn btn4" >
@@ -272,6 +273,7 @@ export default class App extends Component {
               <Route path="/workout-planner-view" component={WorkoutPlannerViewPage} />
               <Route path="/workout-planner-manage" component={WorkoutPlannerManagePage} />
               <Route path="/workout-standard" component={WorkoutStandardPage} />
+              <Route path="/active-workout" component={ActiveWorkoutPage} />
             </Switch>
             </div>
           </Router>
