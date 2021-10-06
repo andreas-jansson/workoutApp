@@ -1,5 +1,10 @@
 /****************** Start Page *************************/
 
+body {
+  /*Workaround to prevent the horizontal scrollbar*/
+  overflow-x: hidden;
+}
+
 .sp-container {
   display: flex;
   flex-direction: column;
