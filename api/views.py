@@ -205,21 +205,23 @@ class GetWorkoutView(APIView):
         shared = False
         if(User.objects.filter(id=self.request.session.get('user_id'))[0].roleid_id > 2):
             print("coach")
-            queryset_shared = Workout.objects.raw('select * from api_workout where active = 1')
+            queryset = Workout.objects.raw('select * from api_workout where active = 1')
+            print(queryset)
             shared = True
-
-
-        queryset = Workout.objects.raw('select * from api_user_hasWorkouts as uhw '
-        +'inner join api_workout as w on uhw.workout_id = w.id where uhw.user_id = \'{}\' and active =1'.format(self.request.session.get('user_id')))
-        
-        if(shared == True):
-            result_list = list(chain(queryset_shared, queryset))
         else:
-            result_list = queryset
-        
+            queryset = Workout.objects.raw('select * from api_user_hasWorkouts as uhw '
+            +'inner join api_workout as w on uhw.workout_id = w.id where uhw.user_id = \'{}\' and active =1'.format(self.request.session.get('user_id')))
+            print(queryset)
+
+        #if(shared == True):
+            #result_list = list(chain(queryset_shared, queryset))
+        #else:
+            #result_list = queryset
+        #print(result_list)
+
 
         if len(queryset)>0:
-            data = WorkoutSerializer(result_list, many=True).data
+            data = WorkoutSerializer(queryset, many=True).data
             print(data)                    
             return Response(data, status=status.HTTP_200_OK)
         return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
@@ -231,11 +233,17 @@ class GetWorkoutExercisesView(APIView):
         name = request.GET.get(self.lookup_url_kwarg)
         print("name: " + name)
         print("GetWorkoutExerciseView Triggered!")
-        queryset = Workout.objects.raw('select e.id, e.name, e.type_id from api_user_hasWorkouts as uhw '
-        +'inner join api_workout as w on uhw.workout_id = w.id '
-        +'inner join api_workout_consistsOf as wco on wco.workout_id = uhw.workout_id '
-        +'inner join api_exercise as e on e.id = wco.exercise_id '
-        +'where uhw.user_id = \'{}\' and  active = 1  and w.name = \'{}\''.format(self.request.session.get('user_id'), name))
+        if(User.objects.filter(id=self.request.session.get('user_id'))[0].roleid_id > 2):
+            queryset = Workout.objects.raw('select e.id, e.name, e.type_id from api_workout as w '
+            +'inner join api_workout_consistsOf as wco on wco.workout_id = w.id '
+            +'inner join api_exercise as e on e.id = wco.exercise_id '
+            +'where  active = 1  and w.name = \'{}\';'.format(name))
+        else:
+            queryset = Workout.objects.raw('select e.id, e.name, e.type_id from api_user_hasWorkouts as uhw '
+            +'inner join api_workout as w on uhw.workout_id = w.id '
+            +'inner join api_workout_consistsOf as wco on wco.workout_id = uhw.workout_id '
+            +'inner join api_exercise as e on e.id = wco.exercise_id '
+            +'where uhw.user_id = \'{}\' and  active = 1  and w.name = \'{}\''.format(user, name))
         
         if len(queryset)>0:
             data = WorkoutSerializer(queryset, many=True).data
@@ -252,13 +260,20 @@ class UpdateWorkoutView(APIView):
         print(request.data['workoutName'])
         name = request.data['workoutName']
 
-        #finds the ID of the excercise that is active and belongs to this user
-        query_workout = Exercise.objects.raw('select w.id, w.description from api_workout as w '
-        +'inner join api_user_hasWorkouts as uhw '
-        +'on w.id = uhw.workout_id inner join api_user as u '
-        +'on uhw.user_id = u.id where u.id = \'{}\' and w.name = \'{}\' and w.active = 1'.format(self.request.session.get('user_id') , name))
+        #finds the ID of the workout that is active and belongs to this user or is shared if coach
+        if(User.objects.filter(id=self.request.session.get('user_id'))[0].roleid_id > 2):
+            query_workout = Exercise.objects.raw('select w.id, w.description from api_workout as w where w.name = \'{}\' and w.active = 1'.format(name))
+            print(query_workout)
+        else:
+            query_workout = Exercise.objects.raw('select w.id, w.description from api_workout as w '
+            +'inner join api_user_hasWorkouts as uhw '
+            +'on w.id = uhw.workout_id inner join api_user as u '
+            +'on uhw.user_id = u.id where u.id = \'{}\' and w.name = \'{}\' and w.active = 1'.format(self.request.session.get('user_id') , name))
+         
+            
 
-        print(query_workout[0].id)
+
+        #print(query_workout[0].id)
 
         #updates old workout to inactive
         workout = Workout.objects.get(id=query_workout[0].id)
@@ -561,8 +576,8 @@ class GetWorkoutDailyView(APIView):
 
         date = request.GET['date'] + "%"
         print("date: " + date)
-        client = request.GET['user']
-        print("user: " + client)
+        client = int(request.GET['user'])
+        print("user: " + str(client))
 
         user = self.request.session.get('user_id')
         if(client == 0):
