@@ -33,6 +33,20 @@
   height: 100vh;
 }
 
+.reg-alert-container{
+  height:30px;
+  width: 250px;
+  margin-top: 160px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.reg-alert-hidden {
+  opacity: 0;
+  transition: all 250ms linear 2s;
+}
+
 @media screen and (max-width: 550px) {
   .loginBox {
     width: 85%;

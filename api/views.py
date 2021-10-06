@@ -66,7 +66,7 @@ class RegisterUserView(APIView):
         stream = io.BytesIO(request.body)
         data = JSONParser().parse(stream)
         if (email_is_registered(data['email'])):
-            return Response({'User already exists': 'BAD'}, status=status.HTTP_226_IM_USED)
+            return Response({'User already exists': 'BAD'}, status=status.HTTP_418_IM_A_TEAPOT)
         else:
             new_salt = create_salt()
             hashed_password = create_pw_hash(data['password'], new_salt)

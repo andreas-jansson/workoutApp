@@ -1,13 +1,11 @@
 import React, { Component } from "react";
 import {
   BrowserRouter as Router,
-  Switch,
-  Route,
   Link,
-  Redirect,
 } from "react-router-dom";
 import '../../static/css/login.css';
 import '../../static/css/header.css';
+import Alert from "@material-ui/lab/Alert";
 
 
 export default class LoginPage extends Component {
@@ -16,38 +14,38 @@ export default class LoginPage extends Component {
   constructor(props) {
     super(props);
     //this.state = { sessionActive: false };
-    this.state = { email: "", password: "" };
+    this.state = { email: "", password: "", invalidInfo: false };
 
     this.OnSignIn = this.OnSignIn.bind(this);
     this.EmailChange = this.EmailChange.bind(this);
     this.PasswordChange = this.PasswordChange.bind(this);
   }
 
-    /* runs on page load*/
-    componentDidMount = () => {
-      this.sessionExist();
-    };
-  
-    /* redirects if session exists */
-    sessionExist = () => {
-      const requestOptions = {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      };
-  
-      fetch("/api/session-exist", requestOptions).then((response) => {
-        if (response.status == 202) {
-          console.log("session exists");
-          window.location.href = "/dashboard";
-          return response.json()
-        } else {
-          console.log("Session Missing");
-        }
-        return response.json()
-      })
-    }
+  /* runs on page load*/
+  componentDidMount = () => {
+    this.sessionExist();
+  };
 
-    
+  /* redirects if session exists */
+  sessionExist = () => {
+    const requestOptions = {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    };
+
+    fetch("/api/session-exist", requestOptions).then((response) => {
+      if (response.status == 202) {
+        console.log("session exists");
+        window.location.href = "/dashboard";
+        return response.json()
+      } else {
+        console.log("Session Missing");
+      }
+      return response.json()
+    })
+  }
+
+
   EmailChange(event) {
     this.setState({ email: event.target.value });
   }
@@ -63,18 +61,18 @@ export default class LoginPage extends Component {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-          email, password,
+        email, password,
       }),
     };
     fetch("/api/login-user", requestOptions)
-    .then((response) => {
-      if (response.ok) {
-        console.log("Success!");
-        window.location.href = "/dashboard";
-      } else {
-        console.log("Failed!");
-      }
-    });
+      .then((response) => {
+        if (response.ok) {
+          console.log("Success!");
+          window.location.href = "/dashboard";
+        } else {
+          this.setState({ invalidInfo: true });
+        }
+      });
 
     event.preventDefault();
   }
@@ -107,33 +105,39 @@ export default class LoginPage extends Component {
               Email
             </div>
             <form>
-                <input
-                  className="login-text"
-                  type="text"
-                  email={this.state.email}
-                  onChange={this.EmailChange}
-                  maxLength="50"
-                />
+              <input
+                className="login-text"
+                type="email"
+                email={this.state.email}
+                onChange={this.EmailChange}
+                maxLength="50"
+              />
               <div align="center" className="login-padding">
                 Password
               </div>
-                <input
-                  className="login-text"
-                  type="password"
-                  password={this.state.password}
-                  onChange={this.PasswordChange}
-                  maxLength="30"
-                />
+              <input
+                className="login-text"
+                type="password"
+                password={this.state.password}
+                onChange={this.PasswordChange}
+                maxLength="30"
+              />
               <div align="center">
-                  <button
-                    className="myButton"
-                    variant="contained"
-                    onClick={this.OnSignIn}
-                  >
-                    Sign In
-                  </button>
+                <br />
+                <button
+                  className="myButton"
+                  variant="contained"
+                  onClick={this.OnSignIn}
+                >
+                  Sign In
+                </button>
               </div>
             </form>
+          </div>
+          <div className="wpmp-alert-container">
+            <div className={`alert alert-success ${this.state.invalidInfo ? 'wpmp-alert-shown' : 'wpmp-alert-hidden'}`}>
+              <Alert severity="error">Invalid email or password</Alert>
+            </div>
           </div>
         </div>
       </div>

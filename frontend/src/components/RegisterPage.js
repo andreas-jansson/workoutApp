@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import {
-  BrowserRouter as Router,
   Link,
 } from "react-router-dom";
 import '../../static/css/register.css';
@@ -9,20 +8,22 @@ import Button from '@material-ui/core/Button';
 import ValidateRegistration from "./ValidateRegistration";
 import { MuiThemeProvider } from "@material-ui/core";
 import { createTheme } from "@material-ui/core/styles";
-import { orange, white, green, red } from "@material-ui/core/colors";
+import Alert from "@material-ui/lab/Alert";
 
 import '../../static/css/register.css';
 import '../../static/css/header.css';
 
 const validateSignUpForm = ValidateRegistration.validateSignUpForm;
 
-const my_theme = createTheme({ 
-  palette: { primary: {
-    main: "#e66a04"
-  }, secondary: {
-    light: '#0066ff',
-    main: '#0044ff',
-  }},
+const my_theme = createTheme({
+  palette: {
+    primary: {
+      main: "#e66a04"
+    }, secondary: {
+      light: '#0066ff',
+      main: '#0044ff',
+    }
+  },
   overrides: {
     MuiFilledInput: {
       root: {
@@ -39,7 +40,7 @@ const my_theme = createTheme({
       }
     }
   }
-  })
+})
 
 export default class RegisterPage extends Component {
   constructor(props) {
@@ -56,6 +57,7 @@ export default class RegisterPage extends Component {
       },
       type: "password",
       btnTxt: "show",
+      invalidInfo: false,
     };
     this.handleChange = this.handleChange.bind(this);
     //this.handleSubmit = this.handleSubmit.bind(this);
@@ -83,13 +85,13 @@ export default class RegisterPage extends Component {
       if (response.ok) {
         window.location.href = "/login";
       } else {
-        console.log("Failed!");
+        this.setState({ invalidInfo: true });
       }
     });
   };
 
   handleChange(e) {
-    const {name, value} = e.target
+    const { name, value } = e.target
     this.setState({
       user: {
         ...this.state.user,
@@ -118,7 +120,7 @@ export default class RegisterPage extends Component {
 
   pwMask(e) {
     this.setState({
-      type : this.state.type === "password" ? "input" : "password",
+      type: this.state.type === "password" ? "input" : "password",
       btnTxt: this.state.btnTxt === "show" ? "hide" : "show"
     }
     )
@@ -136,7 +138,7 @@ export default class RegisterPage extends Component {
     } else {
       const payloaderrors = payload.errors;
       this.setState({
-        errors : payloaderrors
+        errors: payloaderrors
       });
       console.error("Invalid Form");
     }
@@ -144,101 +146,106 @@ export default class RegisterPage extends Component {
 
   render() {
     return (
-    <div className="reg-Picture">
-      {this.RenderHeader()}
-      
-      <MuiThemeProvider theme={my_theme}>
-      <div className="loginBox">
-        <h1>Sign Up</h1>
-        {this.state.errors.message && <p style={{ color: "red" }}>{this.state.errors.message}</p>}
-  
-        <form onSubmit={this.validateForm}>
-          <TextField
-            color="primary"
-            label="First Name"
-            variant="filled"
-            margin = 'normal'
-            name="fname"
-            className='regTextField'
-            value={this.state.user.fname}
-            onChange={this.handleChange}
-            error={this.state.errors.fname}
-            helperText={this.state.errors.fname}
-          />
-          <br/>
-          <TextField
-            color="primary"
-            label="Last Name"
-            variant="filled"
-            margin = 'normal'
-            name="lname"
-            className='regTextField'
-            value={this.state.user.lname}
-            onChange={this.handleChange}
-            error={this.state.errors.lname}
-            helperText={this.state.errors.lname}
-          />
-          <br/>
-          <TextField
-            color="primary"
-            label="Email"
-            variant="filled"
-            margin = 'normal'
-            name="email"
-            className='regTextField'
-            value={this.state.user.email}
-            onChange={this.handleChange}
-            error={this.state.errors.email}
-            helperText={this.state.errors.email}
-          />
-          <br/>
-          <TextField
-            color="primary"
-            type={this.state.type}
-            label="Password"
-            variant="filled"
-            margin = 'normal'
-            name = "password"
-            className='regTextField'
-            value={this.state.user.password}
-            onChange={this.handleChange}
-            error={this.state.errors.password}
-            helperText={this.state.errors.password}
-          />
-          <br/>
-          <TextField
-            color="primary"
-            type={this.state.type}
-            label="Confirm Password"
-            variant="filled"
-            margin = 'normal'
-            name = "confirmed_password"
-            className='regTextField'
-            value={this.state.user.confirmed_password}
-            onChange={this.handleChange}
-            error={this.state.errors.confirmed_password}
-            helperText={this.state.errors.confirmed_password}
-          />
-          <br />
-          <Button
-            primary={true}
-            color = 'primary'
-            variant='contained'
-            size='large'
-            type="submit"
-            label="submit"
-            margin="normal"
-          >
-          Submit
-          </Button>
-        </form>
-        <p>
-          Aleady have an account? <br />
-          <a href="/login">Log in here</a>
-        </p>
+      <div className="reg-Picture">
+        {this.RenderHeader()}
+
+        <MuiThemeProvider theme={my_theme}>
+          <div className="loginBox">
+            <h1>Sign Up</h1>
+            {this.state.errors.message && <p style={{ color: "red" }}>{this.state.errors.message}</p>}
+
+            <form onSubmit={this.validateForm}>
+              <TextField
+                color="primary"
+                label="First Name"
+                variant="filled"
+                margin='normal'
+                name="fname"
+                className='regTextField'
+                value={this.state.user.fname}
+                onChange={this.handleChange}
+                error={this.state.errors.fname}
+                helperText={this.state.errors.fname}
+              />
+              <br />
+              <TextField
+                color="primary"
+                label="Last Name"
+                variant="filled"
+                margin='normal'
+                name="lname"
+                className='regTextField'
+                value={this.state.user.lname}
+                onChange={this.handleChange}
+                error={this.state.errors.lname}
+                helperText={this.state.errors.lname}
+              />
+              <br />
+              <TextField
+                color="primary"
+                label="Email"
+                variant="filled"
+                margin='normal'
+                name="email"
+                className='regTextField'
+                value={this.state.user.email}
+                onChange={this.handleChange}
+                error={this.state.errors.email}
+                helperText={this.state.errors.email}
+              />
+              <br />
+              <TextField
+                color="primary"
+                type={this.state.type}
+                label="Password"
+                variant="filled"
+                margin='normal'
+                name="password"
+                className='regTextField'
+                value={this.state.user.password}
+                onChange={this.handleChange}
+                error={this.state.errors.password}
+                helperText={this.state.errors.password}
+              />
+              <br />
+              <TextField
+                color="primary"
+                type={this.state.type}
+                label="Confirm Password"
+                variant="filled"
+                margin='normal'
+                name="confirmed_password"
+                className='regTextField'
+                value={this.state.user.confirmed_password}
+                onChange={this.handleChange}
+                error={this.state.errors.confirmed_password}
+                helperText={this.state.errors.confirmed_password}
+              />
+              <br />
+              <Button
+                primary={true}
+                color='primary'
+                variant='contained'
+                size='large'
+                type="submit"
+                label="submit"
+                margin="normal"
+              >
+                Submit
+              </Button>
+            </form>
+            <p>
+              Aleady have an account? <br />
+              <a href="/login">Log in here</a>
+            </p>
+          </div>
+        </MuiThemeProvider>
+        <div className="reg-alert-container">
+          <div className={`alert alert-success ${this.state.invalidInfo ? 'reg-alert-shown' : 'reg-alert-hidden'}`}>
+            <Alert severity="error">Email already exists</Alert>
+          </div>
+        </div>
       </div>
-      </MuiThemeProvider>
-    </div>
     );
   };
 }
