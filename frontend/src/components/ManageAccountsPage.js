@@ -3,7 +3,7 @@ import MaterialTable from "material-table";
 import "../../static/css/manage-account-table.css";
 
 function ManageAccountsPage() {
-  const url = "api/get-user";
+  const url = "/api/manage-user";
   const [data, setData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
 
@@ -18,19 +18,34 @@ function ManageAccountsPage() {
       title: "First name",
       field: "fname",
       filtering: false,
-      validate: rowData => rowData.fname.length < 3 ? { isValid: false, helperText: 'Forename must be longer than 3 Characters' } : true,
+      validate: (rowData) =>
+        rowData.fname.length < 3
+          ? {
+            isValid: false,
+            helperText: "Forename must be longer than 3 Characters",
+            }
+          : true,
     },
     {
       title: "Last name",
       field: "lname",
       filtering: false,
-      validate: rowData => rowData.lname.length < 3 ? { isValid: false, helperText: 'Surname must be longer than 3 Characters' } : true,
+      validate: (rowData) =>
+        rowData.lname.length < 3
+          ? {
+              isValid: false,
+              helperText: "Surname must be longer than 3 Characters",
+            }
+          : true,
     },
     {
       title: "Email Address",
       field: "email",
       filtering: false,
-      validate: rowData => rowData.email === '' ? { isValid: false, helperText: 'Email cannot be empty' } : true,
+      validate: (rowData) =>
+        rowData.email === ""
+          ? { isValid: false, helperText: "Email cannot be empty" }
+          : true,
     },
     {
       title: "Role ID",
@@ -67,31 +82,10 @@ function ManageAccountsPage() {
             textAlign: "center",
             backgroundColor: "white",
           }}
-          cellEditable={{
-            cellStyle: {},
-            onCellEditApproved: (newValue, oldValue, rowData, columnDef) => {
-              return new Promise((resolve, reject) => {
-                fetch(url, {
-                  method: "PUT",
-                  headers: {
-                    "Content-type": "application/json",
-                  },
-                  body: newData,
-                })
-                  .then((resp) => resp.json())
-                  .then((resp) => {
-                    getUsers();
-                    resolve();
-                  });
-              });
-            },
-          }}
           title={
-            <div  className="mactable-signup-text">
-            <h2>
-              Account Management Table
-            </h2>
-              </div>
+            <div className="mactable-signup-text">
+              <h2>Account Management Table</h2>
+            </div>
           }
           onRowClick={(evt, selectedRow) =>
             setSelectedRow(selectedRow.tableData.id)
@@ -101,21 +95,21 @@ function ManageAccountsPage() {
               backgroundColor: "orange",
               color: "#FFF",
               fontWeight: "bolder",
-              fontSize: 20,
-              fontStyle:'roboto'
+              fontSize: 15,
+              fontStyle: "roboto",
             },
             rowStyle: (rowData) => ({
+              fontSize: 17,
               backgroundColor:
                 selectedRow === rowData.tableData.id ? "#484849" : "#ededef",
-              color: 
-                selectedRow === rowData.tableData.id ? "#FFF" : "black",
+              color: selectedRow === rowData.tableData.id ? "#FFF" : "black",
             }),
             searchFieldStyle: {
               fontWeight: "bolder",
             },
             exportButton: {
               csv: true,
-              pdf: false
+              pdf: false,
             },
             actionsColumnIndex: -1,
             addRowPosition: "first",
@@ -123,21 +117,20 @@ function ManageAccountsPage() {
           }}
           localization={{
             toolbar: {
-              exportCSVName: "Export some Excel format",
-              exportPDFName: "Export as pdf!!"
-            }
+              exportCSVName: "Export Excel format",
+            },
           }}
           columns={columns}
           data={data}
           editable={{
             onRowUpdate: (newData, oldData) =>
               new Promise((resolve, reject) => {
-                fetch(url + "/" + oldData.id, {
+                fetch(url + '?id=' + oldData.id, {
                   method: "PUT",
                   headers: {
                     "Content-type": "application/json",
                   },
-                  body: newData,
+                  body: JSON.stringify(newData),
                 })
                   .then((resp) => resp.json())
                   .then((resp) => {
@@ -145,9 +138,11 @@ function ManageAccountsPage() {
                     resolve();
                   });
               }),
+
             onRowDelete: (oldData) =>
               new Promise((resolve, reject) => {
-                fetch(url + "/" + oldData.id, {
+                console.log(oldData.id);
+                fetch(url + '?id=' + oldData.id, {
                   method: "DELETE",
                   headers: {
                     "Content-type": "application/json",

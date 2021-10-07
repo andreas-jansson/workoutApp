@@ -598,49 +598,48 @@ class GetWorkoutDailyView(APIView):
 
     
 ########### USER MANAGEMENT [TABLE]  #################################
-class GetUserView(APIView):
+class UserManagementView(APIView):
     def get(self, request, format=None):
         print("GetUserView Triggered!")
+        test = request.GET.get('id')
+        print(test)
         queryset = User.objects.raw('select * from api_user')
 
-        #for i in range(len(queryset)):
-            #print('\nID:',queryset[i].id,'\nFname:',queryset[i].fname,'\nLname:',queryset[i].lname,'\nEmail:',queryset[i].email,'\nCreated:',queryset[i].created,'\nWorkouts?:',queryset[i].hasWorkouts,'\n\n')
-            #print(queryset[i])
-        
         if len(queryset)>0:
             data = UserSerializer(queryset, many=True).data
             return Response(data, status=status.HTTP_200_OK) 
-        return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
-
-class UpdateUserView(APIView):
+        return Response({'User FOUND': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
     
-    def post(self, request, format=None):
-        print("UpdateUserView Triggered!")
+    def put(self, request, format=None):
+        print("PutUserView Triggered!")
+        print(request.data)
 
-        #finds the ID of the modifed User
-        query = User.objects.raw('select * from api_user where id= \'{p}\'')
-
-        print(query[0].id)
-
-        #updates old User to inactive
-        user = User.objects.get(id=query[0].id)
-        user.active=0
-        user.save()
-
-        user_new = User(roleid=roleid, id=id, fname=fname, lname=lname, email=email)
-        user_new.save()
-        return Response({'User Updated': 'OK'}, status=status.HTTP_200_OK)
-
-class DeleteUserView(APIView):
-    def post(self, request, format=None):
-        print("DeleteUserView Triggered!")
-        query = User.objects.get('select * from api_user where id= \'{pk}\'')
-
-        print(query[0].id)
         user_id = request.data['id']
-        user = User.objects.filter(id = user_id).delete()
+        fname   = request.data['fname']
+        lname   = request.data['lname']
+        email   = request.data['email']       
+        
+        query = User.objects.get(id = user_id)
+        query.fname = fname
+        query.lname = lname
+        query.email = email
+        query.save()
+        return Response({'User UPDATED': 'OK'}, status=status.HTTP_200_OK)
+    
+    def delete(self, request, format=None):
+        print("DeleteUserView Triggered!")
+        user_id = request.GET.get('id')
+        print(user_id)
+        
+        scheduledworkout = scheduledWorkout.objects.raw('select * from api_scheduledWorkout where user_id = \'{}\''.format(user_id))
+        print(scheduledworkout)
+        for workout in scheduledworkout: 
+           workout.delete()
+        
+        user = User.objects.filter(id = user_id)
         user.delete()     
-        return Response({'User Deleted': 'OK'}, status=status.HTTP_200_OK)
+        return Response({'User DELETED': 'OK'}, status=status.HTTP_200_OK)
+
 
 class DeleteScheduledWorkout(APIView):
        def post(self, request, format=None):
