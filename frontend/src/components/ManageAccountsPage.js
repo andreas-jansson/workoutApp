@@ -35,6 +35,7 @@ function ManageAccountsPage() {
     {
       title: "Role ID",
       field: "roleid",
+      editable: "never",
       lookup: { 1: "Pending", 2: "Client", 3: "Coach", 4: "Admin" },
     },
     {
