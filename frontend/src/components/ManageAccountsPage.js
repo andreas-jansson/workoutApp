@@ -1,75 +1,121 @@
 import React, { Component, useState, useEffect } from "react";
 import MaterialTable from "material-table";
+import "../../static/css/manage-account-table.css";
 
-export default function ManageAccountsPage() {
-  // Table
+function ManageAccountsPage() {
+  const url = "api/get-user";
   const [data, setData] = useState([]);
-
-  const columns = [
-    { title: "roleid", field: "roleid" },
-    { title: "id", field: "id" },
-    { title: "fname", field: "fname" },
-    { title: "lname", field: "lname" },
-    { title: "email", field: "email" },
-  ];
-
   useEffect(() => {
-    fetch("/api/get-user")
-      .then((resp) => resp.json())
-      .then((resp) => {
-        setData(resp);
-      });
+    getUsers();
   }, []);
 
-  const handleRowUpdate = (newData, oldData, resolve) => {
-        patch("/api/update-user" + newData.id, newData)
-        .then((resp) => {
-          const dataUpdate = [...data];
-          const index = oldData.tableData.id;
-          dataUpdate[index] = newData;
-          setData([...dataUpdate]);
-          resolve();
-        })
+  const getUsers = () => {
+    fetch(url)
+      .then((resp) => resp.json())
+      .then((resp) => setData(resp));
   };
-
-  //fetch("/api/get-workout-exercises?name=" + e.target.innerHTML)
-
-  const handleRowDelete = (oldData, resolve) => {
-    patch(`/api/delete-user/${oldData.id}`).then((resp) => {
-      const dataDelete = [...data];
-      const index = oldData.tableData.id;
-      dataDelete.splice(index, 1);
-      setData([...dataDelete]);
-      resolve();
-    });
-  };
-
+  const columns = [
+    {
+      title: "User ID",
+      field: "id",
+      validate: (rowData) =>
+        rowData.id === undefined || rowData.id === "" ? "Required" : true,
+    },
+    {
+      title: "First name",
+      field: "fname",
+      validate: (rowData) =>
+        rowData.fname === undefined || rowData.fname === "" ? "Required" : true,
+    },
+    {
+      title: "Last name",
+      field: "lname",
+      validate: (rowData) =>
+        rowData.lname === undefined || rowData.lname === "" ? "Required" : true,
+    },
+    {
+      title: "Email Address",
+      field: "email",
+      validate: (rowData) =>
+        rowData.email === undefined || rowData.email === "" ? "Required" : true,
+    },
+    {
+      title: "Role ID",
+      field: "roleid",
+      validate: (rowData) =>
+        rowData.roleid === undefined || rowData.roleid === ""
+          ? "Required"
+          : true,
+    },
+  ];
   return (
-    <div>
-      <div style={{ maxWidth: "50%" }} align="right" className="container.db">
-        <h1 align="center">User Management</h1>
+    <div> 
+      <div className='mactable-signup-text'>
+        <h1 align='center'>Account Management</h1>
+      </div>
 
-        <MaterialTable
-          title="Users"
-          data={data}
+      <div className="mactable-container">
+      <br/>    <br/>
+        <MaterialTable 
+         style='StyledTableCell'
+          title="User Details"
           columns={columns}
+          data={data}
+          options={{ actionsColumnIndex: -1, addRowPosition: "first" }}
           editable={{
+            onRowAdd: (newData) =>
+            new Promise((resolve, reject) => {
+              //Backend call
+              fetch(url, {
+                method: "POST",
+                headers: {
+                  "Content-type": "application/json",
+                },
+                body: JSON.stringify(newData),
+              })
+              .then((resp) => resp.json())
+              .then((resp) => {
+                getUsers();
+                resolve();
+              });
+            }),
             onRowUpdate: (newData, oldData) =>
-              new Promise((resolve) => {
-                handleRowUpdate(newData, oldData, resolve);
-              }),
-              onRowDelete: (oldData) =>
-              new Promise((resolve) => {
-                handleRowDelete(oldData, resolve)
-              }),
-          
+            new Promise((resolve, reject) => {
+              //Backend call
+              fetch(url + "/" + oldData.id, {
+                method: "PUT",
+                headers: {
+                  "Content-type": "application/json",
+                },
+                body: JSON.stringify(newData),
+              })
+              .then((resp) => resp.json())
+              .then((resp) => {
+                getUsers();
+                resolve();
+              });
+            }),
+            onRowDelete: (oldData) =>
+            new Promise((resolve, reject) => {
+              //Backend call
+              fetch(url + "/" + oldData.id, {
+                method: "DELETE",
+                headers: {
+                  "Content-type": "application/json",
+                },
+              })
+              .then((resp) => resp.json())
+              .then((resp) => {
+                getUsers();
+                resolve();
+              });
+            }),
           }}
-          options={{
-            actionsColumnIndex: -1,
-            addRowPosition: "first",
-          }}
-        />
+          />
+
       </div>
     </div>
   );
 }
+
+export default ManageAccountsPage;

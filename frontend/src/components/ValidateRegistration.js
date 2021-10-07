@@ -18,7 +18,7 @@ const validateSignUpForm = payload => {
   ) {
     if (!nameCheck.test(payload.fname)) {
       isFormValid = false;
-      errors.fname = "Invalid characters.";
+      errors.fname = "Invalid letters or a forename that doesn't start with an uppercase letter";
     }
     if (payload.fname.trim().length === 0) {
       isFormValid = false;
@@ -40,7 +40,7 @@ const validateSignUpForm = payload => {
   ) {
     if (!nameCheck.test(payload.lname)) {
       isFormValid = false;
-      errors.lname = "Invalid characters.";
+      errors.lname = "Invalid letters or a surname that doesn't start with an uppercase letter";
     }
     if (payload.lname.trim().length === 0) {
       isFormValid = false;
