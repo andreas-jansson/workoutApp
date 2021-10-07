@@ -14,39 +14,28 @@ function ManageAccountsPage() {
       .then((resp) => resp.json())
       .then((resp) => setData(resp));
   };
+  
   const columns = [
     {
       title: "User ID",
       field: "id",
-      validate: (rowData) =>
-        rowData.id === undefined || rowData.id === "" ? "Required" : true,
     },
     {
       title: "First name",
       field: "fname",
-      validate: (rowData) =>
-        rowData.fname === undefined || rowData.fname === "" ? "Required" : true,
     },
     {
       title: "Last name",
       field: "lname",
-      validate: (rowData) =>
-        rowData.lname === undefined || rowData.lname === "" ? "Required" : true,
     },
     {
       title: "Email Address",
       field: "email",
-      validate: (rowData) =>
-        rowData.email === undefined || rowData.email === "" ? "Required" : true,
     },
     {
       title: "Role ID",
       field: "roleid",
-      validate: (rowData) =>
-        rowData.roleid === undefined || rowData.roleid === ""
-          ? "Required"
-          : true,
-    },
+    }
   ];
   return (
     <div> 
