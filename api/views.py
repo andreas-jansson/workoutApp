@@ -689,7 +689,15 @@ class DeleteScheduledWorkout(APIView):
         #print(delete_workout[0].id)
         return Response({'Workout Deleted': 'OK'}, status=status.HTTP_200_OK)
 
-
+class SettingsView(APIView):
+    def post(self, request, format=None):
+        if(User.objects.filter(id=self.request.session.get('user_id')).exists()):
+            user = User.objects.filter(id=self.request.session.get('user_id'))[0]
+            user.isVisible = request.data['isVisible']
+            user.save()
+            return Response({'isVisible toggled': 'OK'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'Something went wrong': 'BAD'}, status=status.HTTP_418_IM_A_TEAPOT)
 
 
 ############# Logs ######################
