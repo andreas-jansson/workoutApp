@@ -111,12 +111,14 @@ class LoginUserView(generics.ListAPIView):
         if (email_is_registered(data['email'])):
             user = User.objects.filter(email = data['email'])[0]
             if(compare_pw_hash(data['password'], user.salt, user.pwhash)):
+                if (user.roleid == Role.objects.filter(description = 'Unauthorized')[0]):
+                    return Response({'Unauthorized User, Wait to get accepted'}, status=status.HTTP_401_UNAUTHORIZED)
                 self.request.session.create()
                 self.request.session['user_id'] = user.id
                 self.request.session['first_name'] = user.fname
                 self.request.session['role_id'] = user.roleid_id
                 return Response({'Login OK'}, status=status.HTTP_200_OK)
-        return Response({'Invalid Email Or Password'}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({'Invalid Email Or Password'}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
 
 # Recieves exercise type and returns all exercises 
