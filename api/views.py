@@ -208,7 +208,7 @@ class GetWorkoutView(APIView):
         shared = False
         if(User.objects.filter(id=self.request.session.get('user_id'))[0].roleid_id > 2):
             print("coach")
-            queryset = Workout.objects.raw('select * from api_workout where active = 1')
+            queryset = Workout.objects.raw('select * from api_workout where active = 1 and shared = 1')
             print(queryset)
             shared = True
         else:
@@ -216,12 +216,22 @@ class GetWorkoutView(APIView):
             +'inner join api_workout as w on uhw.workout_id = w.id where uhw.user_id = \'{}\' and active =1'.format(self.request.session.get('user_id')))
             print(queryset)
 
-        #if(shared == True):
-            #result_list = list(chain(queryset_shared, queryset))
-        #else:
-            #result_list = queryset
-        #print(result_list)
+        if len(queryset)>0:
+            data = WorkoutSerializer(queryset, many=True).data
+            print(data)                    
+            return Response(data, status=status.HTTP_200_OK)
+        return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
 
+
+
+
+class GetStandardWorkoutView(APIView):
+    def get(self, request, format=None):
+        print("GetWorkoutView Triggered!")
+        shared = False
+
+        queryset = Workout.objects.raw('select * from api_workout where active = 1 and shared = 1')
+        print(queryset)
 
         if len(queryset)>0:
             data = WorkoutSerializer(queryset, many=True).data
@@ -807,6 +817,22 @@ class LoadSpecificLogsView(APIView):
 
         if len(active_logs)>0:
             data = LogExtraSerializer(active_logs, many=True).data
+            print(data)
+            return Response(data, status=status.HTTP_200_OK) 
+        return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class GetClientView(APIView):
+    def get(self, request, format=None):
+        print("GetClientView Triggered!")
+        #coach = request.GET.get(self.lookup_url_kwarg)
+        
+        query_set = User.objects.raw('select u.id, u.fname, u.lname from api_coachhasclient as chc '
+        +'inner join api_user as u on chc.user_id = u.id '
+        +'where chc.coach_id = \'{}\''.format(self.request.session.get('user_id')))
+    
+        if len(query_set)>0:
+            data = UserSerializer(query_set, many=True).data
             print(data)
             return Response(data, status=status.HTTP_200_OK) 
         return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)

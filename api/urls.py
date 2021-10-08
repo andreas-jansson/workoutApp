@@ -4,7 +4,8 @@ from .views import LoginUserView, UserView, SessionExistView, RegisterUserView, 
     , GetWorkoutView, GetWorkoutExercisesView,UpdateWorkoutView, DeleteWorkoutView, DenyPendingUsers \
     , ApprovePendingUsers, CreatePlannedWorkoutView, GetScheduledWorkoutsView \
     , ApprovePendingUsers, GetWorkoutDailyView, DeleteScheduledWorkout, UserManagementView \
-    , GetScheduledWorkoutsTodayView, SaveLogView, LoadActiveLogsView, LoadPreviousLogsView, LoadSpecificLogsView
+    , GetScheduledWorkoutsTodayView, SaveLogView, LoadActiveLogsView, LoadPreviousLogsView, LoadSpecificLogsView \
+    , GetStandardWorkoutView, GetClientView
 
 urlpatterns = [
 
@@ -17,6 +18,8 @@ urlpatterns = [
     path('session-exist', SessionExistView.as_view()),
     path('register-user', RegisterUserView.as_view()),
     path('register-coach', RegisterCoachView.as_view()),
+    path('get-client', GetClientView.as_view()),
+
 
     ##      Exercise       ##
     path('get-exercises', GetExercisesView.as_view()),
@@ -33,6 +36,7 @@ urlpatterns = [
     path('get-scheduled-workouts', GetScheduledWorkoutsView.as_view()),
     path('delete-scheduled-workout', DeleteScheduledWorkout.as_view()),
     path('get-scheduled-workouts-today', GetScheduledWorkoutsTodayView.as_view()),
+    path('get-standard-workouts', GetStandardWorkoutView.as_view()),
 
     ##     Pending User    ## 
     path('deny-user', DenyPendingUsers.as_view()),

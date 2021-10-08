@@ -113,7 +113,7 @@ export default class WorkoutStandardPage extends Component{
     LoadAllWorkouts = () =>{
         console.log("loading workouts")
 
-        fetch("/api/get-workouts")
+        fetch("/api/get-standard-workouts")
         .then((response) => {
             if (!response.ok){
                 console.log("Failed get workouts!");
