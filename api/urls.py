@@ -31,6 +31,7 @@ urlpatterns = [
     path('delete-scheduled-workout', DeleteScheduledWorkout.as_view()),
     path('get-scheduled-workouts-today', GetScheduledWorkoutsTodayView.as_view()),
     path('get-standard-workouts', GetStandardWorkoutView.as_view()),
+    path('get-all-workouts', GetAllWorkoutView.as_view()),
 
     ##     Pending User    ## 
     path('deny-user', DenyPendingUsers.as_view()),

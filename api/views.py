@@ -257,6 +257,12 @@ class GetWorkoutExercisesView(APIView):
             +'inner join api_workout_consistsOf as wco on wco.workout_id = uhw.workout_id '
             +'inner join api_exercise as e on e.id = wco.exercise_id '
             +'where uhw.user_id = \'{}\' and  active = 1  and w.name = \'{}\''.format(self.request.session.get('user_id'), name))
+            #if client, find exercises from their own workout named XYZ, else get exercises from standard workouts
+            if(bool(queryset) == False):
+                queryset = Workout.objects.raw('select e.id, e.name, e.type_id from api_workout as w '
+                +'inner join api_workout_consistsOf as wco on wco.workout_id = w.id '
+                +'inner join api_exercise as e on e.id = wco.exercise_id '
+                +'where  active = 1  and w.name = \'{}\';'.format(name))
         
         if len(queryset)>0:
             data = WorkoutSerializer(queryset, many=True).data
@@ -802,17 +808,7 @@ class LoadSpecificLogsView(APIView):
         print("x:" + workoutName+ ":x")
         print("x:" + date + ":x")
         print("x:" + str(self.request.session.get('user_id'))+":x")
-        '''
-        cursor = connection.cursor()
-        cursor.execute('select e.name, l.id, l.sets, l.reps, l.weight, l.time, l.exercise_id, l.scheduledWorkout_id '
-        +'from api_log  as l inner join api_scheduledworkout as sw '
-        +'on l.scheduledWorkout_id = sw.id '
-        +'inner join api_exercise as e on e.id = l.exercise_id '
-        +'inner join api_workout as w on w.id = sw.workout_id '
-        +'where sw.scheduledDate like \'{}\' and sw.user_id = \'{}\' and w.name = \'{}\' order by e.name, sets desc'.format(date, self.request.session.get('user_id'), workoutName))
-        active_logs  = cursor.fetchall()
-        print(active_logs)
-        '''
+
         active_logs = Log.objects.raw('select e.name, l.id, l.sets, l.reps, l.weight, l.time, l.exercise_id, l.scheduledWorkout_id '
         +'from api_log  as l inner join api_scheduledworkout as sw '
         +'on l.scheduledWorkout_id = sw.id '
@@ -843,4 +839,22 @@ class GetClientView(APIView):
             data = UserSerializer(query_set, many=True).data
             print(data)
             return Response(data, status=status.HTTP_200_OK) 
+        return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class GetAllWorkoutView(APIView):
+    def get(self, request, format=None):
+        print("GetAllWorkoutView Triggered!")
+      
+        queryset1 = Workout.objects.raw('select * from api_workout where active = 1 and shared = 1')
+
+        queryset2 = Workout.objects.raw('select w.id, w.name, w.description, w.active, w.shared from api_user_hasWorkouts as uhw '
+        +'inner join api_workout as w on uhw.workout_id = w.id where uhw.user_id = \'{}\' and active =1'.format(self.request.session.get('user_id')))
+
+        result_list = list(chain(queryset1, queryset2))
+
+        if len(result_list)>0:
+            data = WorkoutSerializer(result_list, many=True).data
+            print(data)                    
+            return Response(data, status=status.HTTP_200_OK)
         return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
