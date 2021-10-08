@@ -41,7 +41,7 @@ export default class ActiveWorkoutPage extends Component{
         console.log(this.state.time)
 
         var updatedSet = this.state.currentSet + 1
-        this.setState({currentSet: updatedSet})
+        //this.setState({currentSet: updatedSet})
         this.saveLog(updatedSet);
 
     }
@@ -162,7 +162,7 @@ export default class ActiveWorkoutPage extends Component{
                 var currentSet = 0
                 for(var i = 0; i < data.length; i++) {
                     console.log(data[i].id);
-                    currentSet = i
+                    currentSet = i+1
                     var elemItem = document.createElement('div');
                     elemItem.className = "awp-active-log-item";
                     elemItem.id = data[i].id;
@@ -198,7 +198,7 @@ export default class ActiveWorkoutPage extends Component{
                     elemTextTimeContainer.appendChild(elemTime);
 
                 }
-                this.setState({currentSet: currentSet +1})
+                this.setState({currentSet: currentSet})
                 const workoutList = document.getElementsByClassName("wmp-dynamic-workout-container")[0];
                 let workoutExerciseList = document.getElementsByClassName("awp-workout-logging-today")[0].appendChild(elemContainer);
             });
@@ -455,7 +455,10 @@ export default class ActiveWorkoutPage extends Component{
          return response.json()}
          ).then((data)=>{
              console.log("sched-id:" + data.id)
-             this.setState({schduleId: data.id})
+             this.setState({
+                 schduleId: data.id,
+                 currentSet: set + 1
+                })
             }).then(()=>{
                 this.loadActiveLogs();
             })
