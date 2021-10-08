@@ -13,6 +13,7 @@ urlpatterns = [
     path('register-user', RegisterUserView.as_view()),
     path('register-coach', RegisterCoachView.as_view()),
     path('change-user-visibilty', SettingsView.as_view()),
+    path('get-user-visibility', SettingsView.as_view()),
 
     ##      Exercise       ##
     path('get-exercises', GetExercisesView.as_view()),
