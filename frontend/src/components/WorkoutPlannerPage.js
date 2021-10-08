@@ -65,7 +65,7 @@ export default class WorkoutPlannerPage extends Component {
       console.log("A")
       if(this.state.roleType > 2){
         console.log("B")
-        fetch("/api/get-user")
+        fetch("/api/get-client")
         .then((response) => {
             if (!response.ok){
                 console.log("Failed save exercise!");
@@ -78,7 +78,10 @@ export default class WorkoutPlannerPage extends Component {
             .then((data)=>{
     
                 for(var i = 0; i < data.length; i++) {
+                    console.log(data[i].id)
                     console.log(data[i].fname)
+                    console.log(data[i].lname)
+
                     const elemSelect = document.createElement('option');
                     elemSelect.text = data[i].id +". " +data[i].fname +" "+ data[i].lname;
                     //elemSelect.value = data[i].id +". " +data[i].fname +" "+ data[i].lname;
@@ -126,6 +129,7 @@ renderPlannerFlow(){
               defaultValue={this.state.selectValue} 
               onChange={(e)=>{ this.setState({ selectValue : e.target.value, textValue: e.target.options[e.target.selectedIndex].text })}}
             >
+              <option>Select client</option>
               {/* auto fills in clients for the coach in question*/}
             </select>    
             <button className="wpp-coach-continue-btn" onClick={this.handleClientSelected}> 

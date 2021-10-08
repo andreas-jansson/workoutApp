@@ -12,6 +12,7 @@ urlpatterns = [
     path('session-exist', SessionExistView.as_view()),
     path('register-user', RegisterUserView.as_view()),
     path('register-coach', RegisterCoachView.as_view()),
+    path('get-client', GetClientView.as_view()),
     path('change-user-visibilty', SettingsView.as_view()),
     path('get-user-visibility', SettingsView.as_view()),
 
@@ -30,6 +31,8 @@ urlpatterns = [
     path('get-scheduled-workouts', GetScheduledWorkoutsView.as_view()),
     path('delete-scheduled-workout', DeleteScheduledWorkout.as_view()),
     path('get-scheduled-workouts-today', GetScheduledWorkoutsTodayView.as_view()),
+    path('get-standard-workouts', GetStandardWorkoutView.as_view()),
+    path('get-all-workouts', GetAllWorkoutView.as_view()),
 
     ##     Pending User    ## 
     path('deny-user', DenyPendingUsers.as_view()),

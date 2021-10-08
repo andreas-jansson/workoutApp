@@ -40,6 +40,7 @@ export default class WorkoutPlannerManagePage extends Component {
         userInfo: this.props.history.location.state.textValue,
     };
     console.log(typeof this.state.userId)
+    console.log(this.state.userId)
     //console.log(this.props.history.location.state.userId);
   }
 

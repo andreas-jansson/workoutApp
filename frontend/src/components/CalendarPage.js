@@ -103,7 +103,7 @@ export default class CalendarPage extends PureComponent {
     var date = this.getMonth(valueOffset);
     console.log("month: " + date);
     var monthLen = this.getDayInMonth(date);
-    //console.log("len: " + monthLen);
+    console.log("len: " + monthLen);
 
 
     fetch("/api/get-scheduled-workouts?date=" + date.toLocaleDateString()+"&user="+ this.props.user)
@@ -163,7 +163,7 @@ export default class CalendarPage extends PureComponent {
               //console.log("Dict!")
               console.log("dict first day: " + dayDict[first_day])
               for(var i=0;i<dayDict[first_day]-1;i++){
-                  //console.log("creating padding blocks")
+                  console.log("creating padding blocks")
                   var elemPadding = document.createElement('div');
                   elemPadding.className = "calendar-padding-item";
                   elemPadding.id = 0;
@@ -173,7 +173,7 @@ export default class CalendarPage extends PureComponent {
               //itterate through the data and create items
               var saved_i = 0;
               var day_nr = 1;
-              var schedule_exist = [];
+              console.log("len: " + monthLen);
                 for(var i = saved_i; i < monthLen; i++) {
                     //if day of month is scheduled
                     //console.log("day: " + day_nr + " no hit" + " planned: " + day_scheduled)
@@ -276,7 +276,7 @@ export default class CalendarPage extends PureComponent {
                     if(day_scheduled == day_nr){
                         //if day of month have an existing schedule
                         if(schedule_exist.includes(day_nr)==true){
-                            //console.log("day: " + day_nr + " hit!" + " planned: " + day_scheduled)
+                            console.log("day: " + day_nr + " hit!" + " planned: " + day_scheduled)
                             //console.log(day_nr + " if")
                             
                             //day of month
@@ -308,7 +308,7 @@ export default class CalendarPage extends PureComponent {
                         }
                         else{
                             //first workout on a scheduled day
-                            //console.log("day: " + day_nr + " hit!" + " planned: " + day_scheduled)
+                            console.log("day: " + day_nr + " hit!" + " planned: " + day_scheduled)
                             //console.log(day_nr + " if")
 
                             //create calendar item
@@ -357,7 +357,7 @@ export default class CalendarPage extends PureComponent {
                         }
                         else{
 
-                        //console.log("day: " + day_nr + " no hit" + " planned: " + day_scheduled)
+                        console.log("day: " + day_nr + " no hit" + " planned: " + day_scheduled)
                         var empty = "empty"
                         var elemItem = document.createElement('div');
                         elemItem.className = "calendar-day-item";
@@ -384,7 +384,7 @@ export default class CalendarPage extends PureComponent {
   getDayInMonth(date){
     //var date = new Date();
     //var month = date.getMonth() + 1;
-    var month = date.getMonth();
+    var month = date.getMonth() + 1;
     var year = date.getFullYear();
     var daysInMonth = new Date(year, month, 0).getDate();
     return daysInMonth;    
@@ -531,8 +531,6 @@ export default class CalendarPage extends PureComponent {
         });
 
 }
-
-
 
   LoadDailyWorkouts = () =>{
     //console.log("edit date: " + this.state.editDate)

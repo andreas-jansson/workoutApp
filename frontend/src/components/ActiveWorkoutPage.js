@@ -326,7 +326,7 @@ export default class ActiveWorkoutPage extends Component{
     }
 
     getWorkouts=()=>{
-        fetch("/api/get-workouts")
+        fetch("/api/get-all-workouts")
         .then((response) => {
             if (!response.ok){
                 //console.log("Failed get workouts!");
