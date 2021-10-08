@@ -1,10 +1,5 @@
 from django.urls import path
-from .views import LoginUserView, UserView, SessionExistView, RegisterUserView, RegisterCoachView \
-    , GetExercisesView, CreateWorkoutView, SignOutView, CreateExerciseView, GetPendingUsers \
-    , GetWorkoutView, GetWorkoutExercisesView,UpdateWorkoutView, DeleteWorkoutView, DenyPendingUsers \
-    , ApprovePendingUsers, CreatePlannedWorkoutView, GetScheduledWorkoutsView \
-    , ApprovePendingUsers, GetWorkoutDailyView, DeleteScheduledWorkout, UserManagementView \
-    , GetScheduledWorkoutsTodayView, SaveLogView, LoadActiveLogsView, LoadPreviousLogsView, LoadSpecificLogsView
+from .views import *
 
 urlpatterns = [
 
