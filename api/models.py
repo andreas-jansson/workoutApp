@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.constraints import UniqueConstraint
 from django.db.models.deletion import CASCADE, PROTECT
 from django.contrib.auth.models import AbstractUser
 
@@ -30,6 +31,7 @@ class User(models.Model):
     roleid = models.ForeignKey(Role, null=False, on_delete=PROTECT)
     created = models.DateTimeField(auto_now_add=True)
     hasWorkouts = models.ManyToManyField(Workout, blank=True)
+    isVisible = models.BooleanField(default=False)
 
 class scheduledWorkout(models.Model):
     user = models.ForeignKey(User, null=False, on_delete=PROTECT)
@@ -44,3 +46,16 @@ class Log(models.Model):
     scheduledWorkout = models.ForeignKey(scheduledWorkout, null=False, on_delete=PROTECT)
     exercise = models.ForeignKey(Exercise, null=False, on_delete=PROTECT)
 
+class Friends(models.Model):
+    class Meta:
+        UniqueConstraint(fields = ['user1', 'user2'], name = 'Friend_Relation')
+
+    user1 = models.ForeignKey(User, null=False, related_name='user1', on_delete=PROTECT)
+    user2 = models.ForeignKey(User, null=False, related_name='user2', on_delete=PROTECT)
+    verified = models.BooleanField(default = False)
+
+class CoachHasClient(models.Model):
+    class Meta:
+        UniqueConstraint(fields = ['user', 'coach'], name = 'Coach_Coaches_User')
+    user = models.ForeignKey(User, null=False, related_name='user', on_delete=PROTECT)
+    coach = models.ForeignKey(User, null=False, related_name='coach', on_delete=PROTECT)
