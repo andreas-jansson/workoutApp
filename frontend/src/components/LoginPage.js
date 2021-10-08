@@ -152,6 +152,10 @@ export default class LoginPage extends Component {
                   Sign In
                 </button>
               </div>
+              <p className="no-account">
+                Don't have an account? <br />
+              <a href="/signup">Register one here!</a>
+            </p>
             </form>
           </div>
           <div className="wpmp-alert-container">
