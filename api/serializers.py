@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Role, ExerciseType, Exercise, Workout, \
-    User, scheduledWorkout, Log 
+    User, scheduledWorkout, Log
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -42,6 +42,17 @@ class LogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Log
         fields = '__all__'
+
+#containes exercise name
+class LogExtraSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    id = serializers.IntegerField()
+    sets = serializers.IntegerField()
+    reps = serializers.IntegerField()
+    weight = serializers.IntegerField()
+    time = serializers.TimeField()
+    exercise_id = serializers.IntegerField()
+    scheduledWorkout_id = serializers.IntegerField()
 
 
 #created this in case of braking the original UserSerializer

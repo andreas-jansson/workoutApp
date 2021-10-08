@@ -141,7 +141,7 @@
 }
 
 .calendar-edit-workout-container{
-    border:2px red solid;
+    border:2px rgb(168, 1, 1) solid;
     width: 90%;
     height:60%;
     display: flex;
@@ -189,6 +189,29 @@
     background: none;
     border: none;
     color: white;
+    order: 3;
+}
+
+.calendar-view-workout-container{
+    border:2px var(--grayDefault) solid;
+    width: 90%;
+    height:60%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 5px;
+    overflow-y: scroll;
+}
+
+.calendar-view-workout-btn{
+    width: 45px;
+    height: 45px;
+    font-size: 40px;
+    background: none;
+    font-size: 16px;
+    color: white;
+    border:none;
     order: 2;
 }
 

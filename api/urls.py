@@ -3,7 +3,8 @@ from .views import DeleteUserView, LoginUserView, UserView, SessionExistView, Re
     , GetExercisesView, CreateWorkoutView, SignOutView, CreateExerciseView, GetPendingUsers \
     , GetWorkoutView, GetWorkoutExercisesView,UpdateWorkoutView, DeleteWorkoutView, DenyPendingUsers \
     , ApprovePendingUsers, CreatePlannedWorkoutView, GetScheduledWorkoutsView \
-    , ApprovePendingUsers, GetUserView, UpdateUserView, DeleteUserView, GetWorkoutDailyView, DeleteScheduledWorkout
+    , ApprovePendingUsers, GetUserView, UpdateUserView, DeleteUserView, GetWorkoutDailyView, DeleteScheduledWorkout \
+    , GetScheduledWorkoutsTodayView, SaveLogView, LoadActiveLogsView, LoadPreviousLogsView, LoadSpecificLogsView
 
 urlpatterns = [
 
@@ -31,9 +32,7 @@ urlpatterns = [
     path('create-planned-workout', CreatePlannedWorkoutView.as_view()),
     path('get-scheduled-workouts', GetScheduledWorkoutsView.as_view()),
     path('delete-scheduled-workout', DeleteScheduledWorkout.as_view()),
-
-
-
+    path('get-scheduled-workouts-today', GetScheduledWorkoutsTodayView.as_view()),
 
     ##     Pending User    ## 
     path('deny-user', DenyPendingUsers.as_view()),
@@ -44,4 +43,12 @@ urlpatterns = [
     path('get-user', GetUserView.as_view()),
     path('update-user', UpdateUserView.as_view()),
     path('delete-user', DeleteUserView.as_view()),
+
+    ## Logs ##
+    path('save-log', SaveLogView.as_view()),
+    path('load-active-log', LoadActiveLogsView.as_view()),
+    path('load-previous-log', LoadPreviousLogsView.as_view()),
+    path('load-specific-log', LoadSpecificLogsView.as_view()),
+
+
 ]

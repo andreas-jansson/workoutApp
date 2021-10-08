@@ -43,3 +43,4 @@ class Log(models.Model):
     time = models.TimeField()
     scheduledWorkout = models.ForeignKey(scheduledWorkout, null=False, on_delete=PROTECT)
     exercise = models.ForeignKey(Exercise, null=False, on_delete=PROTECT)
+

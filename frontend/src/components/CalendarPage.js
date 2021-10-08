@@ -52,7 +52,7 @@ export default class CalendarPage extends PureComponent {
     }
   }
 
-    DeleteWorkout=(workoutName)=>{
+  DeleteWorkout=(workoutName)=>{
 
     var date = this.state.editDate;
     var user = this.props.user
@@ -440,6 +440,99 @@ export default class CalendarPage extends PureComponent {
 
   }
 
+  handleViewWorkoutLogs=(e)=>{
+      e.preventDefault();
+      this.loadPreviousLogs(e.target.id);
+
+    
+  }
+
+  loadPreviousLogs=(workoutName)=>{
+    console.log("Loading previous logs!")
+
+    let targetNode = document.getElementsByClassName("awp-dynamic-previous-log-container")[0];
+
+    if(targetNode != null){
+        targetNode.remove();
+    }
+    console.log("after if")
+
+    var date = this.state.editDate;
+    const requestOptions={
+        method: 'POST',
+        headers: {'Content-Type' : 'application/json'},
+        body: JSON.stringify({
+            workoutName,
+            date,
+        }),
+    };
+
+    fetch("/api/load-specific-log", requestOptions)
+    .then((response) => {
+        if (!response.ok){
+            console.log("Failed get exercise!");
+        }
+        return response.json()}
+        ).then((data)=>{
+            console.log("data time")
+            const elemContainer = document.createElement('div');
+            elemContainer.className = "awp-dynamic-previous-log-container";
+            elemContainer.id = "awp-dynamic-previous-log-container";
+            //var currentSet = 0
+            for(var i = 0; i < data.length; i++) {
+                console.log(data[i].id);
+                //currentSet = data[i].sets
+                var elemItem = document.createElement('div');
+                elemItem.className = "awp-previous-log-item";
+                elemItem.id = data[i].id;
+                elemItem.value = data[i].id;
+                elemItem.onclick = this.handleSelectedExercise;
+
+                var elemTextNameContainer = document.createElement('div');
+                elemTextNameContainer.className = "awp-previous-log-elemTextNameContainer"
+
+                var elemTextSetContainer = document.createElement('div');
+                elemTextSetContainer.className = "awp-previous-log-elemTextSetContainer"
+
+                var elemTextRepContainer = document.createElement('div');
+                elemTextRepContainer.className = "awp-previous-log-elemTextRepContainer"
+
+                var elemTextWeightContainer = document.createElement('div');
+                elemTextWeightContainer.className = "awp-previous-log-elemTextWeightContainer"
+
+                var elemTextTimeContainer = document.createElement('div');
+                elemTextTimeContainer.className = "awp-previous-log-elemTextTimeContainer"
+
+                var elemName = document.createTextNode(data[i].name);
+                var elemSet = document.createTextNode("set: " +data[i].sets);
+                var elemReps = document.createTextNode("reps: " +data[i].reps);
+                var elemWeight = document.createTextNode("weight: " +data[i].weight);
+                var elemTime = document.createTextNode("time: " +data[i].time);
+
+                elemContainer.appendChild(elemItem);
+                elemItem.appendChild(elemTextNameContainer);
+                elemItem.appendChild(elemTextSetContainer);
+                elemItem.appendChild(elemTextRepContainer);
+                elemItem.appendChild(elemTextWeightContainer);
+                elemItem.appendChild(elemTextTimeContainer);
+
+                elemTextNameContainer.appendChild(elemName);
+                elemTextSetContainer.appendChild(elemSet);
+                elemTextRepContainer.appendChild(elemReps);
+                elemTextWeightContainer.appendChild(elemWeight);
+                elemTextTimeContainer.appendChild(elemTime);
+
+
+            }
+            console.log("done")
+            //this.setState({currentSet: currentSet})
+            const workoutList = document.getElementsByClassName("calendar-view-workout-container")[0];
+            let workoutExerciseList = document.getElementsByClassName("calendar-view-workout-container")[0].appendChild(elemContainer);
+        });
+
+}
+
+
 
   LoadDailyWorkouts = () =>{
     //console.log("edit date: " + this.state.editDate)
@@ -482,8 +575,18 @@ export default class CalendarPage extends PureComponent {
                 elemMinus.onclick = this.handleRemoveWorkout;
 
 
+                var elemEye = document.createElement('Button');
+                elemEye.className = "calendar-view-workout-btn";
+                elemEye.innerHTML = "&#128064";
+                elemEye.value = exerciseName;
+                elemEye.type = "submit";
+                elemEye.id = exerciseName;
+                elemEye.onclick = this.handleViewWorkoutLogs;
+
+
                 elemContainer.appendChild(elemItem);
                 elemItem.appendChild(elemTextContainer);
+                elemItem.appendChild(elemEye);
                 elemItem.appendChild(elemMinus);
                 elemTextContainer.appendChild(elemText);
 
@@ -502,6 +605,9 @@ export default class CalendarPage extends PureComponent {
             <p>These are the scheduled workouts for {this.state.editDate}</p>
             <div className="calendar-edit-workout-container">
                 { this.LoadDailyWorkouts()}
+            </div>
+            <div className="calendar-view-workout-container">
+                
             </div>
             <button className="calendar-edit-return-btn" onClick={ ()=>{this.setState({editItem: false})}}>Return</button>
         </div>
