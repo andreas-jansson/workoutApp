@@ -78,3 +78,8 @@
       top:1px;
   }
 
+  .login-alert-hidden {
+    opacity: 0;
+    transition: all 0s linear 0s;
+  }
+

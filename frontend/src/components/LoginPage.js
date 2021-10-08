@@ -6,6 +6,10 @@ import {
 import '../../static/css/login.css';
 import '../../static/css/header.css';
 import Alert from "@material-ui/lab/Alert";
+import IconButton from '@material-ui/core/IconButton';
+import Collapse from '@material-ui/core/Collapse';
+import Button from '@material-ui/core/Button';
+import CloseIcon from '@material-ui/icons/Close';
 
 
 export default class LoginPage extends Component {
@@ -14,7 +18,11 @@ export default class LoginPage extends Component {
   constructor(props) {
     super(props);
     //this.state = { sessionActive: false };
-    this.state = { email: "", password: "", invalidInfo: false };
+    this.state = { email: "", 
+    password: "", 
+    errorStatus: false, 
+    errorString: "",
+  };
 
     this.OnSignIn = this.OnSignIn.bind(this);
     this.EmailChange = this.EmailChange.bind(this);
@@ -45,6 +53,12 @@ export default class LoginPage extends Component {
     })
   }
 
+  closeError = () => {
+    this.setState({
+      errorStatus: false,
+      errorString: ""
+    })
+  }
 
   EmailChange(event) {
     this.setState({ email: event.target.value });
@@ -69,8 +83,14 @@ export default class LoginPage extends Component {
         if (response.ok) {
           console.log("Success!");
           window.location.href = "/dashboard";
-        } else {
-          this.setState({ invalidInfo: true });
+        } 
+        else if (response.status == 401){
+          this.setState({ errorStatus: true,
+          errorString: "Your account is not authorized, Please wait for the staff to accept you." });
+        }
+        else {
+          this.setState({ errorStatus: true,
+          errorString: "Invalid email or password"});
         }
       });
 
@@ -135,12 +155,27 @@ export default class LoginPage extends Component {
             </form>
           </div>
           <div className="wpmp-alert-container">
-            <div className={`alert alert-success ${this.state.invalidInfo ? 'wpmp-alert-shown' : 'wpmp-alert-hidden'}`}>
-              <Alert severity="error">Invalid email or password</Alert>
+            <div className={`alert alert-success ${this.state.errorStatus ? 'login-alert-shown' : 'login-alert-hidden'}`}>
+              <Alert severity="error"
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    this.closeError();
+                  }}
+                >
+                  <CloseIcon fontSize="inherit" />
+                </IconButton>
+              }
+              sx={{ mb: 2 }}
+            >
+            {this.state.errorString}</Alert>
             </div>
           </div>
+          </div>
         </div>
-      </div>
     );
   }
 
