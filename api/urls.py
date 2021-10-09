@@ -33,6 +33,10 @@ urlpatterns = [
     path('get-scheduled-workouts-today', GetScheduledWorkoutsTodayView.as_view()),
     path('get-standard-workouts', GetStandardWorkoutView.as_view()),
     path('get-all-workouts', GetAllWorkoutView.as_view()),
+    path('get-friend-workouts', GetFriendWorkoutView.as_view()),
+    path('copy-friend-workouts', CopyFriendWorkoutView.as_view()),
+
+    
 
     ##     Pending User    ## 
     path('deny-user', DenyPendingUsers.as_view()),
@@ -47,4 +51,9 @@ urlpatterns = [
     path('load-active-log', LoadActiveLogsView.as_view()),
     path('load-previous-log', LoadPreviousLogsView.as_view()),
     path('load-specific-log', LoadSpecificLogsView.as_view()),
+
+    ##     Social     ##
+    path('get-friends', GetFriendsView.as_view()),
+    path('get-friend-info', GetFriendInfoView.as_view()),
+
 ]

@@ -20,7 +20,7 @@
 }
 
 .social-section2{
-    width:40%;
+    width:45%;
     height:700px;
     background-color: var(--grayDarker);
     display: flex;
@@ -36,6 +36,9 @@
 .social-section1-btn-container{
     height:auto;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     
 }
 
@@ -55,3 +58,4 @@
     height: 100%;
 
 }
+

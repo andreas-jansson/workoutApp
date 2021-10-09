@@ -4,6 +4,7 @@ import '../../static/css/social.css';
 import SocialFindFriendsPage from "./SocialFindFriendsPage";
 import SocialMyFriends from "./SocialMyFriends";
 import SocialPendingRequests from "./SocialPendingRequests";
+import SocialFriendPage from "./SocialFriendPage";
 
 
 
@@ -17,8 +18,22 @@ export default class SocialPage extends Component{
 
         this.state={
             sessionActive: false,
-            selectedPage: "my_friends"
+            selectedPage: "my_friends",
+            selectedFriend: 0,
+            friendView: "off",
         };
+
+        this.handleViewFriend = this.handleViewFriend.bind(this);
+    }
+
+    handleViewFriend=(e)=>{
+        e.preventDefault();
+        console.log("todo: view friend: " + e.target.id)
+        this.setState({
+            selectedFriend: e.target.id, 
+            friendView: "on",
+        })
+
     }
 
     renderSocialFlow(){
@@ -26,13 +41,18 @@ export default class SocialPage extends Component{
         //<SocialMyFriends/>
         //<SocialPendingRequests/>
 
-        var myDict = { 
+        var renderViewsLeft = { 
             "default": <div></div>,
             "find_friends": <SocialFindFriendsPage/>,
-            "my_friends": <SocialMyFriends/>,
+            "my_friends": <SocialMyFriends handleViewFriend={ this.handleViewFriend.bind(this)}/>,
             "pending_requests": <SocialPendingRequests/>,
         };
 
+        var renderViewsRight = { 
+            "off": <div>Select a friend to view their info</div>,
+            "on": <SocialFriendPage friend={this.state.selectedFriend}/>,
+        };
+        
         return(
             <div className="social-container">
                 <div className="social-section1">
@@ -48,12 +68,11 @@ export default class SocialPage extends Component{
                         </button>
                     </div>
                     <div className="social-section1-content">
-                         {myDict[this.state.selectedPage]}
+                         {renderViewsLeft[this.state.selectedPage]}
                      </div>
                 </div>
                 <div className="social-section2">
-                    Workouts / Calendar will be shown here
-                    
+                    {renderViewsRight[this.state.friendView]}
                 </div>
             </div>
         );

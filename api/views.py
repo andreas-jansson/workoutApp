@@ -10,8 +10,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
 from .serializers import UserSerializer, ExerciseSerializer, WorkoutSerializer, UserSerializerPending \
-    ,RoleSerializer, scheduledWorkoutSerializer, LogSerializer, LogExtraSerializer
-from .models import Role, User, Exercise, ExerciseType, Workout, scheduledWorkout, Log
+    ,RoleSerializer, scheduledWorkoutSerializer, LogSerializer, LogExtraSerializer, FriendsSerializer
+from .models import Role, User, Exercise, ExerciseType, Workout, scheduledWorkout, Log, Friends
 from .hashUtils import compare_pw_hash, create_pw_hash, create_salt
 from .userUtils import email_is_registered
 import io
@@ -865,3 +865,110 @@ class GetAllWorkoutView(APIView):
             print(data)                    
             return Response(data, status=status.HTTP_200_OK)
         return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+class GetFriendsView(APIView):
+    def get(self, request, format=None):
+        #exercise_type = request.GET.get(self.lookup_url_kwarg)
+        print("****GetFriendsView Triggered!")
+
+        #finds all rows with your id in api_friends
+        queryset1 = Friends.objects.raw('select * from api_friends where (user1_id = \'{}\' or user2_id = \'{}\') and verified = 1'.format(self.request.session.get('user_id'), self.request.session.get('user_id')))
+        
+        #creates a list of the ids that arent yours
+        friend_list = []
+        for person in queryset1:
+            if(person.user1_id == self.request.session.get('user_id')):
+                friend_list.append(person.user2_id)
+            else:
+                friend_list.append(person.user1_id)
+
+        queryset2 = User.objects.filter(id__in = friend_list)
+        
+        if len(queryset2)>0:
+            data = UserSerializer(queryset2, many=True).data
+            print(data)                    
+            return Response(data, status=status.HTTP_200_OK)
+        return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+class GetFriendWorkoutView(APIView):
+    lookup_url_kwarg = 'user'
+    def get(self, request, format=None):
+        print("GetFriendWorkoutView Triggered!")
+        user = request.GET.get(self.lookup_url_kwarg)
+        print("friend: " + str(user))
+
+        queryset = Workout.objects.raw('select w.id, w.name, w.description, w.active, w.shared from api_user_hasWorkouts as uhw '
+        +'inner join api_workout as w on uhw.workout_id = w.id where uhw.user_id = \'{}\' and active =1'.format(user))
+        print(queryset)
+
+        if len(queryset)>0:
+            data = WorkoutSerializer(queryset, many=True).data
+            print(data)                    
+            return Response(data, status=status.HTTP_200_OK)
+        return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+class CopyFriendWorkoutView(APIView):
+      def post(self, request, format=None):
+        print("CopyFriendWorkoutView Triggered!")
+   
+        name = request.data['workoutName']
+        print(name)
+        user = request.data['user']
+        print(user)
+        #active=True
+
+        queryset_workout_desc = Workout.objects.raw('select * from api_workout as w '
+        +'inner join api_user_hasWorkouts as uhw on w.id = uhw.workout_id '
+        +'where w.name= \'{}\' and user_id = \'{}\' and w.active = true'.format(name, user))
+
+
+     
+
+        consistsOf = 'wtf'
+        workout = Workout(name=name, description=queryset_workout_desc[0].description, active=True, shared=False)
+        workout.save()
+        
+        #Finds user and creates user_hasWorkout - mtm
+        user_id = self.request.session.get('user_id')   
+        print("user_id: " + str(user_id))    
+        user_has_workout = User.objects.get(id=user_id)
+        print("user_has_workout: " + str(user_has_workout))  
+        user_has_workout.hasWorkouts.add(workout)
+
+
+        #Find all exercises that the user picked. Finds the specific exercise object and creates mtm with workout
+        for exercise in request.data['exercises_list']:
+            queryset = Exercise.objects.raw('select e.id, e.name, e.type_id from api_exercise as e where name = \'{}\' limit 1'.format(exercise))
+            #var_type = queryset[0].type_id
+            var_name = queryset[0].name
+
+            exercise = Exercise.objects.get(name=var_name)
+            print(exercise.name)
+            workout.consistsOf.add(exercise)
+            workout.save()
+            print(workout)
+        return Response({'User registered': 'OK'}, status=status.HTTP_200_OK)
+        #return Response({'Bad request': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class GetFriendInfoView(APIView):
+    lookup_url_kwarg = 'user'
+    def get(self, request, format=None):
+        user = request.GET.get(self.lookup_url_kwarg)
+        print("friend: " + str(user))
+        queryset = User.objects.raw('select * from api_user where id = \'{}\''.format(user))
+        
+        if len(queryset)>0:
+            data = UserSerializer(queryset[0]).data
+            print(data)                    
+            return Response(data, status=status.HTTP_200_OK)
+        return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
+
+
