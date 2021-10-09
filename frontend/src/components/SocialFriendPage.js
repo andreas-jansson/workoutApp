@@ -27,15 +27,18 @@ export default class SocialFriendPage extends Component{
     }
 
     componentDidMount=()=>{
-       // this.getFriendInfo();
+        this.getFriendInfo();
     }
 
-    componentDidUpdate(prevProps){
-        //this.getFriendInfo();
+    
+    componentDidUpdate(prevProps, prevState){
         if(prevProps.friend !== this.props.friend) {
             this.setState({friend: this.props.friend});
+            this.getFriendInfo();
           }
     }
+
+   
 
     handleUpdateParent=()=>{
         console.log("handleUpdateParent")
@@ -53,7 +56,7 @@ export default class SocialFriendPage extends Component{
     }
 
     getFriendInfo =()=>{
-        fetch("/api/get-friend-info?user=" + this.state.friend)
+        fetch("/api/get-friend-info?user=" + this.props.friend)
         .then((response) => {
             if (!response.ok){
                 console.log("Failed get exercise!");
@@ -91,11 +94,18 @@ export default class SocialFriendPage extends Component{
             return(
                 <div className="sfp-container">
                       <div className="sfp-friend-info-box">
-                          {/*this.getFriendInfo()*/}
-                        friend: {this.state.friend}
-                        <lable>Name: {this.state.friendFname}</lable>
-                        <lable>Last Name: {this.state.friendLname}</lable>
-                        <lable>Email: {this.state.friendEmail}</lable>
+                        <div className="sfp-text-container">
+                            <div className="sfp-text">
+                                <lable>Name:   </lable>
+                                <lable>Last Name: </lable>
+                                <lable>Email:   </lable>
+                            </div>
+                            <div className="sfp-text2">
+                                <lable> {this.state.friendFname} </lable>
+                                <lable> {this.state.friendLname} </lable>
+                                <lable> {this.state.friendEmail} </lable>
+                            </div>
+                        </div>
                          <button className="sfp-btn-remove" onClick={this.handleRemoveFriend}>
                             Remove Friend
                         </button>

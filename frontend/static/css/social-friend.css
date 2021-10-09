@@ -12,8 +12,33 @@
 .sfp-friend-info-box{
     width:80%;
     height:300px;
-    border:2px green solid;
+    border:2px var(--grayDefault) solid;
     display:flex;
+    justify-content: flex-start;
+    flex-direction: column;
+  
+}
+
+.sfp-text-container{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.sfp-text{
+    width:20%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    color: var(--orangeGradiant1);
+
+}
+
+.sfp-text2{
+    width:40%; 
+    display: flex;
     justify-content: flex-start;
     flex-direction: column;
 
@@ -21,6 +46,8 @@
 
 .sfp-friend-info-box:button{
     width:auto;
+    margin-left: 10px;
+
 }
 
 .sfp-option-box{
