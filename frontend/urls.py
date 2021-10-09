@@ -17,5 +17,6 @@ urlpatterns = [
     path('workout-standard', index),
     path('active-workout', index),
     path('settings', index),
+    path('social', index),
 
 ]

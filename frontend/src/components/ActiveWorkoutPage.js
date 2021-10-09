@@ -86,7 +86,6 @@ export default class ActiveWorkoutPage extends Component{
                     elemItem.className = "awp-previous-log-item";
                     elemItem.id = data[i].id;
                     elemItem.value = data[i].id;
-                    elemItem.onclick = this.handleSelectedExercise;
 
                     var elemTextSetContainer = document.createElement('div');
                     elemTextSetContainer.className = "awp-previous-log-elemTextSetContainer"
@@ -125,6 +124,24 @@ export default class ActiveWorkoutPage extends Component{
             });
 
     }
+
+    handleRemoveLog=(e)=>{
+        e.preventDefault();
+        var id = e.target.id.split("-")[0];
+        var set = e.target.id.split("-")[1];
+        console.log(id)
+        console.log(set)
+        this.handleRemoveLog();
+    }
+
+    handleRemoveLog=(id, set)=>{
+        
+        //call remove-log
+        //decriment currentSet 
+        //if there are sets with higher number, decriment all of those too
+        //call loadActiveLogs()
+    }
+
 
     loadActiveLogs=()=>{
         console.log("Loading active logs!")
@@ -165,9 +182,8 @@ export default class ActiveWorkoutPage extends Component{
                     currentSet = i+1
                     var elemItem = document.createElement('div');
                     elemItem.className = "awp-active-log-item";
-                    elemItem.id = data[i].id;
+                    elemItem.id =  this.state.schduleId +"-"+ data[i].sets;
                     elemItem.value = data[i].id;
-                    elemItem.onclick = this.handleSelectedExercise;
 
                     var elemTextSetContainer = document.createElement('div');
                     elemTextSetContainer.className = "awp-active-log-elemTextSetContainer"
@@ -181,16 +197,24 @@ export default class ActiveWorkoutPage extends Component{
                     var elemTextTimeContainer = document.createElement('div');
                     elemTextTimeContainer.className = "awp-active-log-elemTextTimeContainer"
 
-                    var elemSet = document.createTextNode("set: " +data[i].sets);
-                    var elemReps = document.createTextNode("reps: " +data[i].reps);
-                    var elemWeight = document.createTextNode("weight: " +data[i].weight);
+                    var elemSet = document.createTextNode("set: " + data[i].sets);
+                    var elemReps = document.createTextNode("reps: " + data[i].reps);
+                    var elemWeight = document.createTextNode("weight: " + data[i].weight);
                     var elemTime = document.createTextNode("time: " +data[i].time);
+
+                    var elemMinus = document.createElement('div');
+                    elemMinus.className = "awp-active-log-elemMinus"
+                    elemMinus.innerHTML = "-"
+                    elemMinus.id = this.state.schduleId +"-"+ data[i].sets;
+                    elemMinus.onclick = this.handleRemoveLog
+
 
                     elemContainer.appendChild(elemItem);
                     elemItem.appendChild(elemTextSetContainer);
                     elemItem.appendChild(elemTextRepContainer);
                     elemItem.appendChild(elemTextWeightContainer);
                     elemItem.appendChild(elemTextTimeContainer);
+                    elemItem.appendChild(elemMinus);
 
                     elemTextSetContainer.appendChild(elemSet);
                     elemTextRepContainer.appendChild(elemReps);
