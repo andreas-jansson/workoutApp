@@ -1,8 +1,48 @@
 import React, { Component } from "react";
 import Switch from '@material-ui/core/Switch';
 import { alpha, styled } from '@material-ui/core/styles';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from '@material-ui/core'
+import { createTheme } from "@material-ui/core/styles";
+import { MuiThemeProvider } from "@material-ui/core";
+import { green, red } from '@material-ui/core/colors'
+import '../../static/css/settings.css';
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
+const my_theme = createTheme({
+  palette: {
+    primary: {
+      main: "#e66a04"
+    }, secondary: {
+      light: '#0066ff',
+      main: '#0044ff',
+    }
+  },
+  overrides: {
+    MuiFilledInput: {
+      root: {
+        backgroundColor: "rgb(232, 241, 250)",
+        "&:hover": {
+          backgroundColor: "rgb(250, 232, 241)",
+          "@media (hover: none)": {
+            backgroundColor: "rgb(232, 241, 250)"
+          }
+        },
+        "&.Mui-focused": {
+          backgroundColor: "rgb(250, 241, 232)"
+        }
+      }
+    }
+  }
+})
+const dialog_theme = createTheme({ palette: { primary: green, secondary: red, orange: "#e66a04" } })
+
 /*Page to put all user settings*/
 /*Switch in order to make yourself searchable or not searchable for other clients within the social media system*/
 
@@ -34,6 +74,7 @@ export default class SettingsPage extends Component {
       isVisible: false,
       sessionActive: false,
       isLoaded: false,
+      open: false,
     }
   }
 
@@ -51,7 +92,7 @@ export default class SettingsPage extends Component {
           }),
         };
         console.log(requestOptions.body);
-        fetch("/api/change-user-visibilty", requestOptions).then((response) => {
+        fetch("/api/change-user-visibility", requestOptions).then((response) => {
           if (response.ok) {
             console.log("sendDetailsToServer() successful")
           } else {
@@ -67,7 +108,7 @@ export default class SettingsPage extends Component {
       .then(result => {
         this.setState({
           isLoaded: true,
-          isVisible: result.isVisible
+          isVisible: result.isVisible,
         });
       });
   }
@@ -75,6 +116,31 @@ export default class SettingsPage extends Component {
   componentDidMount() {
     this.loadState();
   }
+
+  handleClickOpen = () => {
+    this.setState({ open: true })
+  };
+
+  handleClose = () => {
+    this.setState({ open: false })
+  };
+
+  deleteUser = () => {
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+      })
+    }
+    fetch("/api/settings-user-delete", requestOptions).then((response) => {
+      if (response.ok) {
+        console.log("Woho!!");
+        window.location.href = "/";
+      } else {
+        console.log("Failed!");
+      }
+    });
+  };
 
   render() {
     const mystyle = {
@@ -86,10 +152,10 @@ export default class SettingsPage extends Component {
       return <div>Loading ... </div>;
     } else {
       return (
-        <div>
+        <div id='settings-wrapper'>
           <div>
             <p style={mystyle}>
-              Push below button in order
+              Push switch below in order
               <br />
               to make yourself searchable
               <br />
@@ -99,6 +165,40 @@ export default class SettingsPage extends Component {
           <div>
             <OrangeSwitch onChange={() => { this.handleChange(); }} {...label} checked={this.state.isVisible} />
           </div>
+          <MuiThemeProvider theme={my_theme}>
+          <Button onClick={this.handleClickOpen} 
+          color='primary' 
+          backgroundColor='primary'
+          variant='contained' 
+          size = 'large'
+          margin='normal'>Delete Account</Button></MuiThemeProvider>
+          <Dialog
+              open={this.state.open}
+              onClose={this.handleClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+              PaperProps={{
+                style: {
+                  backgroundColor: '#292727',
+                  color: '#e66a04',
+                },
+              }}
+            >
+              <DialogTitle id="alert-dialog-title" >
+                {"Attention!"}
+              </DialogTitle>
+              <DialogContent>
+              <MuiThemeProvider theme={dialog_theme}><DialogContentText color="orange" id="alert-dialog-description">
+                  Are you sure you want to delete your account?
+                </DialogContentText></MuiThemeProvider>
+              </DialogContent>
+              <DialogActions>
+                <MuiThemeProvider theme={dialog_theme}><Button color="primary" onClick={this.handleClose}>Take me back!</Button></MuiThemeProvider>
+                <MuiThemeProvider theme={dialog_theme}><Button color="secondary" onClick={this.deleteUser} autoFocus>
+                  Delete :/
+                </Button></MuiThemeProvider>
+              </DialogActions>
+            </Dialog>
         </div>
       );
     };
