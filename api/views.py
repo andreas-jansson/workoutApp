@@ -706,12 +706,20 @@ class SettingsView(APIView):
         if(User.objects.filter(id=self.request.session.get('user_id')).exists()):
             user = User.objects.filter(id=self.request.session.get('user_id'))[0]
             user.isVisible = request.data['isVisible']
-            print(user.isVisible)
             user.save()
             return Response({'isVisible toggled': 'OK'}, status=status.HTTP_200_OK)
         else:
             return Response({'Something went wrong': 'BAD'}, status=status.HTTP_418_IM_A_TEAPOT)
 
+class SettingsDeleteView(APIView):
+    def post(self, request, format=None):
+        if(User.objects.filter(id=self.request.session.get('user_id')).exists()):
+            user = User.objects.filter(id=self.request.session.get('user_id'))[0]
+            self.request.session.flush()
+            user.delete()
+            return Response({"User deleted and session flushed"}, status=status.HTTP_200_OK)
+        else:
+            return Response({'Something went wrong': 'BAD'}, status=status.HTTP_418_IM_A_TEAPOT)
 
 ############# Logs ######################
 

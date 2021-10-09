@@ -13,8 +13,9 @@ urlpatterns = [
     path('register-user', RegisterUserView.as_view()),
     path('register-coach', RegisterCoachView.as_view()),
     path('get-client', GetClientView.as_view()),
-    path('change-user-visibilty', SettingsView.as_view()),
+    path('change-user-visibility', SettingsView.as_view()),
     path('get-user-visibility', SettingsView.as_view()),
+    path('settings-user-delete', SettingsDeleteView.as_view()),
 
     ##      Exercise       ##
     path('get-exercises', GetExercisesView.as_view()),
