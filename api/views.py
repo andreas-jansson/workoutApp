@@ -696,10 +696,17 @@ class DeleteScheduledWorkout(APIView):
         return Response({'Workout Deleted': 'OK'}, status=status.HTTP_200_OK)
 
 class SettingsView(APIView):
+    def get(self, request, format=None):
+        if(User.objects.filter(id=self.request.session.get('user_id')).exists()):
+            user = User.objects.filter(id=self.request.session.get('user_id'))[0]
+            data = UserSerializer(user).data
+            return Response(data, status=status.HTTP_200_OK) 
+
     def post(self, request, format=None):
         if(User.objects.filter(id=self.request.session.get('user_id')).exists()):
             user = User.objects.filter(id=self.request.session.get('user_id'))[0]
             user.isVisible = request.data['isVisible']
+            print(user.isVisible)
             user.save()
             return Response({'isVisible toggled': 'OK'}, status=status.HTTP_200_OK)
         else:
