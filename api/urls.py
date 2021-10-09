@@ -56,5 +56,11 @@ urlpatterns = [
     ##     Social     ##
     path('get-friends', GetFriendsView.as_view()),
     path('get-friend-info', GetFriendInfoView.as_view()),
+    path('get-pending-friends', GetPendingFriendView.as_view()),
+    path('deny-pending-friend', DenyPendingFriendView.as_view()),
+    path('accept-pending-friend', AcceptPendingFriendView.as_view()),
+    path('delete-friend', DeleteFriendView.as_view()),
+
+
 
 ]

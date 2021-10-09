@@ -980,3 +980,76 @@ class GetFriendInfoView(APIView):
         return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
 
 
+class GetPendingFriendView(APIView):
+       def get(self, request, format=None):
+        #exercise_type = request.GET.get(self.lookup_url_kwarg)
+        print("****GetPendingFriendView Triggered!")
+
+        #finds all rows with your id in api_friends
+        queryset1 = Friends.objects.raw('select * from api_friends where (user1_id = \'{}\' or user2_id = \'{}\') and verified = 0'.format(self.request.session.get('user_id'), self.request.session.get('user_id')))
+        
+        #creates a list of the ids that arent yours
+        friend_list = []
+        for person in queryset1:
+            if(person.user1_id == self.request.session.get('user_id')):
+                friend_list.append(person.user2_id)
+            else:
+                friend_list.append(person.user1_id)
+
+        queryset2 = User.objects.filter(id__in = friend_list)
+        
+        if len(queryset2)>0:
+            data = UserSerializer(queryset2, many=True).data
+            print(data)                    
+            return Response(data, status=status.HTTP_200_OK)
+        return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+class DenyPendingFriendView(APIView):
+    lookup_url_kwarg = 'user'
+    def get(self, request, format=None):
+        print("****DenyPendingFriend Triggered!")
+        user = request.GET.get(self.lookup_url_kwarg)
+        print("denying user: " + str(user))
+
+        queryset = Friends.objects.raw('select * from api_friends where (user1_id = \'{}\' and user2_id =\'{}\') or (user1_id = \'{}\'  and user2_id =\'{}\') and verified = 0'.format(self.request.session.get('user_id'), user, user, self.request.session.get('user_id')))
+
+        print(queryset)
+        print("deleteing row: " + str(queryset[0].id))
+
+        Friends.objects.filter(id = queryset[0].id).delete()
+        return Response({'Friend Denied': 'OK'}, status=status.HTTP_200_OK)   
+
+class AcceptPendingFriendView(APIView):
+    lookup_url_kwarg = 'user'
+    def get(self, request, format=None):
+        print("****AcceptPendingFriendView Triggered!")
+        user = request.GET.get(self.lookup_url_kwarg)
+        print("accepting user: " + str(user))
+
+        queryset = Friends.objects.raw('select * from api_friends where (user1_id = \'{}\' and user2_id =\'{}\') or (user1_id = \'{}\'  and user2_id =\'{}\') and verified = 0'.format(self.request.session.get('user_id'), user, user, self.request.session.get('user_id')))
+
+        print(queryset)
+        print("accepting row: " + str(queryset[0].id))
+
+        friend = Friends.objects.get(id = queryset[0].id)
+        friend.verified = True
+        friend.save()
+        return Response({'Friend Accepted': 'OK'}, status=status.HTTP_200_OK)   
+
+class DeleteFriendView(APIView):
+    lookup_url_kwarg = 'user'
+    def get(self, request, format=None):
+        print("****DenyPendingFriend Triggered!")
+        user = request.GET.get(self.lookup_url_kwarg)
+        print("deleteing user: " + str(user))
+
+        queryset = Friends.objects.raw('select * from api_friends where (user1_id = \'{}\' and user2_id =\'{}\') or (user1_id = \'{}\' and user2_id =\'{}\') and verified = 1'.format(self.request.session.get('user_id'), user, user, self.request.session.get('user_id')))
+
+        print(queryset)
+        print("deleteing row: " + str(queryset[0].id))
+
+        Friends.objects.filter(id = queryset[0].id).delete()
+        return Response({'Friend Deleted': 'OK'}, status=status.HTTP_200_OK)   
+        

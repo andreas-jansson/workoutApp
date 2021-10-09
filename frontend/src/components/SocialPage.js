@@ -36,6 +36,10 @@ export default class SocialPage extends Component{
 
     }
 
+    handleParentFriendDeleted=()=>{
+        this.setState({friendView: "off"})
+    }
+
     renderSocialFlow(){
         //<SocialFindFriendsPage/>
         //<SocialMyFriends/>
@@ -50,7 +54,7 @@ export default class SocialPage extends Component{
 
         var renderViewsRight = { 
             "off": <div>Select a friend to view their info</div>,
-            "on": <SocialFriendPage friend={this.state.selectedFriend}/>,
+            "on": <SocialFriendPage friend={this.state.selectedFriend} handleParentFriendDeleted={ this.handleParentFriendDeleted.bind(this)} />,
         };
         
         return(

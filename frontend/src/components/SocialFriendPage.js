@@ -69,6 +69,20 @@ export default class SocialFriendPage extends Component{
         });
     }
 
+    handleRemoveFriend=()=>{
+        console.log("deleting: " + this.state.friend)
+        fetch("/api/delete-friend?user=" + this.state.friend)
+        .then((response) => {
+            if (!response.ok){
+                console.log("Failed denying pending request!");
+            }
+            return response.json()}
+            ).then((data)=>{
+                console.log("deleted");
+                this.props.handleParentFriendDeleted();
+            });
+    }
+
    
 
 
@@ -77,7 +91,7 @@ export default class SocialFriendPage extends Component{
             return(
                 <div className="sfp-container">
                       <div className="sfp-friend-info-box">
-                          {this.getFriendInfo()}
+                          {/*this.getFriendInfo()*/}
                         friend: {this.state.friend}
                         <lable>Name: {this.state.friendFname}</lable>
                         <lable>Last Name: {this.state.friendLname}</lable>
