@@ -1,0 +1,31 @@
+/****** Social Find Friends  ******/
+
+  .sff-container{
+    width: 30;
+    height:auto;
+
+    margin: 0% 22%;
+
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sff-section{
+    height: auto;
+    
+    margin: 0% 18%;
+    border-radius: 5px;
+
+    display: flex;
+    justify-content: space-evenly;
+    font-family: 'Roboto', sans-serif;
+    font-weight: lighter;
+  }
+  
+
+  .sff-title{
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+  }
+  

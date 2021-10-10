@@ -654,6 +654,33 @@ class UserManagementView(APIView):
         return Response({'User DELETED': 'OK'}, status=status.HTTP_200_OK)
 
 
+class SocialFindFriendsEmail(APIView):
+
+    def get(self, request, format=None):
+        print("\n\nGetUserVisabilityView Triggered!\n\n")
+        test = request.GET.get('id')
+        queryset = User.objects.raw('select * from api_user')
+
+        if len(queryset)>0:
+            data = UserSerializer(queryset, many=True).data
+            return Response(data, status=status.HTTP_200_OK) 
+        return Response({'User FOUND': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
+
+        
+class SocialFindFriendsVisible(APIView):
+
+    def get(self, request, format=None):
+        print("\n\nGetUserVisabilityView Triggered!\n\n")
+        test = request.GET.get('id')
+        queryset = User.objects.raw('select * from api_user where isVisible == 1')
+
+        if len(queryset)>0:
+            data = UserSerializer(queryset, many=True).data
+            return Response(data, status=status.HTTP_200_OK) 
+        return Response({'User FOUND': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
+
+
+
 class DeleteScheduledWorkout(APIView):
        def post(self, request, format=None):
         print("DeleteScheduledWorkoutView Triggered!")
@@ -981,7 +1008,7 @@ class GetFriendInfoView(APIView):
 
 
 class GetPendingFriendView(APIView):
-       def get(self, request, format=None):
+    def get(self, request, format=None):
         #exercise_type = request.GET.get(self.lookup_url_kwarg)
         print("****GetPendingFriendView Triggered!")
 
@@ -1003,7 +1030,6 @@ class GetPendingFriendView(APIView):
             print(data)                    
             return Response(data, status=status.HTTP_200_OK)
         return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
-
 
 
 class DenyPendingFriendView(APIView):

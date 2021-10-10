@@ -37,8 +37,6 @@ urlpatterns = [
     path('get-friend-workouts', GetFriendWorkoutView.as_view()),
     path('copy-friend-workouts', CopyFriendWorkoutView.as_view()),
 
-    
-
     ##     Pending User    ## 
     path('deny-user', DenyPendingUsers.as_view()),
     path('approve-user', ApprovePendingUsers.as_view()),
@@ -47,7 +45,7 @@ urlpatterns = [
     ##     Management      ##
     path('manage-user', UserManagementView.as_view()),
 
-    ## Logs ##
+    ##     Logs      ##
     path('save-log', SaveLogView.as_view()),
     path('load-active-log', LoadActiveLogsView.as_view()),
     path('load-previous-log', LoadPreviousLogsView.as_view()),
@@ -60,7 +58,7 @@ urlpatterns = [
     path('deny-pending-friend', DenyPendingFriendView.as_view()),
     path('accept-pending-friend', AcceptPendingFriendView.as_view()),
     path('delete-friend', DeleteFriendView.as_view()),
-
-
+    path('social-find-visible-friends', SocialFindFriendsVisible.as_view()),
+    path('social-find-email-friends', SocialFindFriendsEmail.as_view()),
 
 ]
