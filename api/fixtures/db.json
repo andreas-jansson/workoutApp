@@ -1,0 +1,188 @@
+[
+    {
+        "model": "api.Role",
+        "fields": {
+            "description" : "Unauthorized"
+        }
+    },
+    {
+        "model": "api.Role",
+        "fields": {
+            "description" : "Client"
+        }
+    },
+    {
+        "model": "api.Role",
+        "fields": {
+            "description" : "Coach"
+        }
+    },
+    {
+        "model": "api.Role",
+        "fields": {
+            "description" : "Admin"
+        }
+    },
+    {
+        "model": "api.exercisetype",
+        "fields": {
+            "type": "Back"
+        }
+    },
+    {
+        "model": "api.exercisetype",
+        "fields": {
+            "type": "Chest"
+        }
+    },
+    {
+        "model": "api.exercisetype",
+        "fields": {
+            "type": "Biceps"
+        }
+    },
+    {
+        "model": "api.exercisetype",
+        "fields": {
+            "type": "Triceps"
+        }
+    },
+    {
+        "model": "api.exercisetype",
+        "fields": {
+            "type": "Abs"
+        }
+    },
+    {
+        "model": "api.exercisetype",
+        "fields": {
+            "type": "Legs"
+        }
+    },
+    {
+        "model": "api.exercisetype",
+        "fields": {
+            "type": "Shoulders"
+        }
+    },
+    {
+        "model": "api.exercisetype",
+        "fields": {
+            "type": "Cardio"
+        }
+    },
+    {
+        "model": "api.exercise",
+        "fields": {
+            "name": "Running",
+            "type": 7
+        }
+    },
+    {
+        "model": "api.exercise",
+        "fields": {
+            "name": "Spinning",
+            "type": 7
+        }
+    },
+    {
+        "model": "api.exercise",
+        "fields": {
+            "name": "Sit ups",
+            "type": 5
+        }
+    },
+    {
+        "model": "api.exercise",
+        "fields": {
+            "name": "Bicep curls",
+            "type": 4
+        }
+    },
+    {
+        "model": "api.exercise",
+        "fields": {
+            "name": "Push press",
+            "type": 7
+        }
+    },
+    {
+        "model": "api.workout",
+        "fields": {
+            "name": "Cardio lovers 2000",
+            "description": "Cardio forever because you love it",
+            "active": true,
+            "shared": true,
+            "consistsOf": ["1", "4", "3"]
+        }
+    },
+    {
+        "model": "api.workout",
+        "fields": {
+            "name": "Friday Disco",
+            "description": "Biceps only, actually.",
+            "active": true,
+            "shared": true,
+            "consistsOf": ["4", "2"]
+        }
+    },
+    {
+        "model": "api.workout",
+        "fields": {
+            "name": "Friday Disco Private",
+            "description": "Biceps only, actually.",
+            "active": true,
+            "shared": false,
+            "consistsOf": ["4", "2"]
+        }
+    },
+    {
+        "model": "api.user",
+        "fields": {
+            "fname" : "Berit",
+            "lname" : "Beritsson",
+            "email" : "Berit@gmail.com",
+            "pwhash" : "12312321",
+            "salt" : "saltishere",
+            "created" : "2021-09-20T12:50:26.137755Z",
+            "roleid" : "1"
+        }
+    },
+    {
+        "model": "api.user",
+        "fields": {
+            "fname" : "Gun",
+            "lname" : "Lind",
+            "email" : "GunLind@gmail.com",
+            "pwhash" : "testingtesting",
+            "salt" : "123test123",
+            "created" : "2021-09-20T12:50:26.137755Z",
+            "roleid" : "2"
+        }
+    },
+    {
+        "model": "api.user",
+        "fields": {
+            "fname" : "Todor",
+            "lname" : "Stroyanov",
+            "email" : "TodorStr@oru.se",
+            "pwhash" : "123123312",
+            "salt" : "tessssst",
+            "created" : "2021-09-20T12:50:26.137755Z",
+            "roleid" : "3"
+        }
+    },
+    {
+        "model": "api.user",
+        "fields": {
+            "fname" : "Full",
+            "lname" : "Admin",
+            "email" : "ScuffedAdmin@gmail.com",
+            "pwhash" : "testtest",
+            "salt" : "ehehehe",
+            "created" : "2021-09-20T12:50:26.137755Z",
+            "roleid" : "4",
+            "hasWorkouts": ["1", "2"]
+        }
+    }
+]

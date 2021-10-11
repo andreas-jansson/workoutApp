@@ -1,9 +1,5 @@
 from django.urls import path
-from .views import DeleteUserView, ListUnassignedClients, LoginUserView, UserView, SessionExistView, RegisterUserView, RegisterCoachView \
-    , GetExercisesView, CreateWorkoutView, SignOutView, CreateExerciseView, GetPendingUsers \
-    , GetWorkoutView, GetWorkoutExercisesView,UpdateWorkoutView, DeleteWorkoutView, DenyPendingUsers \
-    , ApprovePendingUsers, CreatePlannedWorkoutView, GetScheduledWorkoutsView \
-    , ApprovePendingUsers, GetUserView, UpdateUserView, DeleteUserView, GetWorkoutDailyView, DeleteScheduledWorkout
+from .views import *
 
 urlpatterns = [
 
@@ -16,6 +12,10 @@ urlpatterns = [
     path('session-exist', SessionExistView.as_view()),
     path('register-user', RegisterUserView.as_view()),
     path('register-coach', RegisterCoachView.as_view()),
+    path('get-client', GetClientView.as_view()),
+    path('change-user-visibility', SettingsView.as_view()),
+    path('get-user-visibility', SettingsView.as_view()),
+    path('settings-user-delete', SettingsDeleteView.as_view()),
 
     ##      Exercise       ##
     path('get-exercises', GetExercisesView.as_view()),
@@ -31,9 +31,11 @@ urlpatterns = [
     path('create-planned-workout', CreatePlannedWorkoutView.as_view()),
     path('get-scheduled-workouts', GetScheduledWorkoutsView.as_view()),
     path('delete-scheduled-workout', DeleteScheduledWorkout.as_view()),
-
-
-
+    path('get-scheduled-workouts-today', GetScheduledWorkoutsTodayView.as_view()),
+    path('get-standard-workouts', GetStandardWorkoutView.as_view()),
+    path('get-all-workouts', GetAllWorkoutView.as_view()),
+    path('get-friend-workouts', GetFriendWorkoutView.as_view()),
+    path('copy-friend-workouts', CopyFriendWorkoutView.as_view()),
 
     ##     Pending User    ## 
     path('deny-user', DenyPendingUsers.as_view()),
@@ -41,9 +43,28 @@ urlpatterns = [
     path('get-pending-users', GetPendingUsers.as_view()),
 
     ##     Management      ##
+    path('manage-user', UserManagementView.as_view()),
+
+    ##     Logs      ##
+    path('save-log', SaveLogView.as_view()),
+    path('load-active-log', LoadActiveLogsView.as_view()),
+    path('load-previous-log', LoadPreviousLogsView.as_view()),
+    path('load-specific-log', LoadSpecificLogsView.as_view()),
+
+    ##     Social     ##
+    path('get-friends', GetFriendsView.as_view()),
+    path('get-friend-info', GetFriendInfoView.as_view()),
+    path('get-pending-friends', GetPendingFriendView.as_view()),
+    path('deny-pending-friend', DenyPendingFriendView.as_view()),
+    path('accept-pending-friend', AcceptPendingFriendView.as_view()),
+    path('delete-friend', DeleteFriendView.as_view()),
+    path('social-find-visible-friends', SocialFindFriendsVisible.as_view()),
+    path('social-find-email-friends', SocialFindFriendsEmail.as_view()),
+    ##     Management      ##
     path('get-user', GetUserView.as_view()),
     path('update-user', UpdateUserView.as_view()),
     path('delete-user', DeleteUserView.as_view()),
     
     path('list-unassigned-clients', ListUnassignedClients.as_view())
+
 ]

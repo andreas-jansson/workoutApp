@@ -21,6 +21,8 @@ import WorkoutPlannerViewPage from "./WorkoutPlannerViewPage";
 import WorkoutPlannerManagePage from "./WorkoutPlannerManagePage";
 import WorkoutStandardPage from "./WorkoutStandardPage";
 import ActiveWorkoutPage from "./ActiveWorkoutPage";
+import SettingsPage from "./SettingsPage";
+import SocialPage from "./SocialPage";
 
 
 export default class App extends Component {
@@ -196,14 +198,14 @@ export default class App extends Component {
                 </div>
                 </div>
             </Link>
-            <Link to="/dashboard"
+            <Link to="/social"
               onClick={ ()=>{this.setState({selectedNavbar: "social"})}}
               >
             <div className="menu-btn btn5" >
                 <div className="menu-btn-icon5">
                     </div>
                     <div className="menu-btn-text">
-                        Instagram 2.0
+                        Social
                     </div>
                     <div className={this.state.selectedNavbar=="social"? "menu-btn-dot":"menu-btn-no-dot"}>
                 </div>
@@ -274,6 +276,8 @@ export default class App extends Component {
               <Route path="/workout-planner-manage" component={WorkoutPlannerManagePage} />
               <Route path="/workout-standard" component={WorkoutStandardPage} />
               <Route path="/active-workout" component={ActiveWorkoutPage} />
+              <Route path="/settings" component={SettingsPage} />
+              <Route path="/social" component={SocialPage} />
             </Switch>
             </div>
           </Router>

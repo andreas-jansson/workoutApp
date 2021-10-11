@@ -43,19 +43,19 @@ class Log(models.Model):
     reps = models.IntegerField()
     weight = models.IntegerField()
     time = models.TimeField()
-    scheduledWorkout = models.ForeignKey(scheduledWorkout, null=False, on_delete=PROTECT)
+    scheduledWorkout = models.ForeignKey(scheduledWorkout, null=False, on_delete=CASCADE)
     exercise = models.ForeignKey(Exercise, null=False, on_delete=PROTECT)
 
 class Friends(models.Model):
     class Meta:
         UniqueConstraint(fields = ['user1', 'user2'], name = 'Friend_Relation')
 
-    user1 = models.ForeignKey(User, null=False, related_name='user1', on_delete=PROTECT)
-    user2 = models.ForeignKey(User, null=False, related_name='user2', on_delete=PROTECT)
+    user1 = models.ForeignKey(User, null=False, related_name='user1', on_delete=CASCADE)
+    user2 = models.ForeignKey(User, null=False, related_name='user2', on_delete=CASCADE)
     verified = models.BooleanField(default = False)
 
 class CoachHasClient(models.Model):
     class Meta:
         UniqueConstraint(fields = ['user', 'coach'], name = 'Coach_Coaches_User')
-    user = models.ForeignKey(User, null=False, related_name='user', on_delete=PROTECT)
-    coach = models.ForeignKey(User, null=False, related_name='coach', on_delete=PROTECT)
+    user = models.ForeignKey(User, null=False, related_name='user', on_delete=CASCADE)
+    coach = models.ForeignKey(User, null=False, related_name='coach', on_delete=CASCADE)

@@ -1,0 +1,316 @@
+
+
+/**** Workout List *****/
+
+.sfw-box1-title{
+    font-size: 36px;
+
+}
+
+.sfw-container{
+    width:100%;
+    height:100%;
+    background: var(--grayDefault);
+    display:flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: 3%;
+    border-radius: 5px;
+
+}
+
+.sfw-section{
+    width:100%;
+    height:100%;
+    background: var(--grayDarker);
+    box-shadow: 2px 10px 20px 2px rgba(14, 14, 5, 0.8);
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color:white;
+}
+
+.sfw-workout-container{
+    border:2px var(--orangeGradiant1) solid;
+    height:70%;
+    width:80%;
+    border-radius: 10px;
+    display:flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: scroll;
+}
+
+.sfw-dynamic-workout-container{
+    width:90%;
+    height: auto;
+}
+.sfw-exercise-container{
+    border:2px rgb(56, 55, 55) solid;
+    height:70%;
+    width:80%;
+    border-radius: 10px;
+    display:flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: scroll;
+}
+
+.sfw-workout-item{
+    width:100%;
+    height:50px;
+    border:2px rgb(56, 55, 55) solid;
+    align-self: center;
+    border-radius: 5px;
+    margin-top:3%;
+    display:flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+
+.sfw-workout-elemTextContainer-btn{
+    background: none;
+    border:none;
+    color:white;
+    order:1;
+    width:85%;
+    margin-left:10px;
+    text-align: start;
+}
+
+.sfw-remove-workout-btn{
+    width:45px;
+    height: 45px;
+    font-size: 40px;
+    background: none;
+    border:none;
+    color:white;
+    order:2;
+}
+
+/***** exercises belonging to workout ****/
+
+.sfw-workout-opened-container{
+    border:2px rgb(13, 158, 0) solid;
+    height:70%;
+    width:80%;
+    border-radius: 10px;
+    display:flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: scroll;
+}
+
+.sfw-workout-opened-container form{
+    width:90%;
+    height: auto;
+}
+
+
+.sfw-dynamic-exercise-added-container{
+    width:90%;
+    height: auto;
+}
+
+.sfw-exercise-added-item{
+    width:100%;
+    height:50px;
+    border:2px rgb(56, 55, 55) solid;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-around;
+    margin-top:3%;
+    border-radius:5px;
+}
+
+.sfw-exercise-added-elemTextContainer{
+    background: none;
+    border:none;
+    color:white;
+    order:1;
+    width:85%;
+    margin-left:10px;
+}
+
+.sfw-remove-exercise-btn{
+    width:45px;
+    height: 45px;
+    font-size: 40px;
+    background: none;
+    border:none;
+    color:white;
+    order:2;
+}
+
+.sfw-alert-container{
+    height:30px;
+    width:auto;
+    margin-top: 20px;
+}
+
+.sfw-workout-btns-container{
+    margin-top: 20px;
+    width:80%;
+}
+
+.sfw-workout-exercies-return-btn{
+    border:2px rgb(56, 55, 55) solid;
+    height:36px;
+    font-size: 20px;
+    background: none;
+    color:white;
+    border-radius: 5px;
+    order: 2;
+}
+
+.sfw-workout-exercies-save-btn{
+    border:2px rgb(13, 158, 0) solid;
+    height:36px;
+    font-size: 20px;
+    background: none;
+    color:white;
+    border-radius: 5px;
+    margin-right: 20px;
+    order:1;
+}
+
+.sfw-alert-hidden {
+    opacity: 0;
+    transition: all 250ms linear 2s;
+  }
+
+
+  .sfw-container-padding{
+    height:120px;
+    width:auto;
+  }
+/******* exercise categories ****/
+
+.sfw-exercise-cat-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 80%;
+    width: 95%;
+    overflow-y:hidden;
+    overflow-x: hidden;
+    margin-top:13%;
+}
+
+.sfw-exercise-cat-container-left{
+    width:90%;
+    height: auto;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.sfw-exercise-cat-container-right{
+    width:90%;
+    height: auto;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+}
+
+.sfw-exercise-btn{
+    width:200px;
+    height:80px;
+    border-radius: 5px;
+    border:2px rgb(56, 55, 55) solid;
+    margin-bottom:10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--grayDarker);
+    color:white;
+    font-size: 18px;
+}
+
+.sfw-exercise-btn:hover{
+    background: var(--grayDefault);
+    text-decoration: none;
+}
+
+.sfw-exercise-btn-create{
+    margin-top:10px;
+    border-radius:10px;
+    height: 36px;
+    font-size: 18px;
+    background: none;
+    border:2px white solid;
+    color: white;
+}
+
+
+
+  /***** exercise category opened ***/
+
+  .sfw-exercise-container form{
+    width:90%;
+    height: auto;
+  } 
+  .sfw-dynamic-exercise-container{
+      width:100%;
+      height: auto;
+  }
+
+  .sfw-exercise-item{
+    width:95%;
+    height:50px;
+    border:2px rgb(56, 55, 55) solid;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-around;
+    margin-top:3%;
+    border-radius:5px;
+}
+
+.sfw-ec-container{
+    height: 10%;
+    width:80%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.sfw-ec-container p{
+    font-size: 36px;
+    padding-left: 30%;
+}
+
+.sfw-exercise-elemTextContainer{
+    order:1;
+    width:85%;
+    margin-left:10px;
+}
+
+.sfw-add-exercise-btn{
+    width:45px;
+    height: 45px;
+    font-size: 40px;
+    background: none;
+    border:none;
+    color:white;
+    order:2;
+}
+
+
+.sfw-cwi-btn-return{
+    border:2px rgb(56, 55, 55) solid;
+    height:36px;
+    font-size: 20px;
+    background: none;
+    color:white;
+    border-radius: 5px;
+}

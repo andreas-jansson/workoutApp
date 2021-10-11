@@ -9,8 +9,9 @@ from rest_framework import response
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
-from .serializers import UserSerializer, ExerciseSerializer, WorkoutSerializer, UserSerializerPending, RoleSerializer, scheduledWorkoutSerializer
-from .models import CoachHasClient, Role, User, Exercise, ExerciseType, Workout, scheduledWorkout
+from .serializers import UserSerializer, ExerciseSerializer, WorkoutSerializer, UserSerializerPending \
+    ,RoleSerializer, scheduledWorkoutSerializer, LogSerializer, LogExtraSerializer, FriendsSerializer
+from .models import Role, User, Exercise, ExerciseType, Workout, scheduledWorkout, Log, Friends, CoachHasClient
 from .hashUtils import compare_pw_hash, create_pw_hash, create_salt
 from .userUtils import email_is_registered
 import io
@@ -112,12 +113,14 @@ class LoginUserView(generics.ListAPIView):
         if (email_is_registered(data['email'])):
             user = User.objects.filter(email=data['email'])[0]
             if(compare_pw_hash(data['password'], user.salt, user.pwhash)):
+                if (user.roleid == Role.objects.filter(description = 'Unauthorized')[0]):
+                    return Response({'Unauthorized User, Wait to get accepted'}, status=status.HTTP_401_UNAUTHORIZED)
                 self.request.session.create()
                 self.request.session['user_id'] = user.id
                 self.request.session['first_name'] = user.fname
                 self.request.session['role_id'] = user.roleid_id
                 return Response({'Login OK'}, status=status.HTTP_200_OK)
-        return Response({'Invalid Email Or Password'}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({'Invalid Email Or Password'}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
 
 # Recieves exercise type and returns all exercises
@@ -207,22 +210,32 @@ class GetWorkoutView(APIView):
         shared = False
         if(User.objects.filter(id=self.request.session.get('user_id'))[0].roleid_id > 2):
             print("coach")
-            queryset = Workout.objects.raw(
-                'select * from api_workout where active = 1')
+            queryset = Workout.objects.raw('select * from api_workout where active = 1 and shared = 1')
             print(queryset)
             shared = True
         else:
-            queryset = Workout.objects.raw('select * from api_user_hasWorkouts as uhw '
-                                           + 'inner join api_workout as w on uhw.workout_id = w.id where uhw.user_id = \'{}\' and active =1'.format(self.request.session.get('user_id')))
+            queryset = Workout.objects.raw('select w.id, w.name, w.description, w.active, w.shared from api_user_hasWorkouts as uhw '
+            +'inner join api_workout as w on uhw.workout_id = w.id where uhw.user_id = \'{}\' and active =1'.format(self.request.session.get('user_id')))
             print(queryset)
 
-        # if(shared == True):
-            #result_list = list(chain(queryset_shared, queryset))
-        # else:
-            #result_list = queryset
-        # print(result_list)
+        if len(queryset)>0:
+            data = WorkoutSerializer(queryset, many=True).data
+            print(data)                    
+            return Response(data, status=status.HTTP_200_OK)
+        return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
 
-        if len(queryset) > 0:
+
+
+
+class GetStandardWorkoutView(APIView):
+    def get(self, request, format=None):
+        print("GetWorkoutView Triggered!")
+        shared = False
+
+        queryset = Workout.objects.raw('select * from api_workout where active = 1 and shared = 1')
+        print(queryset)
+
+        if len(queryset)>0:
             data = WorkoutSerializer(queryset, many=True).data
             print(data)
             return Response(data, status=status.HTTP_200_OK)
@@ -243,12 +256,18 @@ class GetWorkoutExercisesView(APIView):
                                            + 'where  active = 1  and w.name = \'{}\';'.format(name))
         else:
             queryset = Workout.objects.raw('select e.id, e.name, e.type_id from api_user_hasWorkouts as uhw '
-                                           + 'inner join api_workout as w on uhw.workout_id = w.id '
-                                           + 'inner join api_workout_consistsOf as wco on wco.workout_id = uhw.workout_id '
-                                           + 'inner join api_exercise as e on e.id = wco.exercise_id '
-                                           + 'where uhw.user_id = \'{}\' and  active = 1  and w.name = \'{}\''.format(user, name))
-
-        if len(queryset) > 0:
+            +'inner join api_workout as w on uhw.workout_id = w.id '
+            +'inner join api_workout_consistsOf as wco on wco.workout_id = uhw.workout_id '
+            +'inner join api_exercise as e on e.id = wco.exercise_id '
+            +'where uhw.user_id = \'{}\' and  active = 1  and w.name = \'{}\''.format(self.request.session.get('user_id'), name))
+            #if client, find exercises from their own workout named XYZ, else get exercises from standard workouts
+            if(bool(queryset) == False):
+                queryset = Workout.objects.raw('select e.id, e.name, e.type_id from api_workout as w '
+                +'inner join api_workout_consistsOf as wco on wco.workout_id = w.id '
+                +'inner join api_exercise as e on e.id = wco.exercise_id '
+                +'where  active = 1  and w.name = \'{}\';'.format(name))
+        
+        if len(queryset)>0:
             data = WorkoutSerializer(queryset, many=True).data
             print(data)
             return Response(data, status=status.HTTP_200_OK)
@@ -311,19 +330,22 @@ class UpdateWorkoutView(APIView):
         # return Response({'Bad request': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-#
-#   Todo: delete scheduled workouts based on the workout id in question
-#
+
 class DeleteWorkoutView(APIView):
     def post(self, request, format=None):
         print("DeleteWorkoutView Triggered!")
         name = request.data['workoutName']
 
-        query_workout = Exercise.objects.raw('select w.id, w.description from api_workout as w '
-                                             + 'inner join api_user_hasWorkouts as uhw '
-                                             + 'on w.id = uhw.workout_id inner join api_user as u '
-                                             + 'on uhw.user_id = u.id where u.id = \'{}\' and w.name = \'{}\' and w.active = 1'.format(self.request.session.get('user_id'), name))
-        print(query_workout[0].id)
+
+        if(User.objects.filter(id=self.request.session.get('user_id'))[0].roleid_id > 2):
+            query_workout = Exercise.objects.raw('select w.id, w.description from api_workout as w where w.name = \'{}\' and w.active = 1'.format(name))
+            print(query_workout[0].id)
+        else:
+            query_workout = Exercise.objects.raw('select w.id, w.description from api_workout as w '
+            +'inner join api_user_hasWorkouts as uhw '
+            +'on w.id = uhw.workout_id inner join api_user as u '
+            +'on uhw.user_id = u.id where u.id = \'{}\' and w.name = \'{}\' and w.active = 1'.format(self.request.session.get('user_id') , name))
+            print(query_workout[0].id)
         workout = Workout.objects.get(id=query_workout[0].id)
         workout.active = False
         workout.save()
@@ -507,29 +529,20 @@ class CreatePlannedWorkoutView(APIView):
         return Response({'User approved': 'OK'}, status=status.HTTP_200_OK)
 
 
-class GetScheduledWorkoutsView2(APIView):
+class GetScheduledWorkoutsTodayView(APIView):
     def get(self, request, format=None):
 
-        print("******GetScheduledWorkoutsView Triggered!****")
-        first_day_of_month = str(dt.today().replace(day=1))
-        print(first_day_of_month[:10])
+        print("******GetScheduledWorkoutsTodayView Triggered!****")
+    
+        today = str(dt.today())[:10]+"%"
+        print(today)
 
-        # extract year and month as ints
-        yyyy = int(first_day_of_month[0:4])
-        mm = int(first_day_of_month[5:7])
-        print(yyyy)
-        print(mm)
-        # get the number of months for the given year and month
-        days_in_month = calendar.monthrange(yyyy, mm)[1]
-        # get date of last day of current month
-        last_day_of_month = str(dt.today().replace(day=days_in_month))
-        print(last_day_of_month)
-
-        queryset = scheduledWorkout.objects.raw('select * from api_scheduledworkout '
-                                                + 'where user_id = \'{}\' and scheduledDate >= \'{}\' and scheduledDate <= \'{}\' order by scheduledDate'.format(self.request.session.get('user_id'), first_day_of_month, last_day_of_month))
-        if len(queryset) > 0:
-            data = scheduledWorkoutSerializer(queryset, many=True).data
-            # print(data)
+        queryset = Workout.objects.raw('select * from api_scheduledworkout as sw '
+        +'inner join api_workout as w on sw.workout_id = w.id '
+        +'where user_id = \'{}\' and scheduledDate like \'{}\''.format(self.request.session.get('user_id'), today, ))
+        if len(queryset)>0:
+            data = WorkoutSerializer(queryset, many=True).data
+            print(data)                    
             return Response(data, status=status.HTTP_200_OK)
         return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -616,52 +629,48 @@ class GetWorkoutDailyView(APIView):
 
 
 ########### USER MANAGEMENT [TABLE]  #################################
-class GetUserView(APIView):
+class UserManagementView(APIView):
     def get(self, request, format=None):
         print("GetUserView Triggered!")
+        test = request.GET.get('id')
+        print(test)
         queryset = User.objects.raw('select * from api_user')
 
-        # for i in range(len(queryset)):
-        # print('\nID:',queryset[i].id,'\nFname:',queryset[i].fname,'\nLname:',queryset[i].lname,'\nEmail:',queryset[i].email,'\nCreated:',queryset[i].created,'\nWorkouts?:',queryset[i].hasWorkouts,'\n\n')
-        # print(queryset[i])
-
-        if len(queryset) > 0:
+        if len(queryset)>0:
             data = UserSerializer(queryset, many=True).data
-            return Response(data, status=status.HTTP_200_OK)
-        return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
+            return Response(data, status=status.HTTP_200_OK) 
+        return Response({'User FOUND': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
+    
+    def put(self, request, format=None):
+        print("PutUserView Triggered!")
+        print(request.data)
 
-
-class UpdateUserView(APIView):
-
-    def post(self, request, format=None):
-        print("UpdateUserView Triggered!")
-
-        # finds the ID of the modifed User
-        query = User.objects.raw('select * from api_user where id= \'{p}\'')
-
-        print(query[0].id)
-
-        # updates old User to inactive
-        user = User.objects.get(id=query[0].id)
-        user.active = 0
-        user.save()
-
-        user_new = User(roleid=roleid, id=id, fname=fname,
-                        lname=lname, email=email)
-        user_new.save()
-        return Response({'User Updated': 'OK'}, status=status.HTTP_200_OK)
-
-
-class DeleteUserView(APIView):
-    def post(self, request, format=None):
-        print("DeleteUserView Triggered!")
-        query = User.objects.get('select * from api_user where id= \'{pk}\'')
-
-        print(query[0].id)
         user_id = request.data['id']
-        user = User.objects.filter(id=user_id).delete()
-        user.delete()
-        return Response({'User Deleted': 'OK'}, status=status.HTTP_200_OK)
+        fname   = request.data['fname']
+        lname   = request.data['lname']
+        email   = request.data['email']       
+        
+        query = User.objects.get(id = user_id)
+        query.fname = fname
+        query.lname = lname
+        query.email = email
+        query.save()
+        return Response({'User UPDATED': 'OK'}, status=status.HTTP_200_OK)
+    
+    def delete(self, request, format=None):
+        print("DeleteUserView Triggered!")
+        user_id = request.GET.get('id')
+        print(user_id)
+        
+        scheduledworkout = scheduledWorkout.objects.raw('select * from api_scheduledWorkout where user_id = \'{}\''.format(user_id))
+        print(scheduledworkout)
+        for workout in scheduledworkout: 
+           workout.delete()
+        
+        user = User.objects.filter(id = user_id)
+        user.delete()     
+        return Response({'User DELETED': 'OK'}, status=status.HTTP_200_OK)
+
 
 
 class DeleteScheduledWorkout(APIView):
@@ -672,6 +681,8 @@ class DeleteScheduledWorkout(APIView):
         client = request.data['user']
         print(name)
         print(date)
+
+
 
         user = self.request.session.get('user_id')
         if(client == 0):
@@ -684,27 +695,452 @@ class DeleteScheduledWorkout(APIView):
             user = client
             # finds correct workout id to remove - coach view
             to_delete = scheduledWorkout.objects.raw('select sw.id from api_workout as w '
-                                                     + 'inner join api_user_hasWorkouts as uhw on w.id = uhw.workout_id '
-                                                     + 'inner join api_scheduledworkout as sw on w.id = sw.workout_id '
-                                                     + 'where sw.user_id = \'{}\' and w.name = \'{}\' and sw.scheduledDate like \'{}\';'.format(user, name, date))
+            +'inner join api_user_hasWorkouts as uhw on w.id = uhw.workout_id '
+            +'inner join api_scheduledworkout as sw on w.id = sw.workout_id '
+            +'where sw.user_id = \'{}\' and w.name = \'{}\' and sw.scheduledDate like \'{}\';'.format(user , name, date))
 
         print(to_delete[0].id)
+        delete_logs = Log.objects.filter(scheduledWorkout_id=to_delete[0].id)
+
+        for log in delete_logs:
+            print("deleting: " + str(log.id))
+            log.delete()
 
         scheduledWorkout.objects.filter(id=to_delete[0].id).delete()
 
-        # delete_workout = scheduledWorkout.objects.raw('delete from api_scheduledworkout '
-        # +'where user_id = \'{}\' and workout_id = \'{}\' and scheduledDate like \'{}\';'.format(self.request.session.get('user_id') , query_workout[0].id, date))
-        # print(delete_workout[0].id)
+        #delete_workout = scheduledWorkout.objects.raw('delete from api_scheduledworkout '
+        #+'where user_id = \'{}\' and workout_id = \'{}\' and scheduledDate like \'{}\';'.format(self.request.session.get('user_id') , query_workout[0].id, date))
+        #print(delete_workout[0].id)
         return Response({'Workout Deleted': 'OK'}, status=status.HTTP_200_OK)
 
-
-class ListUnassignedClients(APIView):
+class SettingsView(APIView):
     def get(self, request, format=None):
-        #print("ListUnassignedClients Triggered!")
-        queryset = User.objects.raw(
-            'SELECT * FROM api_user WHERE roleid_id=2 AND id NOT IN (SELECT user_id FROM api_coachhasclient)')
-        #print(queryset[0].fname)
-        if len(queryset) > 0:
-            data = UserSerializer(queryset, many=True).data
+        if(User.objects.filter(id=self.request.session.get('user_id')).exists()):
+            user = User.objects.filter(id=self.request.session.get('user_id'))[0]
+            data = UserSerializer(user).data
+            return Response(data, status=status.HTTP_200_OK) 
+
+    def post(self, request, format=None):
+        if(User.objects.filter(id=self.request.session.get('user_id')).exists()):
+            user = User.objects.filter(id=self.request.session.get('user_id'))[0]
+            user.isVisible = request.data['isVisible']
+            user.save()
+            return Response({'isVisible toggled': 'OK'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'Something went wrong': 'BAD'}, status=status.HTTP_418_IM_A_TEAPOT)
+
+class SettingsDeleteView(APIView):
+    def post(self, request, format=None):
+        if(User.objects.filter(id=self.request.session.get('user_id')).exists()):
+            user = User.objects.filter(id=self.request.session.get('user_id'))[0]
+            self.request.session.flush()
+            user.delete()
+            return Response({"User deleted and session flushed"}, status=status.HTTP_200_OK)
+        else:
+            return Response({'Something went wrong': 'BAD'}, status=status.HTTP_418_IM_A_TEAPOT)
+
+############# Logs ######################
+
+class SaveLogView(APIView):
+       def post(self, request, format=None):
+        print("SaveLogView Triggered!")
+        setnr = request.data['set']
+        rep = request.data['rep']
+        weight = request.data['weight']
+        time = request.data['time']
+        workoutId = request.data['workoutId']
+        workoutSelected = request.data['workoutSelected']
+        schduleId = request.data['schduleId']
+        exerciseId = request.data['exerciseId']
+        today = str(dt.today())[:10]+"%"
+        if(time==0):
+            time="00:00:00"
+
+        print(today)
+        print(setnr)
+        print(rep)
+        print(weight)
+        print(time)
+        print(workoutId)
+        print(workoutSelected)
+        print(schduleId)
+        print(exerciseId)
+
+
+        #if schduled workout exists, log it. otherwise create a schduled workout and then log it 
+        if(schduleId != 0):
+            print("first if")
+            schedule_workout_id = scheduledWorkout.objects.get(id=schduleId)
+            log = Log(sets=setnr, reps=rep, weight=weight, time=time, exercise_id=exerciseId, scheduledWorkout_id=schduleId)
+            log.save()
+        else:
+            print("first else")
+            schedule_check = scheduledWorkout.objects.raw('select * from api_scheduledworkout as sw inner join api_workout as w on sw.workout_id = w.id where user_id = \'{}\' and w.name = \'{}\' and scheduledDate like \'{}\''.format(self.request.session.get('user_id'), workoutSelected, today))
+            print(bool(schedule_check))
+            if(bool(schedule_check) == False):
+                print("IF***")
+                schedule_workout = scheduledWorkout(scheduledDate=dt.today(),user_id=self.request.session.get('user_id'),workout_id=workoutId)
+                schedule_workout.save()
+                print("schedule_saved***")
+                schedule_workout_id = scheduledWorkout.objects.raw('select * from api_scheduledworkout where user_id = \'{}\' and workout_id = \'{}\'  and scheduledDate like \'{}\''.format(self.request.session.get('user_id'), workoutId, today))[0]
+                print(schedule_workout_id.id)
+                log = Log(sets=setnr, reps=rep, weight=weight, time=time, exercise_id=exerciseId, scheduledWorkout_id=schedule_workout_id.id)
+                log.save()
+                print("log_saved")
+            else:
+                print("ELSE***")
+                schedule_workout_id = scheduledWorkout.objects.raw('select * from api_scheduledworkout where user_id = \'{}\' and workout_id = \'{}\'  and scheduledDate like \'{}\''.format(self.request.session.get('user_id'), workoutId, today))[0]
+                log = Log(sets=setnr, reps=rep, weight=weight, time=time, exercise_id=exerciseId, scheduledWorkout_id=schedule_workout_id.id)
+                log.save()
+
+        data = scheduledWorkoutSerializer(schedule_workout_id).data
+        print(data)
+        return Response(data, status=status.HTTP_200_OK)
+
+
+class LoadActiveLogsView(APIView):
+    def post(self, request, format=None):
+        print("LoadActiveLogsView Triggered!")
+        schduleId = request.data['schduleId']
+        exerciseId = request.data['exerciseId']
+        print(schduleId)
+        print(exerciseId)
+
+        active_logs = Log.objects.raw('select * from api_log where scheduledWorkout_id = \'{}\' and exercise_id=\'{}\' order by sets desc'.format(schduleId, exerciseId))
+        data = LogSerializer(active_logs, many=True).data
+        print(data)
+        return Response(data, status=status.HTTP_200_OK)
+
+
+class LoadPreviousLogsView(APIView):
+    def post(self, request, format=None):
+        print("LoadPreviousLogsView Triggered!")
+        exerciseId = request.data['exerciseId']
+        print(exerciseId)
+        today = str(dt.today())[:10]
+
+        active_logs = Log.objects.raw('select l.id, l.sets, l.reps, l.weight, l.time, l.exercise_id, l.scheduledWorkout_id '
+        +'from api_log as l inner join api_scheduledworkout as sw '
+        +'on l.scheduledWorkout_id = sw.id '
+        +'inner join api_workout_consistsOf as wco '
+        +'on wco.workout_id = sw.workout_id '
+        +'where sw.scheduledDate  < \'{}\' and user_id = \'{}\' and wco.exercise_id = \'{}\' and l.exercise_id = \'{}\' order by l.sets desc'.format(today, self.request.session.get('user_id'), exerciseId, exerciseId))
+
+        if len(active_logs)>0:
+            data = LogSerializer(active_logs, many=True).data
+            print(data)
+            return Response(data, status=status.HTTP_200_OK) 
+        return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
+
+#Loads logs for a specific date
+class LoadSpecificLogsView(APIView):
+    def post(self, request, format=None):
+        print("LoadSpecificLogsView Triggered!")
+        workoutName = request.data['workoutName']
+        date = request.data['date'] + "%"
+        print("x:" + workoutName+ ":x")
+        print("x:" + date + ":x")
+        print("x:" + str(self.request.session.get('user_id'))+":x")
+
+        active_logs = Log.objects.raw('select e.name, l.id, l.sets, l.reps, l.weight, l.time, l.exercise_id, l.scheduledWorkout_id '
+        +'from api_log  as l inner join api_scheduledworkout as sw '
+        +'on l.scheduledWorkout_id = sw.id '
+        +'inner join api_exercise as e on e.id = l.exercise_id '
+        +'inner join api_workout as w on w.id = sw.workout_id '
+        +'where sw.scheduledDate like \'{}\' and sw.user_id = \'{}\' and w.name = \'{}\' order by e.name, sets desc'.format(date, self.request.session.get('user_id'), workoutName))
+        
+        for log in active_logs:
+            print(log.name)
+
+        if len(active_logs)>0:
+            data = LogExtraSerializer(active_logs, many=True).data
+            print(data)
+            return Response(data, status=status.HTTP_200_OK) 
+        return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class GetClientView(APIView):
+    def get(self, request, format=None):
+        print("GetClientView Triggered!")
+        #coach = request.GET.get(self.lookup_url_kwarg)
+        
+        query_set = User.objects.raw('select u.id, u.fname, u.lname from api_coachhasclient as chc '
+        +'inner join api_user as u on chc.user_id = u.id '
+        +'where chc.coach_id = \'{}\''.format(self.request.session.get('user_id')))
+    
+        if len(query_set)>0:
+            data = UserSerializer(query_set, many=True).data
+            print(data)
+            return Response(data, status=status.HTTP_200_OK) 
+        return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class GetAllWorkoutView(APIView):
+    def get(self, request, format=None):
+        print("GetAllWorkoutView Triggered!")
+      
+        queryset1 = Workout.objects.raw('select * from api_workout where active = 1 and shared = 1')
+
+        queryset2 = Workout.objects.raw('select w.id, w.name, w.description, w.active, w.shared from api_user_hasWorkouts as uhw '
+        +'inner join api_workout as w on uhw.workout_id = w.id where uhw.user_id = \'{}\' and active =1'.format(self.request.session.get('user_id')))
+
+        result_list = list(chain(queryset1, queryset2))
+
+        if len(result_list)>0:
+            data = WorkoutSerializer(result_list, many=True).data
+            print(data)                    
             return Response(data, status=status.HTTP_200_OK)
         return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+class GetFriendsView(APIView):
+    def get(self, request, format=None):
+        #exercise_type = request.GET.get(self.lookup_url_kwarg)
+        print("****GetFriendsView Triggered!")
+
+        #finds all rows with your id in api_friends
+        queryset1 = Friends.objects.raw('select * from api_friends where (user1_id = \'{}\' or user2_id = \'{}\') and verified = 1'.format(self.request.session.get('user_id'), self.request.session.get('user_id')))
+        
+        #creates a list of the ids that arent yours
+        friend_list = []
+        for person in queryset1:
+            if(person.user1_id == self.request.session.get('user_id')):
+                friend_list.append(person.user2_id)
+            else:
+                friend_list.append(person.user1_id)
+
+        queryset2 = User.objects.filter(id__in = friend_list)
+        
+        if len(queryset2)>0:
+            data = UserSerializer(queryset2, many=True).data
+            print(data)                    
+            return Response(data, status=status.HTTP_200_OK)
+        return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+class GetFriendWorkoutView(APIView):
+    lookup_url_kwarg = 'user'
+    def get(self, request, format=None):
+        print("GetFriendWorkoutView Triggered!")
+        user = request.GET.get(self.lookup_url_kwarg)
+        print("friend: " + str(user))
+
+        queryset = Workout.objects.raw('select w.id, w.name, w.description, w.active, w.shared from api_user_hasWorkouts as uhw '
+        +'inner join api_workout as w on uhw.workout_id = w.id where uhw.user_id = \'{}\' and active =1'.format(user))
+        print(queryset)
+
+        if len(queryset)>0:
+            data = WorkoutSerializer(queryset, many=True).data
+            print(data)                    
+            return Response(data, status=status.HTTP_200_OK)
+        return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+class CopyFriendWorkoutView(APIView):
+      def post(self, request, format=None):
+        print("CopyFriendWorkoutView Triggered!")
+   
+        name = request.data['workoutName']
+        print(name)
+        user = request.data['user']
+        print(user)
+        #active=True
+
+        queryset_workout_desc = Workout.objects.raw('select * from api_workout as w '
+        +'inner join api_user_hasWorkouts as uhw on w.id = uhw.workout_id '
+        +'where w.name= \'{}\' and user_id = \'{}\' and w.active = true'.format(name, user))
+
+
+     
+
+        consistsOf = 'wtf'
+        workout = Workout(name=name, description=queryset_workout_desc[0].description, active=True, shared=False)
+        workout.save()
+        
+        #Finds user and creates user_hasWorkout - mtm
+        user_id = self.request.session.get('user_id')   
+        print("user_id: " + str(user_id))    
+        user_has_workout = User.objects.get(id=user_id)
+        print("user_has_workout: " + str(user_has_workout))  
+        user_has_workout.hasWorkouts.add(workout)
+
+
+        #Find all exercises that the user picked. Finds the specific exercise object and creates mtm with workout
+        for exercise in request.data['exercises_list']:
+            queryset = Exercise.objects.raw('select e.id, e.name, e.type_id from api_exercise as e where name = \'{}\' limit 1'.format(exercise))
+            #var_type = queryset[0].type_id
+            var_name = queryset[0].name
+
+            exercise = Exercise.objects.get(name=var_name)
+            print(exercise.name)
+            workout.consistsOf.add(exercise)
+            workout.save()
+            print(workout)
+        return Response({'User registered': 'OK'}, status=status.HTTP_200_OK)
+        #return Response({'Bad request': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class GetFriendInfoView(APIView):
+    lookup_url_kwarg = 'user'
+    def get(self, request, format=None):
+        user = request.GET.get(self.lookup_url_kwarg)
+        print("friend: " + str(user))
+        queryset = User.objects.raw('select * from api_user where id = \'{}\''.format(user))
+        
+        if len(queryset)>0:
+            data = UserSerializer(queryset[0]).data
+            print(data)                    
+            return Response(data, status=status.HTTP_200_OK)
+        return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class GetPendingFriendView(APIView):
+    def get(self, request, format=None):
+        #exercise_type = request.GET.get(self.lookup_url_kwarg)
+        print("****GetPendingFriendView Triggered!")
+
+        #finds all rows with your id in api_friends
+        queryset1 = Friends.objects.raw('select * from api_friends where (user1_id = \'{}\' or user2_id = \'{}\') and verified = 0'.format(self.request.session.get('user_id'), self.request.session.get('user_id')))
+        
+        #creates a list of the ids that arent yours
+        friend_list = []
+        for person in queryset1:
+            if(person.user1_id == self.request.session.get('user_id')):
+                friend_list.append(person.user2_id)
+            else:
+                friend_list.append(person.user1_id)
+
+        queryset2 = User.objects.filter(id__in = friend_list)
+        
+        if len(queryset2)>0:
+            data = UserSerializer(queryset2, many=True).data
+            print(data)                    
+            return Response(data, status=status.HTTP_200_OK)
+        return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class CreatePendingFriendView(APIView):
+    lookup_url_kwarg = 'user'
+    def post(self, request, format=None):
+        print("****RequestingFriendRequestView Triggered!")
+        print("accepting user: " + str(user))
+
+        queryset = Friends.objects.raw('select * from api_friends where (user1_id = \'{}\' and user2_id =\'{}\') or (user1_id = \'{}\'  and user2_id =\'{}\') and verified = 0'.format(self.request.session.get('user_id'), user, user, self.request.session.get('user_id')))
+
+        print(queryset)
+        print("accepting row: " + str(queryset[0].id))
+
+        friend = Friends.objects.get(id = queryset[0].id)
+        friend.verified = True
+        friend.save()
+        return Response({'Friend Accepted': 'OK'}, status=status.HTTP_200_OK)   
+
+
+class DenyPendingFriendView(APIView):
+    lookup_url_kwarg = 'user'
+    def get(self, request, format=None):
+        print("****DenyPendingFriend Triggered!")
+        user = request.GET.get(self.lookup_url_kwarg)
+        print("denying user: " + str(user))
+        queryset = Friends.objects.raw('select * from api_friends where (user1_id = \'{}\' and user2_id =\'{}\') or (user1_id = \'{}\'  and user2_id =\'{}\') and verified = 0'.format(self.request.session.get('user_id'), user, user, self.request.session.get('user_id')))
+
+        print(queryset)
+        print("deleteing row: " + str(queryset[0].id))
+
+        Friends.objects.filter(id = queryset[0].id).delete()
+        return Response({'Friend Denied': 'OK'}, status=status.HTTP_200_OK)   
+
+class AcceptPendingFriendView(APIView):
+    lookup_url_kwarg = 'user'
+    def get(self, request, format=None):
+        print("****AcceptPendingFriendView Triggered!")
+        user = request.GET.get(self.lookup_url_kwarg)
+        print("accepting user: " + str(user))
+
+        queryset = Friends.objects.raw('select * from api_friends where (user1_id = \'{}\' and user2_id =\'{}\') or (user1_id = \'{}\'  and user2_id =\'{}\') and verified = 0'.format(self.request.session.get('user_id'), user, user, self.request.session.get('user_id')))
+
+        print(queryset)
+        print("accepting row: " + str(queryset[0].id))
+
+        friend = Friends.objects.get(id = queryset[0].id)
+        friend.verified = True
+        friend.save()
+        return Response({'Friend Accepted': 'OK'}, status=status.HTTP_200_OK)   
+
+class DeleteFriendView(APIView):
+    lookup_url_kwarg = 'user'
+    def get(self, request, format=None):
+        print("****DenyPendingFriend Triggered!")
+        user = request.GET.get(self.lookup_url_kwarg)
+        print("deleteing user: " + str(user))
+
+        queryset = Friends.objects.raw('select * from api_friends where (user1_id = \'{}\' and user2_id =\'{}\') or (user1_id = \'{}\' and user2_id =\'{}\') and verified = 1'.format(self.request.session.get('user_id'), user, user, self.request.session.get('user_id')))
+
+        print(queryset)
+        print("deleteing row: " + str(queryset[0].id))
+
+        Friends.objects.filter(id = queryset[0].id).delete()
+        return Response({'Friend Deleted': 'OK'}, status=status.HTTP_200_OK)   
+
+
+
+class SocialFindFriendsEmail(APIView):
+
+    def get(self, request, format=None):
+        print("****SocialFindFriendsEmail Triggered!")
+        queryset1 = Friends.objects.raw('select * from api_friends where (user1_id = \'{}\' or user2_id = \'{}\')'.format(self.request.session.get('user_id'), self.request.session.get('user_id')))
+        
+        friend_list = []
+        for person in queryset1:
+            if(person.user1_id == self.request.session.get('user_id')):
+                friend_list.append(person.user2_id)
+            else:
+                friend_list.append(person.user1_id)
+        friend_list.append(self.request.session.get('user_id'))
+
+        queryset2 = User.objects.raw('select * from api_user where isVisible == 1 and id not in \'{}\''.format(self.request.session.get('user_id')))
+        queryset2 = User.objects.exclude(id__in = friend_list)
+
+        if len(queryset2)>0:
+            data = UserSerializer(queryset2, many=True).data
+            print(data)                    
+            return Response(data, status=status.HTTP_200_OK)
+        return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
+
+
+    def post(self, request, format=None):
+        print("****SocialFindFriendsEmail-Request Triggered!")
+
+        email = request.data['email']
+        query = User.objects.filter(email = email)
+
+        print(query)
+
+        if(query>0): 
+            query2 = User.objects.raw('select * from api_friends where (user1_id = \'{}\' and user2_id =\'{}\') or (user1_id = \'{}\' and user2_id =\'{}\')'.format(self.request.session.get('user_id'), query[0].id, query[0].id, self.request.session.get('user_id')))
+            if(query2>0): 
+                return Response({'Cannot Add User': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
+            else: 
+                print(query2)
+                friend = Friends(verified=False, user1_id = self.request.session.get('user_id'), user2_id = query[0].id) 
+                print(friend)
+                friend.save()
+                return Response({'Friend Request Sent': 'OK'}, status=status.HTTP_200_OK)   
+        return Response({'Cannot Add User': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
+
+        
+class SocialFindFriendsVisible(APIView):
+    def get(self, request, format=None):
+        print("\n\SocialFindFriendsEmail-SEND_REQUEST Triggered!\n\n")
+        
+        user = self.request.session.get('user_id')
+        queryset = User.objects.raw('select * from api_user where isVisible == 1 and id != \'{}\' and roleid_id == 2 '.format(user))
+
+        if len(queryset)>0:
+            data = UserSerializer(queryset, many=True).data
+            return Response(data, status=status.HTTP_200_OK) 
+        return Response({'User FOUND': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)

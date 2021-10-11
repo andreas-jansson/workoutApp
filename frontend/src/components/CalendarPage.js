@@ -52,7 +52,7 @@ export default class CalendarPage extends PureComponent {
     }
   }
 
-    DeleteWorkout=(workoutName)=>{
+  DeleteWorkout=(workoutName)=>{
 
     var date = this.state.editDate;
     var user = this.props.user
@@ -103,7 +103,7 @@ export default class CalendarPage extends PureComponent {
     var date = this.getMonth(valueOffset);
     console.log("month: " + date);
     var monthLen = this.getDayInMonth(date);
-    //console.log("len: " + monthLen);
+    console.log("len: " + monthLen);
 
 
     fetch("/api/get-scheduled-workouts?date=" + date.toLocaleDateString()+"&user="+ this.props.user)
@@ -163,7 +163,7 @@ export default class CalendarPage extends PureComponent {
               //console.log("Dict!")
               console.log("dict first day: " + dayDict[first_day])
               for(var i=0;i<dayDict[first_day]-1;i++){
-                  //console.log("creating padding blocks")
+                  console.log("creating padding blocks")
                   var elemPadding = document.createElement('div');
                   elemPadding.className = "calendar-padding-item";
                   elemPadding.id = 0;
@@ -173,7 +173,7 @@ export default class CalendarPage extends PureComponent {
               //itterate through the data and create items
               var saved_i = 0;
               var day_nr = 1;
-              var schedule_exist = [];
+              console.log("len: " + monthLen);
                 for(var i = saved_i; i < monthLen; i++) {
                     //if day of month is scheduled
                     //console.log("day: " + day_nr + " no hit" + " planned: " + day_scheduled)
@@ -276,7 +276,7 @@ export default class CalendarPage extends PureComponent {
                     if(day_scheduled == day_nr){
                         //if day of month have an existing schedule
                         if(schedule_exist.includes(day_nr)==true){
-                            //console.log("day: " + day_nr + " hit!" + " planned: " + day_scheduled)
+                            console.log("day: " + day_nr + " hit!" + " planned: " + day_scheduled)
                             //console.log(day_nr + " if")
                             
                             //day of month
@@ -308,7 +308,7 @@ export default class CalendarPage extends PureComponent {
                         }
                         else{
                             //first workout on a scheduled day
-                            //console.log("day: " + day_nr + " hit!" + " planned: " + day_scheduled)
+                            console.log("day: " + day_nr + " hit!" + " planned: " + day_scheduled)
                             //console.log(day_nr + " if")
 
                             //create calendar item
@@ -357,7 +357,7 @@ export default class CalendarPage extends PureComponent {
                         }
                         else{
 
-                        //console.log("day: " + day_nr + " no hit" + " planned: " + day_scheduled)
+                        console.log("day: " + day_nr + " no hit" + " planned: " + day_scheduled)
                         var empty = "empty"
                         var elemItem = document.createElement('div');
                         elemItem.className = "calendar-day-item";
@@ -384,7 +384,7 @@ export default class CalendarPage extends PureComponent {
   getDayInMonth(date){
     //var date = new Date();
     //var month = date.getMonth() + 1;
-    var month = date.getMonth();
+    var month = date.getMonth() + 1;
     var year = date.getFullYear();
     var daysInMonth = new Date(year, month, 0).getDate();
     return daysInMonth;    
@@ -440,6 +440,97 @@ export default class CalendarPage extends PureComponent {
 
   }
 
+  handleViewWorkoutLogs=(e)=>{
+      e.preventDefault();
+      this.loadPreviousLogs(e.target.id);
+
+    
+  }
+
+  loadPreviousLogs=(workoutName)=>{
+    console.log("Loading previous logs!")
+
+    let targetNode = document.getElementsByClassName("awp-dynamic-previous-log-container")[0];
+
+    if(targetNode != null){
+        targetNode.remove();
+    }
+    console.log("after if")
+
+    var date = this.state.editDate;
+    const requestOptions={
+        method: 'POST',
+        headers: {'Content-Type' : 'application/json'},
+        body: JSON.stringify({
+            workoutName,
+            date,
+        }),
+    };
+
+    fetch("/api/load-specific-log", requestOptions)
+    .then((response) => {
+        if (!response.ok){
+            console.log("Failed get exercise!");
+        }
+        return response.json()}
+        ).then((data)=>{
+            console.log("data time")
+            const elemContainer = document.createElement('div');
+            elemContainer.className = "awp-dynamic-previous-log-container";
+            elemContainer.id = "awp-dynamic-previous-log-container";
+            //var currentSet = 0
+            for(var i = 0; i < data.length; i++) {
+                console.log(data[i].id);
+                //currentSet = data[i].sets
+                var elemItem = document.createElement('div');
+                elemItem.className = "awp-previous-log-item";
+                elemItem.id = data[i].id;
+                elemItem.value = data[i].id;
+                elemItem.onclick = this.handleSelectedExercise;
+
+                var elemTextNameContainer = document.createElement('div');
+                elemTextNameContainer.className = "awp-previous-log-elemTextNameContainer"
+
+                var elemTextSetContainer = document.createElement('div');
+                elemTextSetContainer.className = "awp-previous-log-elemTextSetContainer"
+
+                var elemTextRepContainer = document.createElement('div');
+                elemTextRepContainer.className = "awp-previous-log-elemTextRepContainer"
+
+                var elemTextWeightContainer = document.createElement('div');
+                elemTextWeightContainer.className = "awp-previous-log-elemTextWeightContainer"
+
+                var elemTextTimeContainer = document.createElement('div');
+                elemTextTimeContainer.className = "awp-previous-log-elemTextTimeContainer"
+
+                var elemName = document.createTextNode(data[i].name);
+                var elemSet = document.createTextNode("set: " +data[i].sets);
+                var elemReps = document.createTextNode("reps: " +data[i].reps);
+                var elemWeight = document.createTextNode("weight: " +data[i].weight);
+                var elemTime = document.createTextNode("time: " +data[i].time);
+
+                elemContainer.appendChild(elemItem);
+                elemItem.appendChild(elemTextNameContainer);
+                elemItem.appendChild(elemTextSetContainer);
+                elemItem.appendChild(elemTextRepContainer);
+                elemItem.appendChild(elemTextWeightContainer);
+                elemItem.appendChild(elemTextTimeContainer);
+
+                elemTextNameContainer.appendChild(elemName);
+                elemTextSetContainer.appendChild(elemSet);
+                elemTextRepContainer.appendChild(elemReps);
+                elemTextWeightContainer.appendChild(elemWeight);
+                elemTextTimeContainer.appendChild(elemTime);
+
+
+            }
+            console.log("done")
+            //this.setState({currentSet: currentSet})
+            const workoutList = document.getElementsByClassName("calendar-view-workout-container")[0];
+            let workoutExerciseList = document.getElementsByClassName("calendar-view-workout-container")[0].appendChild(elemContainer);
+        });
+
+}
 
   LoadDailyWorkouts = () =>{
     //console.log("edit date: " + this.state.editDate)
@@ -482,8 +573,18 @@ export default class CalendarPage extends PureComponent {
                 elemMinus.onclick = this.handleRemoveWorkout;
 
 
+                var elemEye = document.createElement('Button');
+                elemEye.className = "calendar-view-workout-btn";
+                elemEye.innerHTML = "&#128064";
+                elemEye.value = exerciseName;
+                elemEye.type = "submit";
+                elemEye.id = exerciseName;
+                elemEye.onclick = this.handleViewWorkoutLogs;
+
+
                 elemContainer.appendChild(elemItem);
                 elemItem.appendChild(elemTextContainer);
+                elemItem.appendChild(elemEye);
                 elemItem.appendChild(elemMinus);
                 elemTextContainer.appendChild(elemText);
 
@@ -502,6 +603,9 @@ export default class CalendarPage extends PureComponent {
             <p>These are the scheduled workouts for {this.state.editDate}</p>
             <div className="calendar-edit-workout-container">
                 { this.LoadDailyWorkouts()}
+            </div>
+            <div className="calendar-view-workout-container">
+                
             </div>
             <button className="calendar-edit-return-btn" onClick={ ()=>{this.setState({editItem: false})}}>Return</button>
         </div>
