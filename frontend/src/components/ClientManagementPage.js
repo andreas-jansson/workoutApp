@@ -44,12 +44,20 @@ export default class ClientManagementPage extends Component {
       .then((data) => {
         const table = document.createElement("table");
         const tableBody = document.createElement("tbody");
+        
         for (var i = 0; i < data.length; i++) {
           console.log(data[i].fname);
           var userRow = document.createElement("tr");
           var userCell = document.createElement("td");
+
+          var rowButtons = document.createElement("button")
+          var rowButtonsText = document.createTextNode("Add");
+          rowButtons.appendChild(rowButtonsText);
+          
+          
           var userCellText = document.createTextNode(""+data[i].fname+" "+data[i].lname);
           userCell.appendChild(userCellText);
+          userCell.appendChild(rowButtons);
           userRow.appendChild(userCell);
           tableBody.appendChild(userRow);
         }
@@ -64,6 +72,7 @@ export default class ClientManagementPage extends Component {
     return (
       <table className="cmp-unassigned-users">
         {/*pls do stuff*/ }
+        
       </table>
     );
   }
