@@ -1150,18 +1150,8 @@ class ListUnassignedClients(APIView):
         #print("ListUnassignedClients Triggered!")
         queryset = User.objects.raw(
             'SELECT * FROM api_user WHERE roleid_id=2 AND id NOT IN (SELECT user_id FROM api_coachhasclient)')
-        #print(queryset[0].fname)
-        if len(queryset) > 0:
+        if len(queryset)>0:
             data = UserSerializer(queryset, many=True).data
-        print("GetClientView Triggered!")
-        #coach = request.GET.get(self.lookup_url_kwarg)
-
-        query_set = User.objects.raw('select u.id, u.fname, u.lname from api_coachhasclient as chc '
-        +'inner join api_user as u on chc.user_id = u.id '
-        +'where chc.coach_id = \'{}\''.format(self.request.session.get('user_id')))
-
-        if len(query_set)>0:
-            data = UserSerializer(query_set, many=True).data
-            print(data)
-            return Response(data, status=status.HTTP_200_OK) 
-        return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)        
+            return Response(data, status=status.HTTP_200_OK)
+        else:
+            return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)        
