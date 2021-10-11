@@ -26,6 +26,7 @@ export default class ClientManagementPage extends Component {
       open: false,
       coachId: null,
       userId: null,
+      refresh: false,
     };
     //this.state = { sessionActive: false };
   }
@@ -46,8 +47,13 @@ export default class ClientManagementPage extends Component {
       console.log("Couldn't Add Client to Coach");
   }
   else{
-      console.log("Added Client to Coach!");   
+      console.log("Added Client to Coach!");
+      //this.setState({refresh:!this.state.refresh})
+      //console.log(!this.state.refresh)
+       
   }
+      this.showAssignedUsers();
+      this.showUnassignedUsers(); 
   })
   }
   handleClientToRemove = (e) => {
@@ -68,10 +74,21 @@ export default class ClientManagementPage extends Component {
   else{
       console.log("Removed Client from Coach!");   
   }
+      this.showAssignedUsers();
+      this.showUnassignedUsers(); 
   })
   }
+  
 
   showUnassignedUsers() {
+    let targetNode = document.getElementsByClassName("cmp-unassigned-table")[0];
+    let targetNode2 = document.getElementsByClassName("cmp-assigned-table")[0];
+        if(targetNode != null){
+            targetNode.remove();
+        }
+        if(targetNode2 != null){
+          targetNode2.remove();
+      }
     fetch("/api/list-unassigned-clients")
       .then((response) => {
         if (!response.ok) {
@@ -83,9 +100,9 @@ export default class ClientManagementPage extends Component {
       })
       .then((data) => {
         const table = document.createElement("table");
+        table.className="cmp-unassigned-table";
         const tableBody = document.createElement("tbody");
-        
-        
+      
         for (var i = 0; i < data.length; i++) {
           console.log(data[i].fname);
           var userRow = document.createElement("tr");
@@ -110,6 +127,14 @@ export default class ClientManagementPage extends Component {
       });
   }
   showAssignedUsers() {
+    let targetNode = document.getElementsByClassName("cmp-assigned-table")[0];
+    let targetNode2 = document.getElementsByClassName("cmp-unassigned-table")[0];
+        if(targetNode != null){
+            targetNode.remove();
+        }
+        if(targetNode2 != null){
+          targetNode2.remove();
+      }
     fetch("/api/get-client")
       .then((response) => {
         if (!response.ok) {
@@ -121,7 +146,9 @@ export default class ClientManagementPage extends Component {
       })
       .then((data) => {
         const table = document.createElement("table");
+        table.className="cmp-assigned-table";
         const tableBody = document.createElement("tbody");
+        
         for (var i = 0; i < data.length; i++) {
           console.log(data[i].fname);
           var userRow = document.createElement("tr");
