@@ -61,10 +61,10 @@ urlpatterns = [
     path('social-find-visible-friends', SocialFindFriendsVisible.as_view()),
     path('social-find-email-friends', SocialFindFriendsEmail.as_view()),
     ##     Management      ##
-    path('get-user', GetUserView.as_view()),
-    path('update-user', UpdateUserView.as_view()),
-    path('delete-user', DeleteUserView.as_view()),
-    
+    #path('get-user', GetUserView.as_view()),
+    #path('update-user', UpdateUserView.as_view()),
+    #path('delete-user', DeleteUserView.as_view()),
+    # Behövs ovanstående fortfarande? Verkar inte som det. 
     path('list-unassigned-clients', ListUnassignedClients.as_view())
 
 ]
