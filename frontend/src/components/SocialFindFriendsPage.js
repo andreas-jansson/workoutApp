@@ -19,6 +19,7 @@ import "../../static/css/social-find-friends.css";
 function SocialFindFriendsPage() {
   const [data, setData] = useState([]);
 
+  const awooga = "/api/social-find-friends";
   const email_url = "/api/social-find-email-friends";
   const public_url = "/api/social-find-visible-friends";
 
@@ -43,13 +44,11 @@ function SocialFindFriendsPage() {
     <div>
       <div className="sff-container">
         <div>
-          <br /> <br />
+          <br />
           <MaterialTable
             title={
-              <div className="sff-title" align="center">
-                <h3>
-                Public Profiles
-                  </h3>
+              <div align="center">
+                <h3>Public Profiles</h3>
               </div>
             }
             columns={columns}
@@ -59,24 +58,24 @@ function SocialFindFriendsPage() {
                 icon: "favorite",
                 openIcon: "contact_page",
                 tooltip: "Send Friend Request!",
-                onClick:() => {
+                onClick: () => {
+                  const requestOptions = {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      data,
+                    }),
+                  };
+                  console.log(requestOptions.body);
+                  console.log(data);
 
-                      const requestOptions = {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                          data,
-                        }),
-                      };
-                      console.log(requestOptions.body);
-                      fetch(email_url, requestOptions).then((resp) => {
-                        if (resp.ok) {
-                          console.log("✅Friend Request Was Successful✅")
-                        } else {
-                          console.log("❌Friend Request Was NOT Successful❌")
-                        }
-                      })
-          
+                  fetch(awooga, requestOptions).then((resp) => {
+                    if (resp.ok) {
+                      console.log("✅Friend Request Was Successful✅");
+                    } else {
+                      console.log("❌Friend Request Was NOT Successful❌");
+                    }
+                  });
                 },
                 //hidden: data.isVisible < 1,
                 disabled: data.isVisible < 1,
@@ -84,7 +83,7 @@ function SocialFindFriendsPage() {
             ]}
             localization={{
               header: {
-                actions: "\u00A0 +",
+                actions: "\u00A0 Add",
                 textAlign: "left",
               },
               toolbar: {
@@ -101,6 +100,7 @@ function SocialFindFriendsPage() {
                 fontStyle: "roboto",
                 height: 5,
               },
+              pageSizeOptions: false,
               searchAutoFocus: true,
               rowStyle: (data) => ({
                 fontSize: 17,
@@ -121,8 +121,8 @@ function SocialFindFriendsPage() {
             detailPanel={[
               {
                 icon: "email",
-                openIcon: "contact_page",
-                tooltip: "Show User Info",
+                openIcon: "drafts",
+                tooltip: "User Info",
                 render: (data) => {
                   if (data.isVisible) {
                     return (
@@ -159,6 +159,53 @@ function SocialFindFriendsPage() {
               },
             ]}
           />
+          <br /> <br />
+          <div className="sff-request-title" align="center">
+            Send an email friend request to people you know.{" "}
+          </div>
+          <br />
+          <form>
+            <div align="center">
+              <label>
+                <input
+                  className
+                  type="email"
+                  //value={data.email}
+                  name="email"
+                  placeholder="Email Address"
+                ></input>
+              </label>
+              <button
+                className="sff-request-button"
+                onClick={(e) => {
+                  e.preventDefault()
+
+                  //var data = data.map(x => ({item: x}));
+
+                  const requestOptions = {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      data,
+                    }),
+                  };
+
+                  console.log(requestOptions.body);
+                  console.log(data);
+
+                  fetch(email_url, requestOptions).then((resp) => {
+                    if (resp.ok) {
+                      console.log("✅Friend Request Was Successful✅");
+                    } else {
+                      console.log("❌Friend Request Was NOT Successful❌");
+                    }
+                  });
+                }}
+              >
+                Send Request
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

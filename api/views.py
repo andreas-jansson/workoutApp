@@ -1088,7 +1088,7 @@ class DeleteFriendView(APIView):
 
 
 
-class SocialFindFriendsEmail(APIView):
+class SocialFindFriends(APIView):
 
     def get(self, request, format=None):
         print("****SocialFindFriendsEmail Triggered!")
@@ -1115,14 +1115,16 @@ class SocialFindFriendsEmail(APIView):
     def post(self, request, format=None):
         print("****SocialFindFriendsEmail-Request Triggered!")
 
-        email = request.data['email']
-        query = User.objects.filter(email = email)
+        email = request.data['data']
+        print(email)
+        print(type(email))
+        query = User.objects.filter(email = email['email'])
 
         print(query)
 
-        if(query>0): 
+        if(len(query)>0): 
             query2 = User.objects.raw('select * from api_friends where (user1_id = \'{}\' and user2_id =\'{}\') or (user1_id = \'{}\' and user2_id =\'{}\')'.format(self.request.session.get('user_id'), query[0].id, query[0].id, self.request.session.get('user_id')))
-            if(query2>0): 
+            if(len(query2)>0): 
                 return Response({'Cannot Add User': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
             else: 
                 print(query2)
@@ -1132,6 +1134,29 @@ class SocialFindFriendsEmail(APIView):
                 return Response({'Friend Request Sent': 'OK'}, status=status.HTTP_200_OK)   
         return Response({'Cannot Add User': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
 
+class SocialFindFriendsEmail(APIView):
+    def post(self, request, format=None):
+        print("****SocialFindFriendsEmail-SEND___Request Triggered!")
+
+        email = request.data['data']
+
+        for e in email: 
+            print(e)
+        query = User.objects.filter(email = email['email'])
+
+        print(query)
+
+        if(len(query)>0): 
+            query2 = User.objects.raw('select * from api_friends where (user1_id = \'{}\' and user2_id =\'{}\') or (user1_id = \'{}\' and user2_id =\'{}\')'.format(self.request.session.get('user_id'), query[0].id, query[0].id, self.request.session.get('user_id')))
+            if(len(query2)>0): 
+                return Response({'Cannot Add User': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
+            else: 
+                print(query2)
+                friend = Friends(verified=False, user1_id = self.request.session.get('user_id'), user2_id = query[0].id) 
+                print(friend)
+                friend.save()
+                return Response({'Friend Request Sent': 'OK'}, status=status.HTTP_200_OK)   
+        return Response({'Cannot Add User': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
         
 class SocialFindFriendsVisible(APIView):
     def get(self, request, format=None):

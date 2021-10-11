@@ -58,6 +58,7 @@ urlpatterns = [
     path('deny-pending-friend', DenyPendingFriendView.as_view()),
     path('accept-pending-friend', AcceptPendingFriendView.as_view()),
     path('delete-friend', DeleteFriendView.as_view()),
+    path('social-find-friends', SocialFindFriends.as_view()),
     path('social-find-visible-friends', SocialFindFriendsVisible.as_view()),
     path('social-find-email-friends', SocialFindFriendsEmail.as_view()),
     ##     Management      ##
