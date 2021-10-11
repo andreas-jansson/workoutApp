@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import DeleteUserView, LoginUserView, UserView, SessionExistView, RegisterUserView, RegisterCoachView \
+from .views import DeleteUserView, ListUnassignedClients, LoginUserView, UserView, SessionExistView, RegisterUserView, RegisterCoachView \
     , GetExercisesView, CreateWorkoutView, SignOutView, CreateExerciseView, GetPendingUsers \
     , GetWorkoutView, GetWorkoutExercisesView,UpdateWorkoutView, DeleteWorkoutView, DenyPendingUsers \
     , ApprovePendingUsers, CreatePlannedWorkoutView, GetScheduledWorkoutsView \
@@ -44,4 +44,6 @@ urlpatterns = [
     path('get-user', GetUserView.as_view()),
     path('update-user', UpdateUserView.as_view()),
     path('delete-user', DeleteUserView.as_view()),
+    
+    path('list-unassigned-clients', ListUnassignedClients.as_view())
 ]

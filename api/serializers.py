@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Role, ExerciseType, Exercise, Workout, \
-    User, scheduledWorkout, Log 
+    User, scheduledWorkout, Log, CoachHasClient 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -49,4 +49,9 @@ class LogSerializer(serializers.ModelSerializer):
 class UserSerializerPending(serializers.ModelSerializer):
     class Meta:
         model = User
+        fields = '__all__'
+
+class CoachHasClientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CoachHasClient
         fields = '__all__'
