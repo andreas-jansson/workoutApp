@@ -1179,4 +1179,29 @@ class ListUnassignedClients(APIView):
             data = UserSerializer(queryset, many=True).data
             return Response(data, status=status.HTTP_200_OK)
         else:
-            return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)        
+            return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
+
+class AssignClientToCoach(APIView):
+    def post(self, request, format=None):
+        #TODO: Check if session user is coach
+        #TODO: 2. Update table
+        coachId = self.request.session.get('user_id')
+        clientId = request.data['userId']
+        ClientUser=User.objects.filter(id=clientId)[0]
+        CoachUser=User.objects.filter(id=coachId)[0]
+
+        CoachClientLink = CoachHasClient(user=ClientUser,coach=CoachUser)
+        CoachClientLink.save()
+        return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_200_OK)
+
+class RemoveClientFromCoach(APIView):
+    def post(self,request,format=None):
+        #TODO: 1. Check if session user is coach
+        #TODO: 2. Update table
+        coachId = self.request.session.get('user_id')
+        clientId = request.data['userId']
+        ClientUser=User.objects.filter(id=clientId)[0]
+        CoachUser=User.objects.filter(id=coachId)[0]
+        CoachHasClient.objects.filter(user=ClientUser,coach=CoachUser).delete()
+        
+        return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_200_OK)

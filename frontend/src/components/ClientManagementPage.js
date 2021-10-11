@@ -25,12 +25,52 @@ export default class ClientManagementPage extends Component {
       users: [],
       open: false,
       coachId: null,
+      userId: null,
     };
     //this.state = { sessionActive: false };
   }
-  handleClickOpen = (e) => {
-    this.setState({ open: true });
+  handleClientToAdd = (e) =>{
+    console.log(e.target.value);
+    var userId = e.target.value;
+    const requestOptions={
+      method: 'POST',
+      headers: {'Content-Type' : 'application/json'},
+      body: JSON.stringify({
+          userId
+      }),
   };
+
+  fetch("/api/add-client-to-coach", requestOptions)
+  .then((response)=> {
+    if (!response.ok){
+      console.log("Couldn't Add Client to Coach");
+  }
+  else{
+      console.log("Added Client to Coach!");   
+  }
+  })
+  }
+  handleClientToRemove = (e) => {
+    console.log(e.target.value);
+    var userId = e.target.value;
+    const requestOptions={
+      method: 'POST',
+      headers: {'Content-Type' : 'application/json'},
+      body: JSON.stringify({
+          userId
+      }),
+  };
+  fetch("/api/remove-client-from-coach", requestOptions)
+  .then((response)=> {
+    if (!response.ok){
+      console.log("Couldn't remove Client from Coach");
+  }
+  else{
+      console.log("Removed Client from Coach!");   
+  }
+  })
+  }
+
   showUnassignedUsers() {
     fetch("/api/list-unassigned-clients")
       .then((response) => {
@@ -45,6 +85,7 @@ export default class ClientManagementPage extends Component {
         const table = document.createElement("table");
         const tableBody = document.createElement("tbody");
         
+        
         for (var i = 0; i < data.length; i++) {
           console.log(data[i].fname);
           var userRow = document.createElement("tr");
@@ -53,7 +94,8 @@ export default class ClientManagementPage extends Component {
           var rowButtons = document.createElement("button")
           var rowButtonsText = document.createTextNode("Add");
           rowButtons.appendChild(rowButtonsText);
-          
+          rowButtons.value = data[i].id;
+          rowButtons.onclick = this.handleClientToAdd;
           
           var userCellText = document.createTextNode(""+data[i].fname+" "+data[i].lname);
           userCell.appendChild(userCellText);
@@ -61,19 +103,60 @@ export default class ClientManagementPage extends Component {
           userRow.appendChild(userCell);
           tableBody.appendChild(userRow);
         }
+        
         table.appendChild(tableBody);
+        
         let targetNode = document.getElementsByClassName("cmp-unassigned-users")[0].appendChild(table);
+      });
+  }
+  showAssignedUsers() {
+    fetch("/api/get-client")
+      .then((response) => {
+        if (!response.ok) {
+          console.log("No users loaded!");
+        } else {
+          console.log("Loaded one or more users!");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        const table = document.createElement("table");
+        const tableBody = document.createElement("tbody");
+        for (var i = 0; i < data.length; i++) {
+          console.log(data[i].fname);
+          var userRow = document.createElement("tr");
+          var userCell = document.createElement("td");
+
+          var rowButtons = document.createElement("button")
+          var rowButtonsText = document.createTextNode("Remove");
+          rowButtons.appendChild(rowButtonsText);
+          rowButtons.value = data[i].id;
+          rowButtons.onclick = this.handleClientToRemove;
+          
+          var userCellText = document.createTextNode(""+data[i].fname+" "+data[i].lname);
+          userCell.appendChild(userCellText);
+          userCell.appendChild(rowButtons);
+          userRow.appendChild(userCell);
+          tableBody.appendChild(userRow);
+        }
+        
+        table.appendChild(tableBody);
+        
+        let targetNode = document.getElementsByClassName("cmp-assigned-users")[0].appendChild(table);
       });
   }
   componentDidMount() {
     this.showUnassignedUsers();
+    this.showAssignedUsers();
   }
   render() {
     return (
-      <table className="cmp-unassigned-users">
-        {/*pls do stuff*/ }
-        
-      </table>
+      <div>
+        <table className="cmp-unassigned-users">
+        </table>
+        <table className="cmp-assigned-users">
+        </table>
+      </div>
     );
   }
   //Här skrivs kod
