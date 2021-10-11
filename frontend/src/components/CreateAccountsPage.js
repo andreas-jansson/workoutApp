@@ -27,7 +27,7 @@ export default class CreateAccountsPage extends Component {
       email: null,
       password: null,
       confirmed_password: null,
-      role: 'client',
+      role: 'Client',
       errors: {
         fname: "",
         lname: "",
