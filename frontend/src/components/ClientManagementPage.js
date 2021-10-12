@@ -31,7 +31,7 @@ export default class ClientManagementPage extends Component {
     //this.state = { sessionActive: false };
   }
   handleClientToAdd = (e) =>{
-    console.log(e.target.value);
+    //console.log(e.target.value);
     var userId = e.target.value;
     const requestOptions={
       method: 'POST',
@@ -57,7 +57,7 @@ export default class ClientManagementPage extends Component {
   })
   }
   handleClientToRemove = (e) => {
-    console.log(e.target.value);
+    //console.log(e.target.value);
     var userId = e.target.value;
     const requestOptions={
       method: 'POST',
@@ -104,7 +104,7 @@ export default class ClientManagementPage extends Component {
         const tableBody = document.createElement("tbody");
       
         for (var i = 0; i < data.length; i++) {
-          console.log(data[i].fname);
+          //console.log(data[i].fname);
           var userRow = document.createElement("tr");
           var userCell = document.createElement("td");
 
@@ -150,7 +150,7 @@ export default class ClientManagementPage extends Component {
         const tableBody = document.createElement("tbody");
         
         for (var i = 0; i < data.length; i++) {
-          console.log(data[i].fname);
+          //console.log(data[i].fname);
           var userRow = document.createElement("tr");
           var userCell = document.createElement("td");
 

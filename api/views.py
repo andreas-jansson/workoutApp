@@ -865,7 +865,7 @@ class GetClientView(APIView):
     
         if len(query_set)>0:
             data = UserSerializer(query_set, many=True).data
-            print(data)
+            #print(data)
             return Response(data, status=status.HTTP_200_OK) 
         return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -1182,11 +1182,16 @@ class SocialFindFriendsVisible(APIView):
 class ListUnassignedClients(APIView):
     def get(self, request, format=None):
         #print("ListUnassignedClients Triggered!")
-        queryset = User.objects.raw(
+        coachId = self.request.session.get('user_id')
+        role= User.objects.filter(id=coachId)[0]
+        if(role.roleid.description=='Coach'):    
+            queryset = User.objects.raw(
             'SELECT * FROM api_user WHERE roleid_id=2 AND id NOT IN (SELECT user_id FROM api_coachhasclient)')
-        if len(queryset)>0:
-            data = UserSerializer(queryset, many=True).data
-            return Response(data, status=status.HTTP_200_OK)
+            if len(queryset)>0:
+                data = UserSerializer(queryset, many=True).data
+                return Response(data, status=status.HTTP_200_OK)
+            else:
+                return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
         else:
             return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -1198,10 +1203,10 @@ class AssignClientToCoach(APIView):
         clientId = request.data['userId']
         ClientUser=User.objects.filter(id=clientId)[0]
         CoachUser=User.objects.filter(id=coachId)[0]
-
         CoachClientLink = CoachHasClient(user=ClientUser,coach=CoachUser)
         CoachClientLink.save()
         return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_200_OK)
+        
 
 class RemoveClientFromCoach(APIView):
     def post(self,request,format=None):
@@ -1212,5 +1217,8 @@ class RemoveClientFromCoach(APIView):
         ClientUser=User.objects.filter(id=clientId)[0]
         CoachUser=User.objects.filter(id=coachId)[0]
         CoachHasClient.objects.filter(user=ClientUser,coach=CoachUser).delete()
-        
         return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_200_OK)
+        
+        
+        
+        
