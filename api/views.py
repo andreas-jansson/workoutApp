@@ -927,18 +927,14 @@ class CopyFriendWorkoutView(APIView):
    
         name = request.data['workoutName']
         print(name)
-        user = request.data['user']
-        print(user)
-        #active=True
+        friend_id = request.data['user']
+        print(friend_id)
 
         queryset_workout_desc = Workout.objects.raw('select * from api_workout as w '
         +'inner join api_user_hasWorkouts as uhw on w.id = uhw.workout_id '
-        +'where w.name= \'{}\' and user_id = \'{}\' and w.active = true'.format(name, user))
+        +'where w.name= \'{}\' and user_id = \'{}\' and w.active = true'.format(name, friend_id))
 
 
-     
-
-        consistsOf = 'wtf'
         workout = Workout(name=name, description=queryset_workout_desc[0].description, active=True, shared=False)
         workout.save()
         
