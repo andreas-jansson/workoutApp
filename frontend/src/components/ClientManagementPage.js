@@ -15,6 +15,7 @@ import WorkoutPage from "./WorkoutPage";
 import WorkoutAddPage from "./WorkoutAddPage";
 import WorkoutManagementPage from "./WorkoutManagementPage";
 import ReactDOM from "react-dom";
+import '../../static/css/client-management-page.css';
 export default class ClientManagementPage extends Component {
   static defaultProps = {};
 
@@ -108,7 +109,8 @@ export default class ClientManagementPage extends Component {
           var userRow = document.createElement("tr");
           var userCell = document.createElement("td");
 
-          var rowButtons = document.createElement("button")
+          var rowButtons = document.createElement("button");
+          rowButtons.className="cmp-button-add";
           var rowButtonsText = document.createTextNode("Add");
           rowButtons.appendChild(rowButtonsText);
           rowButtons.value = data[i].id;
@@ -155,6 +157,7 @@ export default class ClientManagementPage extends Component {
           var userCell = document.createElement("td");
 
           var rowButtons = document.createElement("button")
+          rowButtons.className="cmp-button-remove";
           var rowButtonsText = document.createTextNode("Remove");
           rowButtons.appendChild(rowButtonsText);
           rowButtons.value = data[i].id;
@@ -178,11 +181,20 @@ export default class ClientManagementPage extends Component {
   }
   render() {
     return (
-      <div>
-        <table className="cmp-unassigned-users">
-        </table>
-        <table className="cmp-assigned-users">
-        </table>
+      
+      <div className="cmp-container">
+        <div className="cmp-big-box1">
+            <button className="cmp-header1-button">
+              Clients without Coaches
+            </button>
+          <table className="cmp-unassigned-users">
+          </table>
+        </div>
+        <div className="cmp-big-box2">
+        <button className="cmp-header1-button">Your Clients</button>
+          <table className="cmp-assigned-users">
+          </table>
+        </div>
       </div>
     );
   }
