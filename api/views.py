@@ -21,6 +21,7 @@ from datetime import datetime as dt
 import datetime
 import calendar
 from itertools import chain
+import re
 
 # Create your views here.
 
@@ -1105,6 +1106,7 @@ class SocialFindFriends(APIView):
         queryset2 = User.objects.raw('select * from api_user where isVisible == 1 and id not in \'{}\''.format(self.request.session.get('user_id')))
         queryset2 = User.objects.exclude(id__in = friend_list)
 
+    
         if len(queryset2)>0:
             data = UserSerializer(queryset2, many=True).data
             print(data)                    
@@ -1139,11 +1141,23 @@ class SocialFindFriendsEmail(APIView):
         print("****SocialFindFriendsEmail-SEND___Request Triggered!")
 
         email = request.data['data']
+        
+        print("\n")
+        print(email)
+        print("\n")
 
-        for e in email: 
-            print(e)
-        query = User.objects.filter(email = email['email'])
+        s = "email': 'elin@gmail.com'"
+        pattern = "email\': \'(.*?)\'"
+        print('\n\npattern: ')
+        print(pattern)
 
+
+        email = re.search(pattern, str(email)).group(1)
+        print('\nemail: ')
+        print(email)
+        print("\n")
+        
+        query = User.objects.filter(email = email)
         print(query)
 
         if(len(query)>0): 
@@ -1158,12 +1172,13 @@ class SocialFindFriendsEmail(APIView):
                 return Response({'Friend Request Sent': 'OK'}, status=status.HTTP_200_OK)   
         return Response({'Cannot Add User': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
         
+
 class SocialFindFriendsVisible(APIView):
     def get(self, request, format=None):
         print("\n\SocialFindFriendsEmail-SEND_REQUEST Triggered!\n\n")
         
         user = self.request.session.get('user_id')
-        queryset = User.objects.raw('select * from api_user where isVisible == 1 and id != \'{}\' and roleid_id == 2 '.format(user))
+        queryset = User.objects.raw('select * from api_user where isVisible == 1 and id != \'{}\' and roleid_id == 2'.format(user))
 
         if len(queryset)>0:
             data = UserSerializer(queryset, many=True).data
