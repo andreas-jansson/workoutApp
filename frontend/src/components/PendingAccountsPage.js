@@ -101,7 +101,7 @@ export default class PendingAccountsPage extends Component {
         <div className="cap-container">
           <div className="cap-section">
             {users.length == 0
-            ?<div>There are no members waiting to be accepted</div>
+            ?<div >There are no members waiting to be accepted</div>
             :
             <ul>
               {users.map(item => (

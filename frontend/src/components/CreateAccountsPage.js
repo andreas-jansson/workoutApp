@@ -33,8 +33,9 @@ export default class CreateAccountsPage extends Component {
       password: null,
       confirmed_password: null,
       role: 'Client',
-      successStatus: false,
-      successString: "Account has been created.",
+      alertStatus: false,
+      isPostSuccessful: false,
+      alertString: '',
       errors: {
         fname: "",
         lname: "",
@@ -100,16 +101,22 @@ export default class CreateAccountsPage extends Component {
     fetch("/api/register-coach", requestOptions).then((response) => {
       if (response.ok) {
         this.setState({
-          successStatus: true,
+          alertStatus: true,
+          isPostSuccessful: true,
           fname: '',
           lname: '',
           email: '',
           password: '',
           confirmed_password: '',
+          alertString: "Account registered successfully!"
         })
         Array.from(document.querySelectorAll("input")).forEach(input => (input.value = ''))
       } else {
-        console.log("Failed!");
+        this.setState({
+          alertStatus: true,
+          isPostSuccessful: false,
+          alertString: "Email is already in use!"
+        })
       }
     });
   };
@@ -127,13 +134,13 @@ export default class CreateAccountsPage extends Component {
     }
   };
 
-  closeSuccess = () => {
+  closeAlert = () => {
     this.setState({
-      successStatus: false,
+      alertStatus: false,
+      isPostSuccessful: false,
+      alertString: ''
     })
   }
-
-
 
   render() {
     const { errors } = this.state;
@@ -247,15 +254,15 @@ export default class CreateAccountsPage extends Component {
             </form>
           </div>
           <div className="cap-alert-container">
-              <div className={`alert alert-success ${this.state.successStatus ? 'login-alert-shown' : 'login-alert-hidden'}`}>
-                <Alert severity="success"
+              <div className={`alert alert-success ${this.state.alertStatus ? 'login-alert-shown' : 'login-alert-hidden'}`}>
+                <Alert severity={this.state.isPostSuccessful ? 'success' : 'error'}
                   action={
                     <IconButton
                       aria-label="close"
                       color="inherit"
                       size="small"
                       onClick={() => {
-                        this.closeSuccess();
+                        this.closeAlert();
                       }}
                     >
                       <CloseIcon fontSize="inherit" />
@@ -263,10 +270,10 @@ export default class CreateAccountsPage extends Component {
                   }
                   sx={{ mb: 2 }}
                 >
-                  {this.state.successString}</Alert>
+                  {this.state.alertString}</Alert>
               </div>
             </div>
-        </div>
+          </div>
       </div>
     );
   }
