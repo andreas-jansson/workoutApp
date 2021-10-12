@@ -13,7 +13,7 @@ from .serializers import UserSerializer, ExerciseSerializer, WorkoutSerializer, 
     ,RoleSerializer, scheduledWorkoutSerializer, LogSerializer, LogExtraSerializer, FriendsSerializer
 from .models import Role, User, Exercise, ExerciseType, Workout, scheduledWorkout, Log, Friends, CoachHasClient
 from .hashUtils import compare_pw_hash, create_pw_hash, create_salt
-from .userUtils import email_is_registered
+from .userUtils import email_is_registered, user_is_unauthorized
 import io
 from rest_framework.parsers import JSONParser
 from datetime import date
@@ -65,16 +65,14 @@ class HashTestView(APIView):
 
 class RegisterUserView(APIView):
     def post(self, request, format=None):
-        stream = io.BytesIO(request.body)
-        data = JSONParser().parse(stream)
-        if (email_is_registered(data['email'])):
+        if (email_is_registered(request.data['email'])):
             return Response({'User already exists': 'BAD'}, status=status.HTTP_418_IM_A_TEAPOT)
         else:
             new_salt = create_salt()
-            hashed_password = create_pw_hash(data['password'], new_salt)
-            new_user = User(fname=data['fname'],
-                            lname=data['lname'],
-                            email=data['email'],
+            hashed_password = create_pw_hash(request.data['password'], new_salt)
+            new_user = User(fname=request.data['fname'],
+                            lname=request.data['lname'],
+                            email=request.data['email'],
                             salt=new_salt,
                             pwhash=hashed_password,
                             roleid=Role.objects.filter(description='Unauthorized')[0])
@@ -88,7 +86,7 @@ class RegisterCoachView(APIView):
         data = JSONParser().parse(stream)
         if (email_is_registered(data['email'])):
             print("if")
-            return Response({'User already exists': 'BAD'}, status=status.HTTP_226_IM_USED)
+            return Response({'User already exists': 'BAD'}, status=status.HTTP_418_IM_A_TEAPOT)
         else:
             print("else")
             new_salt = create_salt()
@@ -109,12 +107,10 @@ class RegisterCoachView(APIView):
 
 class LoginUserView(generics.ListAPIView):
     def post(self, request, format=None):
-        stream = io.BytesIO(request.body)
-        data = JSONParser().parse(stream)
-        if (email_is_registered(data['email'])):
-            user = User.objects.filter(email=data['email'])[0]
-            if(compare_pw_hash(data['password'], user.salt, user.pwhash)):
-                if (user.roleid == Role.objects.filter(description = 'Unauthorized')[0]):
+        if (email_is_registered(request.data['email'])):
+            user = User.objects.filter(email=request.data['email'])[0]
+            if(compare_pw_hash(request.data['password'], user.salt, user.pwhash)):
+                if (user_is_unauthorized(user)):
                     return Response({'Unauthorized User, Wait to get accepted'}, status=status.HTTP_401_UNAUTHORIZED)
                 self.request.session.create()
                 self.request.session['user_id'] = user.id
@@ -355,10 +351,8 @@ class DeleteWorkoutView(APIView):
 
 class GetPendingUsers(APIView):
     def get(self, request, format=None):
-        user_list = User.objects.filter(
-            roleid=Role.objects.filter(description='Unauthorized')[0])
+        user_list = User.objects.filter(roleid=Role.objects.filter(description='Unauthorized')[0])
         serialized_users = UserSerializerPending(user_list, many=True).data
-        print(serialized_users)
         return Response(serialized_users, status=status.HTTP_200_OK)
 
 
