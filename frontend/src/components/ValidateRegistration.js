@@ -5,8 +5,7 @@ const validateSignUpForm = payload => {
   let message = "";
   let isFormValid = true;
 
-  let nameCheck = /^([A-Z]|Å|Ä|Ö)([a-z]|å|ä|ö)+$/
-  
+  let nameCheck = /^[a-zA-Z åäöÅÄÖ,.'-]+$/
 
     //   First name 
   if (
