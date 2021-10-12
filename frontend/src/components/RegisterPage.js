@@ -60,9 +60,6 @@ export default class RegisterPage extends Component {
       invalidInfo: false,
     };
     this.handleChange = this.handleChange.bind(this);
-    //this.handleSubmit = this.handleSubmit.bind(this);
-    this.pwMask = this.pwMask(this);
-    //this.validateForm = this.validateForm(this);
   }
 
   sendDetailsToServer = () => {
@@ -116,14 +113,6 @@ export default class RegisterPage extends Component {
         </div>
       </div>
     );
-  }
-
-  pwMask(e) {
-    this.setState({
-      type: this.state.type === "password" ? "input" : "password",
-      btnTxt: this.state.btnTxt === "show" ? "hide" : "show"
-    }
-    )
   }
 
   validateForm = (e) => {
