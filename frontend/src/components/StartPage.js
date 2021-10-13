@@ -1,5 +1,11 @@
 import React, { Component, useEffect, useState } from "react";
-import { BrowserRouter as Router, Switch, Route, Link, Redirect,} from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+} from "react-router-dom";
 import { Parallax, Background } from "react-parallax";
 import emailjs, { init } from "emailjs-com";
 import "../../static/css/startpage.css";
@@ -16,21 +22,19 @@ const image3 =
 const image4 =
   "https://www.socialseo.com/wp-content/uploads/2018/11/black-brick.jpg";
 
-
-
 const parallax = () => {
   return (
     <div>
       <div style={{ textAlign: "center" }}>
         {renderHeader()}
-          <a id = 'HOME' color="none"></a>  
+        <a id="HOME" color="none"></a>
         <Parallax bgImage={image1} strength={-300}>
           <div className="headingg" justifyContent="center">
             WORKIT
           </div>
-          <br />
+          <br/>
           <div className="sub-headingg" justifyContent="center">
-            It's for 
+            It's for
             <Typewriter
               onInit={(typewriter) => {
                 typewriter
@@ -48,45 +52,45 @@ const parallax = () => {
                   .deleteAll()
                   .typeString("YOU")
                   .start();
-                  <br/>
+                <br />;
               }}
             />
           </div>
-                    <Link to="/signup">
-                        <button type="button" className="sp-bttn-join">
-                            Join!
-                        </button>
-                    </Link>
+          <br />
+          <Link to="/signup">
+            <button type="button" className="sp-bttn-join">
+              Join!
+            </button>
+          </Link>
           <div
             style={{
               width: 250,
               height: 550,
             }}
           ></div>
-        <a id = 'ABOUT' color="none"></a>
+          <a id="ABOUT" color="none"></a>
         </Parallax>
         <Parallax
           bgImage={image2}
           strength={200}
           renderLayer={() => (
             <div
-            style={{
-              width: "700px",
-              height: "200px",
-              marginLeft: "5%",
-              fontSize: '23px',
-              background: 'orange',              
-              borderRadius:'30px',
-              opacity:'80%',
-            }}
+              style={{
+                width: "700px",
+                height: "200px",
+                marginLeft: "5%",
+                fontSize: "23px",
+                background: "orange",
+                borderRadius: "30px",
+                opacity: "80%",
+              }}
             >
-              
-              <h1>   
-
-              Madav AB <br/> 
-            </h1>
+              <h1>
+                Madav AB <br />
+              </h1>
               <h3>
-              For our clients and instructors at Madav AB, we create powerful muscles. With 24/7 service and intense training.
+                For our clients and instructors at Madav AB, we create powerful
+                muscles. With 24/7 service and intense training.
               </h3>
             </div>
           )}
@@ -94,12 +98,8 @@ const parallax = () => {
           <div style={{ height: "350px" }}></div>
         </Parallax>
 
-        <Parallax
-          blur={{ min: -15, max: 15 }}
-          bgImage={image3}
-          strength={-100}
-        >
-          <a id = 'PRICING' color="none"></a>
+        <Parallax blur={{ min: -15, max: 15 }} bgImage={image3} strength={-100}>
+          <a id="PRICING" color="none"></a>
           <div
             style={{
               display: "flex",
@@ -115,7 +115,7 @@ const parallax = () => {
 
           <div style={{ height: "250px" }} />
         </Parallax>
-        <a id = 'CONTACT' color="none"></a>
+        <a id="CONTACT" color="none"></a>
         <Parallax bgImage={image4} strength={-300}>
           {contactUs()}
           <div
@@ -305,7 +305,7 @@ function contactUs() {
           () => {
             btn.value = "Send Email";
             this.reset();
-            window.location.href ='#HOME'
+            window.location.href = "#HOME";
             alert("Email sent!");
           },
           (err) => {
@@ -402,50 +402,40 @@ function contactUs() {
   );
 }
 
-
 const renderHeader = () => {
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
+  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    anchor.addEventListener("click", function (e) {
+      e.preventDefault();
 
-        document.querySelector(this.getAttribute('href')).scrollIntoView({
-            behavior: 'smooth'
-        });
+      document.querySelector(this.getAttribute("href")).scrollIntoView({
+        behavior: "smooth",
+      });
     });
-});
-  return(
+  });
+  return (
     <div>
-      
-    <div className="header-container">
-    <div className="header-btn-container">
-
-            <div  className="header-btn-btn1">
-                <a href="#ABOUT">About</a>
-            </div>
-            <div className="header-btn-btn1">
-                <a href="#PRICING">Pricing</a>
-            </div>
-            <div className="header-btn-btn2">
-                <a href="#CONTACT">Contact</a>
-            </div>
-        <Link to="/login">
-            <div className="header-btn-btn3">
-                Login
-            </div>
-        </Link>
+      <div className="header-container">
+        <div className="header-btn-container">
+          <div className="header-btn-btn1">
+            <a href="#ABOUT">About</a>
+          </div>
+          <div className="header-btn-btn1">
+            <a href="#PRICING">Pricing</a>
+          </div>
+          <div className="header-btn-btn2">
+            <a href="#CONTACT">Contact</a>
+          </div>
+          <Link to="/login">
+            <div className="header-btn-btn3">Login</div>
+          </Link>
+        </div>
+      </div>
     </div>
-</div>
-    </div>
-);
-}
+  );
+};
 
 function StartPage() {
-
-  return <div>
-         {parallax()} 
-
-
-</div>;
+  return <div>{parallax()}</div>;
 }
 
 export default StartPage;
