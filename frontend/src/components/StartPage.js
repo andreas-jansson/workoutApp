@@ -1,4 +1,5 @@
 import React, { Component, useEffect, useState } from "react";
+import { BrowserRouter as Router, Switch, Route, Link, Redirect,} from "react-router-dom";
 import { Parallax, Background } from "react-parallax";
 import emailjs, { init } from "emailjs-com";
 import "../../static/css/startpage.css";
@@ -16,10 +17,12 @@ const image4 =
   "https://www.socialseo.com/wp-content/uploads/2018/11/black-brick.jpg";
 
 
+
 const parallax = () => {
   return (
     <div>
       <div style={{ textAlign: "center" }}>
+        {renderHeader()}
         <Parallax bgImage={image1} strength={-300}>
           <div className="headingg" justifyContent="center">
             WORKIT
@@ -40,6 +43,20 @@ const parallax = () => {
                   .pauseFor(2000)
                   .deleteAll()
                   .typeString("Hardworker")
+                  .pauseFor(2000)
+                  .deleteAll()
+                  .typeString("Dedicated")
+                  .pauseFor(2000)
+                  .deleteAll()
+                  .typeString("Inspired")
+                  .pauseFor(2000)
+                  .deleteAll()
+                  .typeString("Excited")
+                  .pauseFor(2000)
+                  .deleteAll()
+                  .typeString("Hardworker")
+                  
+                  
                   .start();
               }}
             />
@@ -78,7 +95,7 @@ const parallax = () => {
             </div>
           )}
         >
-          <div style={{ height: "450px" }} align="center"></div>
+          <div style={{ height: "650px" }} align="center"></div>
         </Parallax>
 
         <Parallax
@@ -388,8 +405,42 @@ function contactUs() {
   );
 }
 
+
+const renderHeader = () => {
+
+  return(
+    <div>
+      
+    <div className="header-container">
+    <div className="header-btn-container">
+        <Link to="/login">
+            <div  className="header-btn-btn1">
+                Pricing
+            </div>
+        </Link>
+        <Link to="/login">
+            <div className="header-btn-btn2">
+                About
+            </div>
+        </Link>
+        <Link to="/login">
+            <div className="header-btn-btn3">
+                Login
+            </div>
+        </Link>
+    </div>
+</div>
+    </div>
+);
+}
+
 function StartPage() {
-  return <div>{parallax()}</div>;
+  
+  return <div>
+         {parallax()} 
+
+
+</div>;
 }
 
 export default StartPage;
