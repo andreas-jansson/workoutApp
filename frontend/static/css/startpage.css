@@ -122,6 +122,19 @@ body {
   padding-bottom: 20px;
 }
 
+.sp-bttn-join {
+  background: var(--orangeGradiant1);
+  background: var(--orangeGradiant2);
+  border: none;
+  border-radius: 35px;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 32px;
+  margin-top: 5%;
+}
+
 .sp-btn-join {
   background: var(--orangeGradiant1);
   background: var(--orangeGradiant2);
@@ -135,7 +148,7 @@ body {
   margin-right: 10px;
 }
 
-.sp-bttn-join {
+.sp-btttn-join {
   background:black;
   border: black;
   border-radius: 5px;
@@ -144,7 +157,6 @@ body {
   height: 40px;
   font-size: 25px;
 }
-
 
 
 /* försöker få call to action knappens text att bli lite metallisk- funkar inte atm*/

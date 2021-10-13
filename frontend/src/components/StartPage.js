@@ -23,69 +23,65 @@ const parallax = () => {
     <div>
       <div style={{ textAlign: "center" }}>
         {renderHeader()}
+          <a id = 'HOME' color="none"></a>  
         <Parallax bgImage={image1} strength={-300}>
           <div className="headingg" justifyContent="center">
             WORKIT
           </div>
           <br />
           <div className="sub-headingg" justifyContent="center">
-            It's for the
+            It's for 
             <Typewriter
               onInit={(typewriter) => {
                 typewriter
-                  .typeString("Dedicated")
-                  .pauseFor(2000)
+                  .typeString("The Dedicated")
+                  .pauseFor(1000)
                   .deleteAll()
-                  .typeString("Inspired")
-                  .pauseFor(2000)
+                  .typeString("The Inspired")
+                  .pauseFor(1000)
                   .deleteAll()
-                  .typeString("Excited")
-                  .pauseFor(2000)
+                  .typeString("The Ambigious")
+                  .pauseFor(1000)
                   .deleteAll()
-                  .typeString("Hardworker")
-                  .pauseFor(2000)
+                  .typeString("The Herculean")
+                  .pauseFor(1000)
                   .deleteAll()
-                  .typeString("Dedicated")
-                  .pauseFor(2000)
-                  .deleteAll()
-                  .typeString("Inspired")
-                  .pauseFor(2000)
-                  .deleteAll()
-                  .typeString("Excited")
-                  .pauseFor(2000)
-                  .deleteAll()
-                  .typeString("Hardworker")
-                  
-                  
+                  .typeString("YOU")
                   .start();
+                  <br/>
               }}
             />
           </div>
+                    <Link to="/signup">
+                        <button type="button" className="sp-bttn-join">
+                            Join!
+                        </button>
+                    </Link>
           <div
             style={{
               width: 250,
-              height: 750,
+              height: 550,
             }}
           ></div>
+        <a id = 'ABOUT' color="none"></a>
         </Parallax>
         <Parallax
           bgImage={image2}
-          strength={300}
-          renderLayer={(precentage) => (
+          strength={200}
+          renderLayer={() => (
             <div
-              style={{
-                position: "absolute",
-                width: "700px",
-                height: "200px",
-                left: "10%",
-                top: "20%",
-                fontSize: '23px',
-                background: 'orange',
-                borderRadius:'30px',
-                opacity:'80%',
-              }}
+            style={{
+              width: "700px",
+              height: "200px",
+              marginLeft: "5%",
+              fontSize: '23px',
+              background: 'orange',              
+              borderRadius:'30px',
+              opacity:'80%',
+            }}
             >
-              <h1>
+              
+              <h1>   
 
               Madav AB <br/> 
             </h1>
@@ -95,15 +91,15 @@ const parallax = () => {
             </div>
           )}
         >
-          <div style={{ height: "650px" }} align="center"></div>
+          <div style={{ height: "350px" }}></div>
         </Parallax>
 
         <Parallax
           blur={{ min: -15, max: 15 }}
           bgImage={image3}
-          bgImageAlt="the dog"
-          strength={-200}
+          strength={-100}
         >
+          <a id = 'PRICING' color="none"></a>
           <div
             style={{
               display: "flex",
@@ -119,7 +115,7 @@ const parallax = () => {
 
           <div style={{ height: "250px" }} />
         </Parallax>
-
+        <a id = 'CONTACT' color="none"></a>
         <Parallax bgImage={image4} strength={-300}>
           {contactUs()}
           <div
@@ -309,6 +305,7 @@ function contactUs() {
           () => {
             btn.value = "Send Email";
             this.reset();
+            window.location.href ='#HOME'
             alert("Email sent!");
           },
           (err) => {
@@ -390,7 +387,7 @@ function contactUs() {
               type="submit"
               id="button"
               value="Send Email"
-              className="sp-bttn-join"
+              className="sp-btttn-join"
             />
           </div>
           <br /> <br />
@@ -407,22 +404,30 @@ function contactUs() {
 
 
 const renderHeader = () => {
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
 
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
+        });
+    });
+});
   return(
     <div>
       
     <div className="header-container">
     <div className="header-btn-container">
-        <Link to="/login">
+
             <div  className="header-btn-btn1">
-                Pricing
+                <a href="#ABOUT">About</a>
             </div>
-        </Link>
-        <Link to="/login">
+            <div className="header-btn-btn1">
+                <a href="#PRICING">Pricing</a>
+            </div>
             <div className="header-btn-btn2">
-                About
+                <a href="#CONTACT">Contact</a>
             </div>
-        </Link>
         <Link to="/login">
             <div className="header-btn-btn3">
                 Login
@@ -435,7 +440,7 @@ const renderHeader = () => {
 }
 
 function StartPage() {
-  
+
   return <div>
          {parallax()} 
 
