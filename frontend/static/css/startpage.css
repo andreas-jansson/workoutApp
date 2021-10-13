@@ -135,14 +135,17 @@ body {
   margin-right: 10px;
 }
 
-.sp-btttn-join {
-  background: var(--orangeGradiant1);
-  background: var(--orangeGradiant2);
-  border: black 2px solid;
-  border-radius: 20px;
+.sp-bttn-join {
+  background:black;
+  border: black;
+  border-radius: 5px;
   text-align: center;
-  font-size: 22px;
+  color: white;
+  height: 40px;
+  font-size: 25px;
 }
+
+
 
 /* försöker få call to action knappens text att bli lite metallisk- funkar inte atm*/
 .sp-btn-join p {
@@ -150,8 +153,6 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-
-
 
 .startpage-email-label {
   justify-content: 'center';
@@ -201,10 +202,11 @@ body {
 .input-email{
     position: relative;
     width: 300px;
-    padding: 6px 0;
+    padding: 6px 5px;
     line-height: 160%;
+    height: 25px;
     font-size: 14px;
-    background: none;
+    background: rgba(0, 0, 0, 0.15);
     color: white;
     border: none;
     border-bottom: 1px solid #aaa;
@@ -212,11 +214,12 @@ body {
 
     .textarea-email{
       position: relative;
-      width: 600px;
+      width: 500px;
       height: 300px;
       padding: 6px 0;
       line-height: 160%;
       font-size: 14px;
+      margin-right: 35px;
       padding-right: 5px;
       font-size: 20px;
       background: rgba(0, 0, 0, 0.57);

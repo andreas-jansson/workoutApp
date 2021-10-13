@@ -198,7 +198,7 @@ function PriceCard1() {
 
   return (
     <div>
-      <Card background="#4f9deb">
+      <Card>
         <Content>
           <Icon className="icofont-gym-alt-1" />
           <PlanTitle>Basic</PlanTitle>
@@ -217,7 +217,7 @@ function PriceCard1() {
 
 function PriceCard2() {
   const [features] = useState([
-    "3 Month Membership",
+    "3 Month Membership", 
     "45 Exercises",
     "+ All Benefits of the Previous Tier",
   ]);
@@ -285,8 +285,8 @@ function contactUs(){
         emailjs.sendForm(serviceID, templateID, this)
           .then(() => {
             btn.value = 'Send Email';
-            alert('Email sent!');
             this.reset();
+            alert('Email sent!');
           }, (err) => {
             btn.value = 'Send Email';
             alert(JSON.stringify(err));
@@ -318,7 +318,7 @@ return(
   <div class="field">
     <label for="name" className='label-email '>Full Name</label>
     <br/>
-    <input type="text" name="name" className='input-email' maxlength='25' minLength='3' id="name"/>
+    <input type="text" name="name" className='input-email' maxlength='25' minLength='3' id="name" required/>
   </div>
 
   <br/> 
@@ -326,17 +326,17 @@ return(
 
     <label for="email" class='tooltip' className='label-email '>Email Address</label>
     <br/> 
-    <input type="email" name="email" id="email" className='input-email' maxlength='50' minLength='10'/>
+    <input type="email" name="email" id="email" className='input-email' maxlength='30' minLength='10' size="30" required />
   </div>
-
+  <br/> 
     <div class="field">
     <label for="message" className='label-email'>Your Message</label>
     <br/> <br/> 
-    <textarea type="text" name="message" id="message" className='textarea-email'/>
+    <textarea type="text" name="message" id="message" className='textarea-email' minLength='10' required />
   </div>
   <br/>  <br/>
   <div > 
-  <input type="submit" id="button" value="Send Email" className='sp-btttn-join'/>
+  <input type="submit" id="button" value="Send Email" className="sp-bttn-join"/>
   </div>
   <br/>  <br/><br/>  <br/>
 </form>
