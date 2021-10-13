@@ -305,29 +305,40 @@ return(
     borderRadius: "20px",
   }}
 >
+ 
   <div align="center" className='startpage-email-TITLE'>
     <h1> Contact Us </h1>
+    <br/> 
   </div>
-  <br/>  <br/>  <br/>  <br/>  <br/>
+  <br/>  <br/>  <br/>  
   <div className='startpage-MOVE-INPUT'> 
 
 <form id="form" className='startpage-email-label' >
+
   <div class="field">
-    <label for="name" className='startpage-email-text'>Full Name</label>
+    <label for="name" className='label-email '>Full Name</label>
+    <br/>
     <input type="text" name="name" className='input-email' maxlength='25' minLength='3' id="name"/>
   </div>
+
+  <br/> 
   <div class="field">
-    <label for="email" class='tooltip' className='startpage-email-text'>Email Address</label>
+
+    <label for="email" class='tooltip' className='label-email '>Email Address</label>
+    <br/> 
     <input type="email" name="email" id="email" className='input-email' maxlength='50' minLength='10'/>
   </div>
+
     <div class="field">
-    <label for="message" className='startpage-email-text'>Your Message</label>
+    <label for="message" className='label-email'>Your Message</label>
+    <br/> <br/> 
     <textarea type="text" name="message" id="message" className='textarea-email'/>
   </div>
-
+  <br/>  <br/>
   <div > 
-  <input type="submit" id="button" value="Send Email" style={{background:'#008CBA', color:'white'}}/>
+  <input type="submit" id="button" value="Send Email" className='sp-btttn-join'/>
   </div>
+  <br/>  <br/><br/>  <br/>
 </form>
 </div>
 

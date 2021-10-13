@@ -63,7 +63,7 @@ body {
   font-weight: bold;
   text-align: center;
   height: 200px;
-  color: white;
+  color: var(--silverGradiant1);
 }
 
 .sub-headingg{
@@ -135,12 +135,23 @@ body {
   margin-right: 10px;
 }
 
+.sp-btttn-join {
+  background: var(--orangeGradiant1);
+  background: var(--orangeGradiant2);
+  border: black 2px solid;
+  border-radius: 20px;
+  text-align: center;
+  font-size: 22px;
+}
+
 /* försöker få call to action knappens text att bli lite metallisk- funkar inte atm*/
 .sp-btn-join p {
   background: -webkit-linear-gradient(360deg, #ffffff, #b9b9b9);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+
 
 .startpage-email-label {
   justify-content: 'center';
@@ -151,7 +162,8 @@ body {
 .startpage-email-box {
   justify-content: 'center';
   margin-left: 300px;
-  width: 40%;
+  width: 70%;
+  height: 80%;
 }
 
 
@@ -162,12 +174,22 @@ body {
 
 .startpage-email-TITLE {
   justify-content: 'center';
-  margin-left: 500px;
   font-size: 44px;
   border-color: black;
   border-width: 2px;
-  height: 20px; 
-  color: orange;
+  height: 65px; 
+  width:100;
+  color: var(--grayDefault);
+}
+
+.label-email {
+  align-items: 'left';
+  justify-content: center;
+  font-size: 14px;
+  padding: 0 2px 30px 0;
+  color: white;
+  opacity:90%;
+  text-transform: uppercase;
 }
 
 .startpage-email-text{
