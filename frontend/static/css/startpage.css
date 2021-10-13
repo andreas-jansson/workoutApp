@@ -142,7 +142,67 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
+.startpage-email-label {
+  justify-content: 'center';
+  margin-left: 400px;
+  width: 100%;
+}
 
+.startpage-email-box {
+  justify-content: 'center';
+  margin-left: 300px;
+  width: 40%;
+}
+
+
+.startpage-MOVE-INPUT {
+  justify-content: 'center';
+  margin-left: 150px;
+}
+
+.startpage-email-TITLE {
+  justify-content: 'center';
+  margin-left: 500px;
+  font-size: 44px;
+  border-color: black;
+  border-width: 2px;
+  height: 20px; 
+  color: orange;
+}
+
+.startpage-email-text{
+  color: white;
+  font-size: 22px;
+  justify-content: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.input-email{
+    position: relative;
+    width: 300px;
+    padding: 6px 0;
+    line-height: 160%;
+    font-size: 14px;
+    background: none;
+    color: white;
+    border: none;
+    border-bottom: 1px solid #aaa;
+    }
+
+    .textarea-email{
+      position: relative;
+      width: 600px;
+      height: 300px;
+      padding: 6px 0;
+      line-height: 160%;
+      font-size: 14px;
+      padding-right: 5px;
+      font-size: 20px;
+      background: rgba(0, 0, 0, 0.57);
+      color: white;
+      font-family: Arial, Helvetica, sans-serif;
+      border: none;
+      border-bottom: 1px solid #aaa;
+      }
 
 @media only screen and (max-width: 600px) {
   /* For tablets: */

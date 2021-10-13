@@ -286,6 +286,7 @@ function contactUs(){
           .then(() => {
             btn.value = 'Send Email';
             alert('Email sent!');
+            this.reset();
           }, (err) => {
             btn.value = 'Send Email';
             alert(JSON.stringify(err));
@@ -294,29 +295,45 @@ function contactUs(){
     }
 
 return(
-    <div>
-        <div container='login-box box-centering'>
-<form id="form">
+  <div
+  justifyContent='center'
+  className='startpage-email-box'
+  style={{
+    backgroundImage: `url('https://cutewallpaper.org/21/fitness/Mens-Fitness-Workouts-Exercise-Health-Nutrition-GQ.png')`,
+    backgroundPosition: "center",
+    backgroundSize: "cover",
+    borderRadius: "20px",
+  }}
+>
+  <div align="center" className='startpage-email-TITLE'>
+    <h1> Contact Us </h1>
+  </div>
+  <br/>  <br/>  <br/>  <br/>  <br/>
+  <div className='startpage-MOVE-INPUT'> 
+
+<form id="form" className='startpage-email-label' >
   <div class="field">
-    <label for="name">name</label>
-    <input type="text" name="name" id="name"/>
+    <label for="name" className='startpage-email-text'>Full Name</label>
+    <input type="text" name="name" className='input-email' maxlength='25' minLength='3' id="name"/>
   </div>
   <div class="field">
-    <label for="message">message</label>
-    <input type="text" name="message" id="message"/>
+    <label for="email" class='tooltip' className='startpage-email-text'>Email Address</label>
+    <input type="email" name="email" id="email" className='input-email' maxlength='50' minLength='10'/>
   </div>
-  <div class="field">
-    <label for="email">email</label>
-    <input type="text" name="email" id="email"/>
+    <div class="field">
+    <label for="message" className='startpage-email-text'>Your Message</label>
+    <textarea type="text" name="message" id="message" className='textarea-email'/>
   </div>
 
-  <input type="submit" id="button" value="Send Email"/>
+  <div > 
+  <input type="submit" id="button" value="Send Email" style={{background:'#008CBA', color:'white'}}/>
+  </div>
 </form>
+</div>
 
 <script type="text/javascript"
   src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-        </div>
-    </div>
+  </div>
 )
 };
 
