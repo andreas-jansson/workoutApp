@@ -159,7 +159,7 @@ export default class LoginPage extends Component {
             <TextField
                 color="primary"
                 type="text"
-                label="First Name"
+                label="Email"
                 variant="filled"
                 margin='normal'
                 name="fname"
