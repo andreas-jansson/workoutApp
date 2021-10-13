@@ -1,6 +1,6 @@
 import React, { Component, useEffect, useState } from "react";
 import { Parallax, Background } from "react-parallax";
-import emailjs from "emailjs-com";
+import emailjs, {init} from "emailjs-com";
 import "../../static/css/startpage.css";
 import "../../static/css/icofont.min.css";
 import styled, { css } from "styled-components";
@@ -37,7 +37,7 @@ const parallax = () => {
             
             <Typewriter
             onInit={(typewriter) => {
-                typewriter.typeString("Dedicated").pauseFor(2000).deleteAll().typeString("Inspired").pauseFor(2000).deleteAll().typeString("Excited").pauseFor(2000).deleteAll().start();
+                typewriter.typeString("Dedicated").pauseFor(2000).deleteAll().typeString("Inspired").pauseFor(2000).deleteAll().typeString("Excited").pauseFor(2000).deleteAll().typeString("Hardworker").start();
             }}
             />
                 </div>
@@ -267,64 +267,57 @@ function PriceCard3() {
   );
 }
 
-const contactUs = () => {
-  function sendEmail(e) {
-    e.preventdefault();
+function contactUs(){
 
-    emailjs
-      .sendForm(
-        "service_3yncdof",
-        "template_hte4ibb",
-        e.target,
-        "user_JKn0SxPW0K2IyVQxkRJfu"
-      )
-      .then(
-        (result) => {
-          console.log(result.text);
-        },
-        (error) => {
-          console.log(error.text);
-        }
-      );
-  }
+  window.onload=function(){
+    emailjs.init('user_JKn0SxPW0K2IyVQxkRJfu')
+    const btn = document.getElementById('button');
 
-  return (
-    <div
-      className="container border"
-      style={{
-        marginTop: "150px",
-        width: "50%",
-        backgroundImage: `url('https://cutewallpaper.org/21/fitness/Mens-Fitness-Workouts-Exercise-Health-Nutrition-GQ.png')`,
+    document.getElementById('form')
+      .addEventListener('submit', function(event) {
+        event.preventDefault();
+    
+        btn.value = 'Sending...';
+    
+        const serviceID = 'default_service';
+        const templateID = 'template_hte4ibb';
+    
+        emailjs.sendForm(serviceID, templateID, this)
+          .then(() => {
+            btn.value = 'Send Email';
+            alert('Email sent!');
+          }, (err) => {
+            btn.value = 'Send Email';
+            alert(JSON.stringify(err));
+          });
+      });
+    }
 
-        backgroundPosition: "center",
-        backgroundSize: "cover",
-        borderRadius: "20px",
-      }}
-    >
-      <div align="center">
-        <h1 style={{ marginTop: "25px" }}>Contact Form</h1>
-      </div>
-      <form onSubmit={sendEmail} align="left" width="20px">
-        <label>Name</label>
-        <input type="text" name="name" className="form-control" />
+return(
+    <div>
+        <div container='login-box box-centering'>
+<form id="form">
+  <div class="field">
+    <label for="name">name</label>
+    <input type="text" name="name" id="name"/>
+  </div>
+  <div class="field">
+    <label for="message">message</label>
+    <input type="text" name="message" id="message"/>
+  </div>
+  <div class="field">
+    <label for="email">email</label>
+    <input type="text" name="email" id="email"/>
+  </div>
 
-        <label>Email</label>
-        <input type="email" name="email" className="form-control" />
+  <input type="submit" id="button" value="Send Email"/>
+</form>
 
-        <label>Message</label>
-        <textarea name="message" rows="4" className="form-control" />
-
-        <input
-          style={{ marginTop: "30px" }}
-          type="submit"
-          value="Send"
-          className="form-control btn btn-primary"
-          style={{ marginTop: "30px" }}
-        />
-      </form>
-      <br /> <br />
+<script type="text/javascript"
+  src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+        </div>
     </div>
-  );
+)
 };
 
 function StartPage() {
