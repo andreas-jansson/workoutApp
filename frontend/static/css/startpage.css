@@ -56,6 +56,25 @@ body {
   font-variant: normal;
 }
 
+.headingg{
+  margin-top: 200px;
+  display: inline-block;
+  font-size: 180px;
+  font-weight: bold;
+  text-align: center;
+  height: 200px;
+  color: var(--silverGradiant1);
+}
+
+.sub-headingg{
+  display: inline-block;
+  font-size: 90px;
+  font-weight: bold;
+  text-align: center;
+  color: var(--orangeGradiant1); 
+}
+
+
 .box-2 {
   background-color: var(--grayDefault);
   display: flex;
@@ -103,6 +122,19 @@ body {
   padding-bottom: 20px;
 }
 
+.sp-bttn-join {
+  background: var(--orangeGradiant1);
+  background: var(--orangeGradiant2);
+  border: none;
+  border-radius: 35px;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 32px;
+  margin-top: 5%;
+}
+
 .sp-btn-join {
   background: var(--orangeGradiant1);
   background: var(--orangeGradiant2);
@@ -116,6 +148,17 @@ body {
   margin-right: 10px;
 }
 
+.sp-btttn-join {
+  background:black;
+  border: black;
+  border-radius: 5px;
+  text-align: center;
+  color: white;
+  height: 40px;
+  font-size: 25px;
+}
+
+
 /* försöker få call to action knappens text att bli lite metallisk- funkar inte atm*/
 .sp-btn-join p {
   background: -webkit-linear-gradient(360deg, #ffffff, #b9b9b9);
@@ -123,7 +166,81 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
+.startpage-email-label {
+  justify-content: 'center';
+  margin-left: 400px;
+  width: 100%;
+}
 
+.startpage-email-box {
+  justify-content: 'center';
+  margin-left: 300px;
+  width: 70%;
+  height: 80%;
+}
+
+
+.startpage-MOVE-INPUT {
+  justify-content: 'center';
+  margin-left: 150px;
+}
+
+.startpage-email-TITLE {
+  justify-content: 'center';
+  font-size: 44px;
+  border-color: black;
+  border-width: 2px;
+  height: 65px; 
+  width:100;
+  color: var(--grayDefault);
+}
+
+.label-email {
+  align-items: 'left';
+  justify-content: center;
+  font-size: 14px;
+  padding: 0 2px 30px 0;
+  color: white;
+  opacity:90%;
+  text-transform: uppercase;
+}
+
+.startpage-email-text{
+  color: white;
+  font-size: 22px;
+  justify-content: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.input-email{
+    position: relative;
+    width: 300px;
+    padding: 6px 5px;
+    line-height: 160%;
+    height: 25px;
+    font-size: 14px;
+    background: rgba(0, 0, 0, 0.15);
+    color: white;
+    border: none;
+    border-bottom: 1px solid #aaa;
+    }
+
+    .textarea-email{
+      position: relative;
+      width: 500px;
+      height: 300px;
+      resize: none;
+      padding: 6px 0;
+      line-height: 160%;
+      font-size: 14px;
+      margin-right: 35px;
+      padding-right: 5px;
+      font-size: 20px;
+      background: rgba(0, 0, 0, 0.57);
+      color: white;
+      font-family: Arial, Helvetica, sans-serif;
+      border: none;
+      border-bottom: 1px solid #aaa;
+      }
 
 @media only screen and (max-width: 600px) {
   /* For tablets: */

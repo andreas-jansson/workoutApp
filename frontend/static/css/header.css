@@ -2,6 +2,8 @@
     width:100vw;
     height:50px;
     position: fixed;
+    z-index: 9999;
+
 }
 
 .header-btn-container{
@@ -11,6 +13,8 @@
     justify-content: flex-end;
     color:white;
     font-size: 24px;
+    z-index: 9999;
+
 
 }
 .header-btn{

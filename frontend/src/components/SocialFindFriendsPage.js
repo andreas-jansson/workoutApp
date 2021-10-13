@@ -12,12 +12,14 @@ import {
   Link,
   Redirect,
 } from "react-router-dom";
-//import '../../static/css/social-find-friends.css';
+
 
 import "../../static/css/social-find-friends.css";
 
 function SocialFindFriendsPage() {
   const [data, setData] = useState([]);
+  const [email, setEmail] = useState('');
+  const handleSubmit = () => console.log(email);
 
   const awooga = "/api/social-find-friends";
   const email_url = "/api/social-find-email-friends";
@@ -168,25 +170,27 @@ function SocialFindFriendsPage() {
             <div align="center">
               <label>
                 <input
-                  className
                   type="email"
-                  //value={data.email}
+                  onChange={(event, newValue) => setEmail(newValue)}
+                  //onChange={onTextChange}
+                  value={email}
                   name="email"
                   placeholder="Email Address"
                 ></input>
               </label>
               <button
-                className="sff-request-button"
+              type= 'submit'
+              className="sff-request-button"
                 onClick={(e) => {
                   e.preventDefault()
-
-                  //var data = data.map(x => ({item: x}));
-
+                  console.log(e.target.value)
+                  console.log(email)
+                  
                   const requestOptions = {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                      data,
+                      email,
                     }),
                   };
 

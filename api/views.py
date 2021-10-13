@@ -21,6 +21,7 @@ from datetime import datetime as dt
 import datetime
 import calendar
 from itertools import chain
+import re
 
 # Create your views here.
 
@@ -864,7 +865,7 @@ class GetClientView(APIView):
     
         if len(query_set)>0:
             data = UserSerializer(query_set, many=True).data
-            print(data)
+            #print(data)
             return Response(data, status=status.HTTP_200_OK) 
         return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -1095,6 +1096,7 @@ class SocialFindFriends(APIView):
         queryset2 = User.objects.raw('select * from api_user where isVisible == 1 and id not in \'{}\''.format(self.request.session.get('user_id')))
         queryset2 = User.objects.exclude(id__in = friend_list)
 
+    
         if len(queryset2)>0:
             data = UserSerializer(queryset2, many=True).data
             print(data)                    
@@ -1129,11 +1131,23 @@ class SocialFindFriendsEmail(APIView):
         print("****SocialFindFriendsEmail-SEND___Request Triggered!")
 
         email = request.data['data']
+        
+        print("\n")
+        print(email)
+        print("\n")
 
-        for e in email: 
-            print(e)
-        query = User.objects.filter(email = email['email'])
+        s = "email': 'elin@gmail.com'"
+        pattern = "email\': \'(.*?)\'"
+        print('\n\npattern: ')
+        print(pattern)
 
+
+        email = re.search(pattern, str(email)).group(1)
+        print('\nemail: ')
+        print(email)
+        print("\n")
+        
+        query = User.objects.filter(email = email)
         print(query)
 
         if(len(query)>0): 
@@ -1148,12 +1162,13 @@ class SocialFindFriendsEmail(APIView):
                 return Response({'Friend Request Sent': 'OK'}, status=status.HTTP_200_OK)   
         return Response({'Cannot Add User': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
         
+
 class SocialFindFriendsVisible(APIView):
     def get(self, request, format=None):
         print("\n\SocialFindFriendsEmail-SEND_REQUEST Triggered!\n\n")
         
         user = self.request.session.get('user_id')
-        queryset = User.objects.raw('select * from api_user where isVisible == 1 and id != \'{}\' and roleid_id == 2 '.format(user))
+        queryset = User.objects.raw('select * from api_user where isVisible == 1 and id != \'{}\' and roleid_id == 2'.format(user))
 
         if len(queryset)>0:
             data = UserSerializer(queryset, many=True).data
@@ -1163,11 +1178,16 @@ class SocialFindFriendsVisible(APIView):
 class ListUnassignedClients(APIView):
     def get(self, request, format=None):
         #print("ListUnassignedClients Triggered!")
-        queryset = User.objects.raw(
+        coachId = self.request.session.get('user_id')
+        role= User.objects.filter(id=coachId)[0]
+        if(role.roleid.description=='Coach'):    
+            queryset = User.objects.raw(
             'SELECT * FROM api_user WHERE roleid_id=2 AND id NOT IN (SELECT user_id FROM api_coachhasclient)')
-        if len(queryset)>0:
-            data = UserSerializer(queryset, many=True).data
-            return Response(data, status=status.HTTP_200_OK)
+            if len(queryset)>0:
+                data = UserSerializer(queryset, many=True).data
+                return Response(data, status=status.HTTP_200_OK)
+            else:
+                return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
         else:
             return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -1179,10 +1199,10 @@ class AssignClientToCoach(APIView):
         clientId = request.data['userId']
         ClientUser=User.objects.filter(id=clientId)[0]
         CoachUser=User.objects.filter(id=coachId)[0]
-
         CoachClientLink = CoachHasClient(user=ClientUser,coach=CoachUser)
         CoachClientLink.save()
         return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_200_OK)
+        
 
 class RemoveClientFromCoach(APIView):
     def post(self,request,format=None):
@@ -1193,5 +1213,8 @@ class RemoveClientFromCoach(APIView):
         ClientUser=User.objects.filter(id=clientId)[0]
         CoachUser=User.objects.filter(id=coachId)[0]
         CoachHasClient.objects.filter(user=ClientUser,coach=CoachUser).delete()
-        
         return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_200_OK)
+        
+        
+        
+        
