@@ -6,11 +6,41 @@ import {
 import '../../static/css/login.css';
 import '../../static/css/header.css';
 import Alert from "@material-ui/lab/Alert";
+import { FormHelperText, MuiThemeProvider } from "@material-ui/core";
+import { createTheme } from "@material-ui/core/styles";
+import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
 import Collapse from '@material-ui/core/Collapse';
 import Button from '@material-ui/core/Button';
 import CloseIcon from '@material-ui/icons/Close';
 
+const my_theme = createTheme({
+  palette: {
+    primary: {
+      main: "#e66a04"
+    }, secondary: {
+      light: '#0066ff',
+      main: '#0044ff',
+    }
+  },
+  overrides: {
+    MuiFilledInput: {
+      root: {
+        backgroundColor: "rgb(232, 241, 250)",
+        "&:hover": {
+          backgroundColor: "rgb(250, 232, 241)",
+          "@media (hover: none)": {
+            backgroundColor: "rgb(232, 241, 250)"
+          }
+        },
+        "&.Mui-focused": {
+          backgroundColor: "rgb(250, 241, 232)"
+        },
+      },
+      }
+    }
+  },
+)
 
 export default class LoginPage extends Component {
   static defaultProps = {};
@@ -122,40 +152,53 @@ export default class LoginPage extends Component {
         <div className="box-centering">
           <div className="login-box box-centering">
             <div align="center" className="login-padding">
-              Email
+              Sign In
             </div>
-            <form>
-              <input
-                className="login-text"
-                type="email"
-                email={this.state.email}
+            <form onSubmit={this.OnSignIn}>
+            <MuiThemeProvider theme={my_theme}>
+            <TextField
+                color="primary"
+                type="text"
+                label="Email"
+                variant="filled"
+                margin='normal'
+                name="fname"
+                className='login-TextField'
+                size="medium"
+                value={this.state.email}
                 onChange={this.EmailChange}
-                maxLength="50"
               />
-              <div align="center" className="login-padding">
-                Password
-              </div>
-              <input
-                className="login-text"
+              <TextField
+                color="primary"
                 type="password"
-                password={this.state.password}
+                label="Password"
+                variant="filled"
+                margin='normal'
+                name="password"
+                size="medium"
+                className='login-TextField'
+                value={this.state.password}
                 onChange={this.PasswordChange}
-                maxLength="30"
               />
               <div align="center">
                 <br />
-                <button
-                  className="myButton"
-                  variant="contained"
-                  onClick={this.OnSignIn}
-                >
-                  Sign In
-                </button>
+                <Button
+                primary={true}
+                color='primary'
+                variant='contained'
+                size='large'
+                type="submit"
+                label="submit"
+                margin="normal"
+              >
+                Submit
+              </Button>
               </div>
               <p className="no-account">
                 Don't have an account? <br />
               <a href="/signup">Register one here!</a>
             </p>
+            </MuiThemeProvider>
             </form>
           </div>
           <div className="wpmp-alert-container">
