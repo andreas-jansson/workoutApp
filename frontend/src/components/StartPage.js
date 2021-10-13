@@ -1,10 +1,10 @@
 import React, { Component, useEffect, useState } from "react";
 import { Parallax, Background } from "react-parallax";
-import emailjs, {init} from "emailjs-com";
+import emailjs, { init } from "emailjs-com";
 import "../../static/css/startpage.css";
 import "../../static/css/icofont.min.css";
 import styled, { css } from "styled-components";
-import Typewriter from 'typewriter-effect'
+import Typewriter from "typewriter-effect";
 
 const image1 =
   "https://www.sponser.com/media/catalog/product/h/e/header_pre_workout_booster.png";
@@ -15,40 +15,41 @@ const image3 =
 const image4 =
   "https://www.socialseo.com/wp-content/uploads/2018/11/black-brick.jpg";
 
-const inlineStyle = {
-  background: "#fff",
-  left: "50%",
-  top: "50%",
-  position: "absolute",
-  padding: "20px",
-  transform: "translate(-50%, -50%)",
-};
 
 const parallax = () => {
   return (
     <div>
       <div style={{ textAlign: "center" }}>
-          
         <Parallax bgImage={image1} strength={-300}>
-            <div className='headingg' justifyContent='center'>WORKIT</div>
-            <br/> 
-        <div className='sub-headingg' justifyContent='center'>
-           It's for the
-            
+          <div className="headingg" justifyContent="center">
+            WORKIT
+          </div>
+          <br />
+          <div className="sub-headingg" justifyContent="center">
+            It's for the
             <Typewriter
-            onInit={(typewriter) => {
-                typewriter.typeString("Dedicated").pauseFor(2000).deleteAll().typeString("Inspired").pauseFor(2000).deleteAll().typeString("Excited").pauseFor(2000).deleteAll().typeString("Hardworker").start();
-            }}
+              onInit={(typewriter) => {
+                typewriter
+                  .typeString("Dedicated")
+                  .pauseFor(2000)
+                  .deleteAll()
+                  .typeString("Inspired")
+                  .pauseFor(2000)
+                  .deleteAll()
+                  .typeString("Excited")
+                  .pauseFor(2000)
+                  .deleteAll()
+                  .typeString("Hardworker")
+                  .start();
+              }}
             />
-                </div>
+          </div>
           <div
             style={{
               width: 250,
               height: 750,
             }}
-          >
-              
-          </div>
+          ></div>
         </Parallax>
         <Parallax
           bgImage={image2}
@@ -57,18 +58,27 @@ const parallax = () => {
             <div
               style={{
                 position: "absolute",
-                width: "100px",
-                height: "100px",
-                borderRadius: "50%",
-                left: "50%",
-                top: "50%",
-                background: `rgba(255, 123, 23, ${precentage * 1})`,
-                transform: `translate(-50%, -50%) scale(${precentage * 5})`,
+                width: "700px",
+                height: "200px",
+                left: "10%",
+                top: "20%",
+                fontSize: '23px',
+                background: 'orange',
+                borderRadius:'30px',
+                opacity:'80%',
               }}
-            ></div>
+            >
+              <h1>
+
+              Madav AB <br/> 
+            </h1>
+              <h3>
+              For our clients and instructors at Madav AB, we create powerful muscles. With 24/7 service and intense training.
+              </h3>
+            </div>
           )}
         >
-          <div style={{ height: "750px" }} align="center"></div>
+          <div style={{ height: "450px" }} align="center"></div>
         </Parallax>
 
         <Parallax
@@ -107,8 +117,6 @@ const parallax = () => {
   );
 };
 
-   
-
 const gradient = () => css`
   background: var(--grayDefault);
 `;
@@ -116,7 +124,6 @@ const gradient = () => css`
 const gradient2 = () => css`
   background: var(--orangeGradiant2);
 `;
-
 
 const Card = styled.div`
   position: relative;
@@ -186,7 +193,6 @@ const ActionButton = styled.button`
   background: rgba(248, 148, 6, 1);
   box-shadow: 0 11px 15px -7px rgba(0, 0, 0, 0.25);
   transition: background 0.25s;
-
 `;
 
 function PriceCard1() {
@@ -217,7 +223,7 @@ function PriceCard1() {
 
 function PriceCard2() {
   const [features] = useState([
-    "3 Month Membership", 
+    "3 Month Membership",
     "45 Exercises",
     "+ All Benefits of the Previous Tier",
   ]);
@@ -267,86 +273,120 @@ function PriceCard3() {
   );
 }
 
-function contactUs(){
+function contactUs() {
+  window.onload = function () {
+    emailjs.init("user_JKn0SxPW0K2IyVQxkRJfu");
+    const btn = document.getElementById("button");
 
-  window.onload=function(){
-    emailjs.init('user_JKn0SxPW0K2IyVQxkRJfu')
-    const btn = document.getElementById('button');
-
-    document.getElementById('form')
-      .addEventListener('submit', function(event) {
+    document
+      .getElementById("form")
+      .addEventListener("submit", function (event) {
         event.preventDefault();
-    
-        btn.value = 'Sending...';
-    
-        const serviceID = 'default_service';
-        const templateID = 'template_hte4ibb';
-    
-        emailjs.sendForm(serviceID, templateID, this)
-          .then(() => {
-            btn.value = 'Send Email';
+
+        btn.value = "Sending...";
+
+        const serviceID = "default_service";
+        const templateID = "template_hte4ibb";
+
+        emailjs.sendForm(serviceID, templateID, this).then(
+          () => {
+            btn.value = "Send Email";
             this.reset();
-            alert('Email sent!');
-          }, (err) => {
-            btn.value = 'Send Email';
+            alert("Email sent!");
+          },
+          (err) => {
+            btn.value = "Send Email";
             alert(JSON.stringify(err));
-          });
+          }
+        );
       });
-    }
+  };
 
-return(
-  <div
-  justifyContent='center'
-  className='startpage-email-box'
-  style={{
-    backgroundImage: `url('https://cutewallpaper.org/21/fitness/Mens-Fitness-Workouts-Exercise-Health-Nutrition-GQ.png')`,
-    backgroundPosition: "center",
-    backgroundSize: "cover",
-    borderRadius: "20px",
-  }}
->
- 
-  <div align="center" className='startpage-email-TITLE'>
-    <h1> Contact Us </h1>
-    <br/> 
-  </div>
-  <br/>  <br/>  <br/>  
-  <div className='startpage-MOVE-INPUT'> 
-
-<form id="form" className='startpage-email-label' >
-
-  <div class="field">
-    <label for="name" className='label-email '>Full Name</label>
-    <br/>
-    <input type="text" name="name" className='input-email' maxlength='25' minLength='3' id="name" required/>
-  </div>
-
-  <br/> 
-  <div class="field">
-
-    <label for="email" class='tooltip' className='label-email '>Email Address</label>
-    <br/> 
-    <input type="email" name="email" id="email" className='input-email' maxlength='30' minLength='10' size="30" required />
-  </div>
-  <br/> 
-    <div class="field">
-    <label for="message" className='label-email'>Your Message</label>
-    <br/> <br/> 
-    <textarea type="text" name="message" id="message" className='textarea-email' minLength='10' required />
-  </div>
-  <br/>  <br/>
-  <div > 
-  <input type="submit" id="button" value="Send Email" className="sp-bttn-join"/>
-  </div>
-  <br/>  <br/><br/>  <br/>
-</form>
-</div>
-
-<script type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-  </div>
-)
-};
+  return (
+    <div
+      justifyContent="center"
+      className="startpage-email-box"
+      style={{
+        backgroundImage: `url('https://cutewallpaper.org/21/fitness/Mens-Fitness-Workouts-Exercise-Health-Nutrition-GQ.png')`,
+        backgroundPosition: "center",
+        backgroundSize: "cover",
+        borderRadius: "20px",
+      }}
+    >
+      <div align="center" className="startpage-email-TITLE">
+        <h1> Contact Us </h1>
+        <br />
+      </div>
+      <br /> <br /> <br />
+      <div className="startpage-MOVE-INPUT">
+        <form id="form" className="startpage-email-label">
+          <div class="field">
+            <label for="name" className="label-email ">
+              Full Name
+            </label>
+            <br />
+            <input
+              type="text"
+              name="name"
+              className="input-email"
+              maxlength="25"
+              minLength="3"
+              id="name"
+              required
+            />
+          </div>
+          <br />
+          <div class="field">
+            <label for="email" class="tooltip" className="label-email ">
+              Email Address
+            </label>
+            <br />
+            <input
+              type="email"
+              name="email"
+              id="email"
+              className="input-email"
+              maxlength="30"
+              minLength="10"
+              size="30"
+              required
+            />
+          </div>
+          <br />
+          <div class="field">
+            <label for="message" className="label-email">
+              Your Message
+            </label>
+            <br /> <br />
+            <textarea
+              type="text"
+              name="message"
+              id="message"
+              className="textarea-email"
+              minLength="10"
+              required
+            />
+          </div>
+          <br /> <br />
+          <div>
+            <input
+              type="submit"
+              id="button"
+              value="Send Email"
+              className="sp-bttn-join"
+            />
+          </div>
+          <br /> <br />
+          <br /> <br />
+        </form>
+      </div>
+      <script
+        type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"
+      ></script>
+    </div>
+  );
+}
 
 function StartPage() {
   return <div>{parallax()}</div>;
