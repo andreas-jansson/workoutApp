@@ -56,6 +56,25 @@ body {
   font-variant: normal;
 }
 
+.headingg{
+  margin-top: 200px;
+  display: inline-block;
+  font-size: 180px;
+  font-weight: bold;
+  text-align: center;
+  height: 200px;
+  color: white;
+}
+
+.sub-headingg{
+  display: inline-block;
+  font-size: 90px;
+  font-weight: bold;
+  text-align: center;
+  color: var(--orangeGradiant1); 
+}
+
+
 .box-2 {
   background-color: var(--grayDefault);
   display: flex;
