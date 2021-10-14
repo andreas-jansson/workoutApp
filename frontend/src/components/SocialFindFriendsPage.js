@@ -1,9 +1,6 @@
 import React, { Component, useState, useEffect } from "react";
 import MaterialTable from "material-table";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import MTableToolbar from "material-table";
+import SocialFindFriendsEmail from "./SocialFindFriendsEmail";
 
 import {
   BrowserRouter as Router,
@@ -21,9 +18,8 @@ function SocialFindFriendsPage() {
   const [email, setEmail] = useState('');
   const handleSubmit = () => console.log(email);
 
-  const awooga = "/api/social-find-friends";
+  const public_url = "/api/social-find-friends";
   const email_url = "/api/social-find-email-friends";
-  const public_url = "/api/social-find-visible-friends";
 
   const columns = [
     {
@@ -42,12 +38,19 @@ function SocialFindFriendsPage() {
     getPublicUsers();
   }, []);
 
+  
   return (
     <div>
+      <br/>
+      <SocialFindFriendsEmail/>
       <div className="sff-container">
         <div>
           <br />
           <MaterialTable
+          style={{
+            background: '#292727',
+            color:'white'
+          }}
             title={
               <div align="center">
                 <h3>Public Profiles</h3>
@@ -57,8 +60,7 @@ function SocialFindFriendsPage() {
             data={data}
             actions={[
               (data) => ({
-                icon: "favorite",
-                openIcon: "contact_page",
+                icon:'🧡',
                 tooltip: "Send Friend Request!",
                 onClick: () => {
                   const requestOptions = {
@@ -71,7 +73,7 @@ function SocialFindFriendsPage() {
                   console.log(requestOptions.body);
                   console.log(data);
 
-                  fetch(awooga, requestOptions).then((resp) => {
+                  fetch(public_url, requestOptions).then((resp) => {
                     if (resp.ok) {
                       console.log("✅Friend Request Was Successful✅");
                     } else {
@@ -89,15 +91,14 @@ function SocialFindFriendsPage() {
                 textAlign: "left",
               },
               toolbar: {
-                searchTooltip: "Search for a friend through their mail",
+                searchTooltip: "Search for a friend",
                 searchPlaceholder: "example@gmail.com",
               },
             }}
             options={{
               headerStyle: {
-                backgroundColor: "#ff8b00",
+                backgroundColor: "rgb(230,106,4)",
                 color: "#FFF",
-                fontWeight: "bolder",
                 fontSize: 19,
                 fontStyle: "roboto",
                 height: 5,
@@ -106,15 +107,11 @@ function SocialFindFriendsPage() {
               searchAutoFocus: true,
               rowStyle: (data) => ({
                 fontSize: 17,
-                color: "black",
-                fontWeight: "bolder",
+                color: "white",
                 fontStyle: "Times New Roman",
               }),
               searchFieldStyle: {
-                fontWeight: "bolder",
-                fontStyle: "Times New Roman",
-                backgroundColor: "#FFD5AA",
-                color: "#290916",
+                color: "white",
                 borderRadius: 20,
               },
               actionsColumnIndex: -1,
@@ -122,8 +119,8 @@ function SocialFindFriendsPage() {
             }}
             detailPanel={[
               {
-                icon: "email",
-                openIcon: "drafts",
+                icon: "📧",
+                openIcon: "📨",
                 tooltip: "User Info",
                 render: (data) => {
                   if (data.isVisible) {
@@ -135,7 +132,7 @@ function SocialFindFriendsPage() {
                           width: 300,
                           textAlign: "center",
                           color: "white",
-                          backgroundColor: "orange",
+                          backgroundColor: "rgb(240, 128, 37)",
                         }}
                       >
                         {data.fname} {data.lname}
@@ -162,54 +159,6 @@ function SocialFindFriendsPage() {
             ]}
           />
           <br /> <br />
-          <div className="sff-request-title" align="center">
-            Send an email friend request to people you know.{" "}
-          </div>
-          <br />
-          <form>
-            <div align="center">
-              <label>
-                <input
-                  type="email"
-                  onChange={(event, newValue) => setEmail(newValue)}
-                  //onChange={onTextChange}
-                  value={email}
-                  name="email"
-                  placeholder="Email Address"
-                ></input>
-              </label>
-              <button
-              type= 'submit'
-              className="sff-request-button"
-                onClick={(e) => {
-                  e.preventDefault()
-                  console.log(e.target.value)
-                  console.log(email)
-                  
-                  const requestOptions = {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                      email,
-                    }),
-                  };
-
-                  console.log(requestOptions.body);
-                  console.log(data);
-
-                  fetch(email_url, requestOptions).then((resp) => {
-                    if (resp.ok) {
-                      console.log("✅Friend Request Was Successful✅");
-                    } else {
-                      console.log("❌Friend Request Was NOT Successful❌");
-                    }
-                  });
-                }}
-              >
-                Send Request
-              </button>
-            </div>
-          </form>
         </div>
       </div>
     </div>
