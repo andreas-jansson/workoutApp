@@ -1,11 +1,23 @@
-import React, { Component, useState, useEffect } from "react";
-import MaterialTable from "material-table";
+import React, {useState, useEffect } from "react";
+import MaterialTable,{ MTableToolbar } from "material-table";
 import "../../static/css/manage-account-table.css";
+import {
+  MuiThemeProvider,
+  createMuiTheme,
+  Grid,
+  Divider,
+} from "@material-ui/core";
 
 function ManageAccountsPage() {
+
   const url = "/api/manage-user";
   const [data, setData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
+
+  const [preferDarkMode, setPreferDarkMode] = useState(() => {
+    const mode = localStorage.getItem("_tableDarkMode");
+    return mode === "true" || false;
+  });
 
   const columns = [
     {
@@ -71,17 +83,22 @@ function ManageAccountsPage() {
     getUsers();
   }, []);
 
+
+  const theme = createMuiTheme({
+    palette: {
+      type: preferDarkMode ? "dark" : "light",
+    },
+  });
+
+
   return (
     <div>
+            <MuiThemeProvider theme={theme}>
+
       <div className="mactable-signup-text"></div>
       <div className="mactable-container">
         <br /> <br />
         <MaterialTable
-          style={{
-            fontSize: 20,
-            textAlign: "center",
-            backgroundColor: "white",
-          }}
           title={
             <div className="mactable-signup-text">
               <h2>Account Management Table</h2>
@@ -92,7 +109,7 @@ function ManageAccountsPage() {
           }
           options={{
             headerStyle: {
-              backgroundColor: "orange",
+              backgroundColor: "rgb(230,106,4)",
               color: "#FFF",
               fontWeight: "bolder",
               fontSize: 15,
@@ -101,11 +118,12 @@ function ManageAccountsPage() {
             rowStyle: (rowData) => ({
               fontSize: 17,
               backgroundColor:
-                selectedRow === rowData.tableData.id ? "#484849" : "#ededef",
-              color: selectedRow === rowData.tableData.id ? "#FFF" : "black",
+                selectedRow === rowData.tableData.id ? "rgb(247, 142, 56)" : "#484849",
+              color: "FFF",
             }),
             searchFieldStyle: {
-              fontWeight: "bolder",
+              color: "white",
+              borderRadius: 20,
             },
             exportButton: {
               csv: true,
@@ -116,12 +134,35 @@ function ManageAccountsPage() {
             filtering: true,
           }}
           localization={{
+            header: {
+              actions: "\u00A0Edit\u00A0\u00A0\u00A0\u00A0Delete",
+              textAlign: "left",
+            },
+            toolbar: {
+              searchTooltip: "Search for an Email",
+              searchPlaceholder: "example@mail.com",
+            },
             toolbar: {
               exportCSVName: "Export Excel format",
             },
           }}
+          style={{
+            background: "rgb(26, 24, 24)",
+            color: "white",
+            fontSize: 20,
+            align: 'center',
+          }}
           columns={columns}
           data={data}
+          components={{
+            Toolbar: (props) => (
+              <div>
+                <MTableToolbar {...props} />
+                <Grid align="right" style={{ padding: 0 }}></Grid>
+                <Divider />
+              </div>
+            ),
+          }}
           editable={{
             onRowUpdate: (newData, oldData) =>
               new Promise((resolve, reject) => {
@@ -157,6 +198,7 @@ function ManageAccountsPage() {
           }}
         />
       </div>
+      </MuiThemeProvider>
     </div>
   );
 }

@@ -635,7 +635,11 @@ class UserManagementView(APIView):
         print("GetUserView Triggered!")
         test = request.GET.get('id')
         print(test)
-        queryset = User.objects.raw('select * from api_user')
+
+        if(self.request.session.get('role_id') == 3): 
+            queryset = User.objects.raw('select * from api_user where roleid_id < 3')
+        else:
+            queryset = User.objects.raw('select * from api_user')
 
         if len(queryset)>0:
             data = UserSerializer(queryset, many=True).data
@@ -1091,7 +1095,7 @@ class DeleteFriendView(APIView):
 class SocialFindFriends(APIView):
 
     def get(self, request, format=None):
-        print("****SocialFindFriendsEmail Triggered!")
+        print("****SocialFindFriendsVisible Triggered!")
         queryset1 = Friends.objects.raw('select * from api_friends where (user1_id = \'{}\' or user2_id = \'{}\')'.format(self.request.session.get('user_id'), self.request.session.get('user_id')))
         
         friend_list = []
@@ -1102,13 +1106,18 @@ class SocialFindFriends(APIView):
                 friend_list.append(person.user1_id)
         friend_list.append(self.request.session.get('user_id'))
 
-        queryset2 = User.objects.raw('select * from api_user where isVisible == 1 and id not in \'{}\''.format(self.request.session.get('user_id')))
-        queryset2 = User.objects.exclude(id__in = friend_list)
+        queryset2 = User.objects.raw('select * from api_user')
 
-    
-        if len(queryset2)>0:
-            data = UserSerializer(queryset2, many=True).data
-            print(data)                    
+        for person in queryset2:
+            if(person.isVisible == False or person.roleid_id > 2):
+                friend_list.append(person.id)
+        print(friend_list)
+
+        queryset3 = User.objects.exclude(id__in = friend_list).exclude(isVisible = False)
+
+        if len(queryset3)>0:
+            data = UserSerializer(queryset3, many=True).data
+            #print(data)                    
             return Response(data, status=status.HTTP_200_OK)
         return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -1138,25 +1147,9 @@ class SocialFindFriends(APIView):
 class SocialFindFriendsEmail(APIView):
     def post(self, request, format=None):
         print("****SocialFindFriendsEmail-SEND___Request Triggered!")
-
-        email = request.data['data']
+        email = request.data['email']
+        query = User.objects.filter(email = email, roleid_id = 2)        
         
-        print("\n")
-        print(email)
-        print("\n")
-
-        s = "email': 'elin@gmail.com'"
-        pattern = "email\': \'(.*?)\'"
-        print('\n\npattern: ')
-        print(pattern)
-
-
-        email = re.search(pattern, str(email)).group(1)
-        print('\nemail: ')
-        print(email)
-        print("\n")
-        
-        query = User.objects.filter(email = email)
         print(query)
 
         if(len(query)>0): 
@@ -1178,6 +1171,7 @@ class SocialFindFriendsVisible(APIView):
         
         user = self.request.session.get('user_id')
         queryset = User.objects.raw('select * from api_user where isVisible == 1 and id != \'{}\' and roleid_id == 2'.format(user))
+
 
         if len(queryset)>0:
             data = UserSerializer(queryset, many=True).data
