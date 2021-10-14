@@ -45,29 +45,29 @@ export default class App extends Component {
   };
 
 
-  selectedNavbarController =()=>{
+  selectedNavbarController = () => {
     console.log(window.location.href);
     const urlPath = window.location.href;
     const result = urlPath.toString().split('/').pop();
-    this.setState({selectedNavbar: result});
+    this.setState({ selectedNavbar: result });
 
-    if(result.includes('dashboard')==true){
-      this.setState({selectedNavbar: 'dashboard'});
+    if (result.includes('dashboard') == true) {
+      this.setState({ selectedNavbar: 'dashboard' });
     }
-    else if(result.includes('workout-planner')==true){
-      this.setState({selectedNavbar: 'workout-planner'});
+    else if (result.includes('workout-planner') == true) {
+      this.setState({ selectedNavbar: 'workout-planner' });
     }
-    else if(result.includes('workout')==true){
-      this.setState({selectedNavbar: 'workout'});
+    else if (result.includes('workout') == true) {
+      this.setState({ selectedNavbar: 'workout' });
     }
-    else if(result.includes('active')==true){
-      this.setState({selectedNavbar: 'active'});
+    else if (result.includes('active') == true) {
+      this.setState({ selectedNavbar: 'active' });
     }
-    else if(result.includes('social')==true){
-      this.setState({selectedNavbar: 'social'});
+    else if (result.includes('social') == true) {
+      this.setState({ selectedNavbar: 'social' });
     }
-    else if(result.includes('management')==true){
-      this.setState({selectedNavbar: 'management'});
+    else if (result.includes('management') == true) {
+      this.setState({ selectedNavbar: 'management' });
     }
   }
 
@@ -87,155 +87,170 @@ export default class App extends Component {
         //console.log("Session Missing");
       }
       return response.json()
-    }).then((data)=>{
-        //console.log("***")
-        //console.log(data.fname)
-        this.setState({ 
-            fname: data.fname,
-            role_id: data.role_id,
-        });
-        
+    }).then((data) => {
+      //console.log("***")
+      //console.log(data.fname)
+      this.setState({
+        fname: data.fname,
+        role_id: data.role_id,
+      });
+
     })
   }
 
-  handleSignOut = () =>{
+  handleSignOut = () => {
     const requestOptions = {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      };
-  
-      fetch("/api/sign-out", requestOptions).then((response) => {
-        if (response.status == 202) {
-          console.log("sign out success");
-          this.setState({ sessionActive: false });
-          window.location.href='/login'
-        } else {
-          console.log("sign out success failed");
-        }
-      });
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    };
+
+    fetch("/api/sign-out", requestOptions).then((response) => {
+      if (response.status == 202) {
+        console.log("sign out success");
+        this.setState({ sessionActive: false });
+        window.location.href = '/login'
+      } else {
+        console.log("sign out success failed");
+      }
+    });
   }
 
-  handleNavigation=(e)=>{
+  handleNavigation = (e) => {
     e.preventDefault();
-    this.setState({selectedNavbar: e.target.value});
+    this.setState({ selectedNavbar: e.target.value });
     console.log("clicked: " + e.target.value);
   }
 
 
   renderNav() {
     var role
-    if(this.state.role_id == 2){
-        role = "Client"
+    if (this.state.role_id == 2) {
+      role = "Client"
     }
-    else if(this.state.role_id == 3){
-        role = "Coach"
+    else if (this.state.role_id == 3) {
+      role = "Coach"
     }
-    else if(this.state.role_id == 4){
-        role = "Admin"
+    else if (this.state.role_id == 4) {
+      role = "Admin"
     }
-    
+
     return (
       <div className="nav-bar">
-        
+
         <div className="container-menu-btn">
-        <div className="menu-user">
+          <div className="menu-user">
             <p id="menu-user-text-container">
-            <p id="menu-user-info">User: </p> <p id="menu-user-info-var">{ this.state.fname }</p>
-            <br/>
-            <p id="menu-user-info">Role: </p><p id="menu-user-info-var">{ role }</p>
+              <p id="menu-user-info">User: </p> <p id="menu-user-info-var">{this.state.fname}</p>
+              <br />
+              <p id="menu-user-info">Role: </p><p id="menu-user-info-var">{role}</p>
             </p>
           </div>
 
           <Link to="/dashboard"
-           onClick={ (e)=>{this.setState({selectedNavbar: "dashboard"})}}>
-              <div className="menu-btn btn1" >
-                  <div className="menu-btn-icon1">
-                      
-                  </div>
-                  <div className="menu-btn-text">
-                  Dashboard
-                  </div>
-                  <div className={this.state.selectedNavbar=="dashboard"? "menu-btn-dot":"menu-btn-no-dot"}>
-                </div>
+            onClick={(e) => { this.setState({ selectedNavbar: "dashboard" }) }}>
+            <div className="menu-btn btn1" >
+              <div className="menu-btn-icon1">
+
               </div>
-              </Link>
-              <Link to="/workout"
-                onClick={ ()=>{this.setState({selectedNavbar: "workout"})}}
-                >
-                  <div className="menu-btn btn2">
-                    <div className="menu-btn-icon2">      
-                    </div>
-                    <div className="menu-btn-text">
-                      Workout
-                    </div>
-                    <div className={this.state.selectedNavbar=="workout"? "menu-btn-dot":"menu-btn-no-dot"}>
-                </div>
-                  </div>
-                </Link>
-                <Link to="/workout-planner"
-                onClick={ ()=>{this.setState({selectedNavbar: "workout-planner"})}}
-                >
-                  <div className="menu-btn btn3">
-                  <div className="menu-btn-icon3">
-                  </div>
-                  <div className="menu-btn-text">
-                      Workout Planner
-                  </div>
-                  <div className={this.state.selectedNavbar=="workout-planner"? "menu-btn-dot":"menu-btn-no-dot"}>
-                </div>
-                </div>
-            </Link>
-            <Link to="/active-workout"
-              onClick={ ()=>{this.setState({selectedNavbar: "active-workout"})}}
-              >
-                <div className="menu-btn btn4" >
-                <div className="menu-btn-icon4">
+              <div className="menu-btn-text">
+                Dashboard
+              </div>
+              <div className={this.state.selectedNavbar == "dashboard" ? "menu-btn-dot" : "menu-btn-no-dot"}>
+              </div>
+            </div>
+          </Link>
+          <Link to="/workout"
+            onClick={() => { this.setState({ selectedNavbar: "workout" }) }}
+          >
+            <div className="menu-btn btn2">
+              <div className="menu-btn-icon2">
+              </div>
+              <div className="menu-btn-text">
+                Workout
+              </div>
+              <div className={this.state.selectedNavbar == "workout" ? "menu-btn-dot" : "menu-btn-no-dot"}>
+              </div>
+            </div>
+          </Link>
+          <Link to="/workout-planner"
+            onClick={() => { this.setState({ selectedNavbar: "workout-planner" }) }}
+          >
+            <div className="menu-btn btn3">
+              <div className="menu-btn-icon3">
+              </div>
+              <div className="menu-btn-text">
+                Workout Planner
+              </div>
+              <div className={this.state.selectedNavbar == "workout-planner" ? "menu-btn-dot" : "menu-btn-no-dot"}>
+              </div>
+            </div>
+          </Link>
+          <Link to="/active-workout"
+            onClick={() => { this.setState({ selectedNavbar: "active-workout" }) }}
+          >
+            <div className="menu-btn btn4" >
+              <div className="menu-btn-icon4">
+              </div>
+              <div className="menu-btn-text">
+                Active Workout
+              </div>
+              <div className={this.state.selectedNavbar == "active-workout" ? "menu-btn-dot" : "menu-btn-no-dot"}>
+              </div>
+            </div>
+          </Link>
+          <Link to="/social"
+            onClick={() => { this.setState({ selectedNavbar: "social" }) }}
+          >
+            <div className="menu-btn btn5" >
+              <div className="menu-btn-icon5">
+              </div>
+              <div className="menu-btn-text">
+                Social
+              </div>
+              <div className={this.state.selectedNavbar == "social" ? "menu-btn-dot" : "menu-btn-no-dot"}>
+              </div>
+            </div>
+          </Link>
+          {this.state.role_id > 2 ?
+            <Link to="/management"
+              onClick={() => { this.setState({ selectedNavbar: "management" }) }}
+            >
+              <div className="menu-btn btn6" >
+                <div className="menu-btn-icon6">
                 </div>
                 <div className="menu-btn-text">
-                    Active Workout
+                  Management
                 </div>
-                <div className={this.state.selectedNavbar=="active-workout"? "menu-btn-dot":"menu-btn-no-dot"}>
+                <div className={this.state.selectedNavbar == "management" ? "menu-btn-dot" : "menu-btn-no-dot"}>
                 </div>
-                </div>
+              </div>
             </Link>
-            <Link to="/social"
-              onClick={ ()=>{this.setState({selectedNavbar: "social"})}}
-              >
-            <div className="menu-btn btn5" >
-                <div className="menu-btn-icon5">
-                    </div>
-                    <div className="menu-btn-text">
-                        Social
-                    </div>
-                    <div className={this.state.selectedNavbar=="social"? "menu-btn-dot":"menu-btn-no-dot"}>
+            : null}
+          {this.state.role_id == 2 ?
+            <Link to="/settings"
+              onClick={() => { this.setState({ selectedNavbar: "settings" }) }}
+            >
+              <div className="menu-btn btn6" >
+                <div className="menu-btn-icon6">
                 </div>
+                <div className="menu-btn-text">
+                  Settings
                 </div>
+                <div className={this.state.selectedNavbar == "settings" ? "menu-btn-dot" : "menu-btn-no-dot"}>
+                </div>
+              </div>
             </Link>
-            { this.state.role_id > 2? 
-                 <Link to="/management"
-                 onClick={ ()=>{this.setState({selectedNavbar: "management"})}}
-                 >
-            <div className="menu-btn btn6" >
-                        <div className="menu-btn-icon6">
-                            </div>
-                            <div className="menu-btn-text">
-                                Management
-                            </div>
-                            <div className={this.state.selectedNavbar=="management"? "menu-btn-dot":"menu-btn-no-dot"}>
-                          </div>
-                        </div>
-                    </Link>
-                :null }  
+            : null}
         </div>
-        <Link to="/login" onClick={ this.handleSignOut }>
-            <div className="menu-btn btn-signout">
-                <div className="menu-btn-icon-signout">
-                    </div>
-                    <div className="menu-btn-text">
-                        Sign Out
-                    </div>
-                </div>
-            </Link>
+        <Link to="/login" onClick={this.handleSignOut}>
+          <div className="menu-btn btn-signout">
+            <div className="menu-btn-icon-signout">
+            </div>
+            <div className="menu-btn-text">
+              Sign Out
+            </div>
+          </div>
+        </Link>
       </div>
     );
   }
@@ -253,9 +268,9 @@ export default class App extends Component {
   render() {
     return (
       <div className="app-container">
-          <Router>
+        <Router>
           {this.state.sessionActive ? this.renderNav() : null}
-              <div className={this.containerSessionName()}>
+          <div className={this.containerSessionName()}>
             <Switch>
               <Route exact path="/">
                 {this.state.sessionActive ? (
@@ -279,8 +294,8 @@ export default class App extends Component {
               <Route path="/settings" component={SettingsPage} />
               <Route path="/social" component={SocialPage} />
             </Switch>
-            </div>
-          </Router>
+          </div>
+        </Router>
       </div>
     );
   }
