@@ -24,7 +24,13 @@ from itertools import chain
 import re
 
 # Create your views here.
-
+class GetUserId(APIView):
+    def get(self, request, format=None):
+        data = self.request.session.get('user_id')
+        if(data!=0):
+            return Response(data, status=status.HTTP_200_OK)
+        else:
+            return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
 
 class UserView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -1183,7 +1189,7 @@ class ListUnassignedClients(APIView):
         #print("ListUnassignedClients Triggered!")
         coachId = self.request.session.get('user_id')
         role= User.objects.filter(id=coachId)[0]
-        if(role.roleid.description=='Coach'):    
+        if(role.roleid.description=='Coach' or role.roleid.description=='Admin'):    
             queryset = User.objects.raw(
             'SELECT * FROM api_user WHERE roleid_id=2 AND id NOT IN (SELECT user_id FROM api_coachhasclient)')
             if len(queryset)>0:

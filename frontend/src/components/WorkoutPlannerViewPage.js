@@ -6,8 +6,8 @@ import {
   Link,
   Redirect,
 } from "react-router-dom";
-import '../../static/css/workout-planner.css';
-
+import "../../static/css/workout-planner.css";
+import CalendarPage from "./CalendarPage";
 
 export default class WorkoutPlannerViewPage extends Component {
   static defaultProps = {};
@@ -16,21 +16,28 @@ export default class WorkoutPlannerViewPage extends Component {
     super(props);
 
     this.state = {
-
+      userId: 0,
     };
   }
+
+  getUserId() {
+    fetch("/api/get-user-id")
+      .then((response) => {
+        /*{<CalendarPage user={32} />}*/
+        return response.json();
+      })
+      .then((data) => {
+        this.setState({ userId: data });
+      });
+  }
+  componentDidMount = () => {
+    this.getUserId();
+  }
   
-
-renderPlannerView(){
-  return(
-    <div className="wpvp-container">
-        View
-    </div>
-  );
-}
-
-
   render() {
-    return(this.renderPlannerView());
+    
+    return (
+      <div className="wpmp-section wpmp-box2">{<CalendarPage user={this.state.userId} />}</div>
+    );
   }
 }
