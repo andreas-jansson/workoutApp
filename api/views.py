@@ -999,8 +999,7 @@ class GetPendingFriendView(APIView):
         print("****GetPendingFriendView Triggered!")
 
         #finds all rows with your id in api_friends
-        queryset1 = Friends.objects.raw('select * from api_friends where (user1_id = \'{}\' or user2_id = \'{}\') and verified = 0'.format(self.request.session.get('user_id'), self.request.session.get('user_id')))
-        
+        queryset1 = Friends.objects.raw('select * from api_friends where (user2_id = \'{}\') and verified = 0'.format(self.request.session.get('user_id')))
         #creates a list of the ids that arent yours
         friend_list = []
         for person in queryset1:
