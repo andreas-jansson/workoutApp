@@ -1,18 +1,7 @@
-import React, { Component, useEffect } from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  Redirect,
-} from "react-router-dom";
+import React, { Component } from "react";
 import "../../static/css/social-my-friends.css";
 
-
-
-const public_url = "/api/social-find-friends";
 const email_url = "/api/social-find-email-friends";
-
 export default class SocialFindFriendsEmail extends Component {
   static defaultProps = {};
 
@@ -25,9 +14,8 @@ export default class SocialFindFriendsEmail extends Component {
     };
   }
 
-  handleSubmit = () => 
-  { 
-      var email = this.state.emailFriend       
+  handleSubmit = () => {
+    var email = this.state.emailFriend;
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -43,7 +31,7 @@ export default class SocialFindFriendsEmail extends Component {
         console.log("❌Friend Request Was NOT Successful❌");
       }
     });
-};
+  };
 
   renderSearch = () => {
     return (
@@ -51,6 +39,7 @@ export default class SocialFindFriendsEmail extends Component {
         <div className="sff-request-title" align="center">
           Send an email friend request to people you know.{" "}
         </div>
+        <br />
         <form onSubmit={this.handleSubmit}>
           <div align="center">
             <label>
@@ -73,8 +62,6 @@ export default class SocialFindFriendsEmail extends Component {
   };
 
   render() {
-    return (
-        this.renderSearch()
-    )
+    return this.renderSearch();
   }
 }
