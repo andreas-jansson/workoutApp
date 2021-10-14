@@ -68,7 +68,7 @@ body {
 
 .sub-headingg{
   display: inline-block;
-  font-size: 90px;
+  font-size: 80px;
   font-weight: bold;
   text-align: center;
   color: var(--orangeGradiant1); 
@@ -96,6 +96,10 @@ body {
   background-size: contain;
   background-repeat: no-repeat;
   border-radius: 20px;
+}
+
+.parallax-img1 {
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.9), rgba(73, 73, 73, 0.6)),
 }
 
 .box-2-info {
