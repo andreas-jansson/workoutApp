@@ -176,7 +176,7 @@ export default class SocialFriendWorkout extends Component{
 
                     var elemMinus = document.createElement('Button');
                     elemMinus.className = "sfw-remove-exercise-btn";
-                    elemMinus.innerHTML = "-";
+                    //elemMinus.innerHTML = "-";
                     elemMinus.value = exerciseName;
                     elemMinus.type = "submit";
                     elemMinus.id = unique_id;

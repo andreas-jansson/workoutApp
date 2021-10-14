@@ -108,6 +108,7 @@ export default class ClientManagementPage extends Component {
           //console.log(data[i].fname);
           var userRow = document.createElement("tr");
           var userCell = document.createElement("td");
+          userCell.className="cmp-td";
 
           var rowButtons = document.createElement("button");
           rowButtons.className="cmp-button-add";
@@ -117,7 +118,10 @@ export default class ClientManagementPage extends Component {
           rowButtons.onclick = this.handleClientToAdd;
           
           var userCellText = document.createTextNode(""+data[i].fname+" "+data[i].lname);
-          userCell.appendChild(userCellText);
+          var something = document.createElement("div");
+          something.className="cmp-something-div";
+          something.appendChild(userCellText);
+          userCell.appendChild(something);
           userCell.appendChild(rowButtons);
           userRow.appendChild(userCell);
           tableBody.appendChild(userRow);
@@ -155,7 +159,7 @@ export default class ClientManagementPage extends Component {
           //console.log(data[i].fname);
           var userRow = document.createElement("tr");
           var userCell = document.createElement("td");
-
+          userCell.className="cmp-td";
           var rowButtons = document.createElement("button")
           rowButtons.className="cmp-button-remove";
           var rowButtonsText = document.createTextNode("Remove");
@@ -164,7 +168,10 @@ export default class ClientManagementPage extends Component {
           rowButtons.onclick = this.handleClientToRemove;
           
           var userCellText = document.createTextNode(""+data[i].fname+" "+data[i].lname);
-          userCell.appendChild(userCellText);
+          var something = document.createElement("div");
+          something.className="cmp-something-div";
+          something.appendChild(userCellText);
+          userCell.appendChild(something);
           userCell.appendChild(rowButtons);
           userRow.appendChild(userCell);
           tableBody.appendChild(userRow);

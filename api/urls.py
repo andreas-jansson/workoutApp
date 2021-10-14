@@ -16,6 +16,7 @@ urlpatterns = [
     path('change-user-visibility', SettingsView.as_view()),
     path('get-user-visibility', SettingsView.as_view()),
     path('settings-user-delete', SettingsDeleteView.as_view()),
+    path('get-user-id', GetUserId.as_view()),
 
     ##      Exercise       ##
     path('get-exercises', GetExercisesView.as_view()),
