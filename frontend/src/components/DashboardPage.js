@@ -17,34 +17,49 @@ export default class DashboardPage extends Component {
     super(props);
 
     this.state = {
+      information: [],
       sessionActive: false,
     };
   }
 
+  getDashboardData = () => {
+    fetch('/api/get-dashboard-data')
+      .then(res => res.json())
+      .then(result => {
+        this.setState({
+          isLoaded: true,
+          information: result
+        });
+      });
+  }
+
+  componentDidMount = () => {
+    this.getDashboardData();
+  };
+
 
   DashboardPage() {
+    const { information } = this.state;
     return (
       /* main container*/
       <div className="db-container">
-        <div className="db-section1">
-          <div className="db-section1-box1">
-          <p className="db-section1-big-text">Wednesday</p>
-            <p className="db-section1-small-text">Next Workout</p>
+        <h2 className="db-header-big-text"> The last 7 days you have </h2>
+        <div class="db-row">
+          <div class="db-column">
+          <div className="db-card">
+            <p className="db-section1-big-text">Lifted a total of <span style={{color: "white"}}>{information[0]}</span> kg</p>
           </div>
-          <div className="db-section1-box2">
-          <p className="db-section1-big-text">Squats 140 Kg</p>
-          <p className="db-section1-small-text">Latest Personal Record</p>
-          </div>
-          <div className="db-section1-box3">
-            <p className="db-section1-big-text">Jennifer</p>
-            <p className="db-section1-small-text">Personal Coach</p>
+          <div className="db-card">
+            <p className="db-section1-big-text">Performed a total of <span style={{color: "white"}}>{information[1]}</span> reps</p>
           </div>
           </div>
-        <div className="db-container2">
-          <div className="db-section2">
+        <div class="db-column">
+        <div className="db-card">
+            <p className="db-section1-big-text">Heaviest lift of <span style={{color: "white"}}>{information[2]}</span> kg</p>
           </div>
-          <div className="db-section3">
-          <div id="donutchart"></div>
+          <div className="db-card">
+            <p className="db-section1-big-text">Performed <span style={{color: "white"}}>{information[3]}</span> workouts</p>
+          </div>
           </div>
         </div>
       </div>

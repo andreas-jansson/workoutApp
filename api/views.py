@@ -2,6 +2,7 @@ from codecs import lookup
 from django import http
 from django.conf.urls import url
 from django.db.models import query
+from django.db import connection
 from django.shortcuts import render
 from django.views.generic.base import RedirectView
 from rest_framework import generics, serializers, status
@@ -18,7 +19,7 @@ import io
 from rest_framework.parsers import JSONParser
 from datetime import date
 from datetime import datetime as dt
-import datetime
+from datetime import timedelta
 import calendar
 from itertools import chain
 import re
@@ -1218,6 +1219,37 @@ class RemoveClientFromCoach(APIView):
         CoachUser=User.objects.filter(id=coachId)[0]
         CoachHasClient.objects.filter(user=ClientUser,coach=CoachUser).delete()
         return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_200_OK)
+
+class GetDashboardData(APIView):
+    def get(self, request, format=None):
+        with connection.cursor() as cursor:
+            user_id = self.request.session.get('user_id')
+            start_date = dt.now() + timedelta(days=-7)
+            end_date = dt.now()
+            data = []
+
+            get_total_weights_lifted_last_7_days = f'select SUM(l.reps*l.weight) as totalWeight from api_log l where l.scheduledWorkout_id IN (select s.id from api_scheduledWorkout s where s.user_id = {user_id} and s.scheduledDate BETWEEN "{start_date}" AND "{end_date}")'
+            cursor.execute(get_total_weights_lifted_last_7_days)
+            data.append(cursor.fetchone())
+
+            get_total_reps_last_7_days = f'select SUM(l.reps) as totalReps from api_log l where l.scheduledWorkout_id IN (select s.id from api_scheduledWorkout s where s.user_id = {user_id} and s.scheduledDate BETWEEN "{start_date}" AND "{end_date}")'
+            cursor.execute(get_total_reps_last_7_days)
+            data.append(cursor.fetchone())
+
+            get_max_lift_last_7_days = f'select MAX(l.weight) as maxWeight from api_log l where l.scheduledWorkout_id IN (select s.id from api_scheduledWorkout s where s.user_id = {user_id} and s.scheduledDate BETWEEN "{start_date}" AND "{end_date}")'
+            cursor.execute(get_max_lift_last_7_days)
+            data.append(cursor.fetchone())
+
+            get_total_workouts_last_7_days = f'select Count(*) as totalWorkouts from api_scheduledWorkout where user_id = {user_id} and scheduledDate BETWEEN "{start_date}" AND "{end_date}"'
+            cursor.execute(get_total_workouts_last_7_days)
+            data.append(cursor.fetchone())
+
+            for i in range(len(data)):
+                if "None" in str(data[i]):
+                    data[i] = "0"
+
+            print(data)
+        return Response(data, status=status.HTTP_200_OK)
         
         
         

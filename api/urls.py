@@ -68,6 +68,8 @@ urlpatterns = [
     # Behövs ovanstående fortfarande? Verkar inte som det. 
     path('list-unassigned-clients', ListUnassignedClients.as_view()),
     path('add-client-to-coach',AssignClientToCoach.as_view()),
-    path('remove-client-from-coach',RemoveClientFromCoach.as_view())
+    path('remove-client-from-coach',RemoveClientFromCoach.as_view()),
+
+    path('get-dashboard-data', GetDashboardData.as_view())
 
 ]
