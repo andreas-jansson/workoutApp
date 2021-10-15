@@ -28,12 +28,16 @@ const parallax = () => {
     <div>
       <div style={{ textAlign: "center" }}>
         {renderHeader()}
+
         <a id="HOME" color="none"></a>
-        <Parallax bgImage={image1} strength={-300}>
+        <Parallax bgImage={image1} strength={-300} bgImageStyle={{
+          opacity:'0.35',
+          filter: 'brightness(50%)'
+        }}>
           <div className="headingg" justifyContent="center">
             WORKIT
           </div>
-          <br/>
+          <br />
           <div className="sub-headingg" justifyContent="center">
             It's for
             <Typewriter
@@ -45,7 +49,7 @@ const parallax = () => {
                   .typeString("The Inspired")
                   .pauseFor(1000)
                   .deleteAll()
-                  .typeString("The Ambigious")
+                  .typeString("The Ambitious")
                   .pauseFor(1000)
                   .deleteAll()
                   .typeString("The Herculean")
@@ -73,13 +77,19 @@ const parallax = () => {
         </Parallax>
         <Parallax
           bgImage={image2}
+          bgImageStyle={{
+            opacity:'0.55',
+            filter: 'brightness(50%)'
+          }}
           strength={200}
           renderLayer={() => (
             <div
               style={{
-                width: "700px",
-                height: "200px",
+                width: "500px",
+                height: "400px",
                 marginLeft: "5%",
+                align:'left',
+                alignItems:'left',
                 fontSize: "23px",
                 background: "orange",
                 borderRadius: "30px",
@@ -90,8 +100,8 @@ const parallax = () => {
                 Madav AB <br />
               </h1>
               <h3>
-                For our clients and instructors at Madav AB, we create powerful
-                muscles. With 24/7 service and intense training.
+              With a 24-hour service and intense training, Madav AB not only develops strong muscles, but also bonds between our clients and their coaches. 
+              &nbsp; Our team fitness crew is comprised of seasoned athletes that have coaching expertise with individuals of all ages and body types.              
               </h3>
             </div>
           )}

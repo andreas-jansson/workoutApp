@@ -70,7 +70,11 @@ body {
 
 .sub-headingg{
   display: inline-block;
+<<<<<<< HEAD
   font-size: 50px;
+=======
+  font-size: 80px;
+>>>>>>> a9d4fbacfbd5534862f431c2b3f467064ab48304
   font-weight: bold;
   text-align: center;
   color: white; 
@@ -99,6 +103,10 @@ body {
   background-size: contain;
   background-repeat: no-repeat;
   border-radius: 20px;
+}
+
+.parallax-img1 {
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.9), rgba(73, 73, 73, 0.6)),
 }
 
 .box-2-info {

@@ -16,6 +16,7 @@ urlpatterns = [
     path('change-user-visibility', SettingsView.as_view()),
     path('get-user-visibility', SettingsView.as_view()),
     path('settings-user-delete', SettingsDeleteView.as_view()),
+    path('get-user-id', GetUserId.as_view()),
 
     ##      Exercise       ##
     path('get-exercises', GetExercisesView.as_view()),
@@ -68,6 +69,8 @@ urlpatterns = [
     # Behövs ovanstående fortfarande? Verkar inte som det. 
     path('list-unassigned-clients', ListUnassignedClients.as_view()),
     path('add-client-to-coach',AssignClientToCoach.as_view()),
-    path('remove-client-from-coach',RemoveClientFromCoach.as_view())
+    path('remove-client-from-coach',RemoveClientFromCoach.as_view()),
+
+    path('get-dashboard-data', GetDashboardData.as_view())
 
 ]

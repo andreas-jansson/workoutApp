@@ -81,4 +81,13 @@
     margin-top: 25px;
     pointer-events: none;
 }
+.cmp-td {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
 
+}
+.cmp-something-div {
+    width: 80%;
+    
+}

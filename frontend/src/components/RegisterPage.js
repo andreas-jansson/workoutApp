@@ -62,6 +62,28 @@ export default class RegisterPage extends Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
+  componentDidMount = () => {
+    this.sessionExist();
+  };
+
+  sessionExist = () => {
+    
+    const requestOptions = {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    };
+    fetch("/api/session-exist", requestOptions).then((response) => {
+      if (response.status == 202) {
+        console.log("session exists");
+        window.location.href = "/dashboard";
+        return response.json()
+      } else {
+        console.log("Session Missing");
+      }
+      return response.json()
+    })
+  }
+
   sendDetailsToServer = () => {
     let fname = this.state.user.fname;
     let lname = this.state.user.lname;

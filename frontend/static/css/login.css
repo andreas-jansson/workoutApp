@@ -37,6 +37,7 @@
     color: #FF9D00;
     border-radius: 25px;
     box-shadow: 5px 5px 5px 5px rgba(34, 32, 32, 0.623);
+    text-align: center;
   
     display: flex;
     flex-direction: column;
@@ -90,3 +91,6 @@
     text-align: center;
   }
 
+  .login-TextField .MuiFilledInput-root{
+    text-align: center;
+  }

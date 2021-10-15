@@ -6,6 +6,7 @@ import '../../static/css/workout-managment.css';
 import WorkoutCreateExercisePage from './WorkoutCreateExercisePage';
 import Alert from "@material-ui/lab/Alert";
 
+
 export default class WorkoutManagementPage extends Component{
 
     static defaultProps = {
@@ -26,8 +27,8 @@ export default class WorkoutManagementPage extends Component{
             workoutSaved: false,
             createExerciseView: this.props.createExerciseView,
             workoutOpened: false,
+            
         };
-
 
         //this.handleParentUpdate = this.handleParentUpdate.bind(this);
         this.handleDeleteWorkout = this.handleDeleteWorkout.bind(this);
@@ -37,12 +38,16 @@ export default class WorkoutManagementPage extends Component{
         this.ExerciseCategories = this.ExerciseCategories.bind(this);
         this.handleExerciseGroup = this.handleExerciseGroup.bind(this);
         this.ExerciseCategory = this.ExerciseCategory.bind(this);
+        this.handleParentUpdate = this.handleParentUpdate.bind(this);
         }
 
     componentDidMount = () =>{
         this.LoadAllWorkouts()
     }
-
+    handleParentUpdate(){
+        console.log("Pressed!");
+        this.setState({createExerciseView: false});
+    }
     handleDeleteWorkout = (e) =>{
         e.preventDefault();
         console.log("Delete workouts!");

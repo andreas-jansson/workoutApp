@@ -166,6 +166,7 @@ export default class SettingsPage extends Component {
             <OrangeSwitch onChange={() => { this.handleChange(); }} {...label} checked={this.state.isVisible} />
           </div>
           <MuiThemeProvider theme={my_theme}>
+          <br />
           <Button onClick={this.handleClickOpen} 
           color='primary' 
           backgroundColor='primary'
