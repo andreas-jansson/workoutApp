@@ -18,8 +18,8 @@ body {
 .box-1 {
   align-items: center;
   justify-content: center;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.9), rgba(73, 73, 73, 0.6)),
-    url("../images/index/heroimage.png");
+  /*background: linear-gradient(0deg, rgba(0, 0, 0, 0.9), rgba(73, 73, 73, 0.6)),
+    url("../images/index/heroimage.png");*/
   background-attachment: fixed;
   background-position: center;
   background-repeat: no-repeat;
@@ -63,15 +63,18 @@ body {
   font-weight: bold;
   text-align: center;
   height: 200px;
-  color: var(--silverGradiant1);
+  background: -webkit-linear-gradient(360deg, #e66a04, #fcef45);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .sub-headingg{
   display: inline-block;
-  font-size: 90px;
+  font-size: 50px;
   font-weight: bold;
   text-align: center;
-  color: var(--orangeGradiant1); 
+  color: white; 
+  font-weight: bolder;
 }
 
 

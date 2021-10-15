@@ -57,11 +57,11 @@ export default class App extends Component {
     else if(result.includes('workout-planner')==true){
       this.setState({selectedNavbar: 'workout-planner'});
     }
-    else if(result.includes('workout')==true){
-      this.setState({selectedNavbar: 'workout'});
-    }
     else if(result.includes('active')==true){
       this.setState({selectedNavbar: 'active'});
+    }
+    else if(result.includes('workout')==true){
+      this.setState({selectedNavbar: 'workout'});
     }
     else if(result.includes('social')==true){
       this.setState({selectedNavbar: 'social'});
@@ -85,6 +85,11 @@ export default class App extends Component {
         return response.json()
       } else {
         //console.log("Session Missing");
+        var is_root = (location.pathname == "/");
+        console.log(is_root)
+        if((location.pathname != "/") && (location.pathname != "/login") && (location.pathname != "/signup")){
+          window.location.replace("/")
+        }
       }
       return response.json()
     }).then((data)=>{

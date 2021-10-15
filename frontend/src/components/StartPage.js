@@ -13,6 +13,7 @@ import "../../static/css/icofont.min.css";
 import styled, { css } from "styled-components";
 import Typewriter from "typewriter-effect";
 
+
 const image1 =
   "https://www.sponser.com/media/catalog/product/h/e/header_pre_workout_booster.png";
 const image2 =
