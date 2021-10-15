@@ -353,7 +353,7 @@ export default class WorkoutPlannerManagePage extends Component {
               <br/>
               <h3>Schedule Updated!</h3>
             </div>
-            <button type="submit" className="wpmp-created-message-return-btn" onClick={ () => { this.setState({selctedWorkout: "None"})} }>
+            <button type="submit" className="wpmp-created-message-return-btn" onClick={ this.handleReturn }>
               Return
             </button>
         </div>

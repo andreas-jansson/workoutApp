@@ -20,6 +20,7 @@ from rest_framework.parsers import JSONParser
 from datetime import date
 from datetime import datetime as dt
 from datetime import timedelta
+import datetime
 import calendar
 from itertools import chain
 import re
@@ -254,24 +255,28 @@ class GetWorkoutExercisesView(APIView):
         print("name: " + name)
         print("GetWorkoutExerciseView Triggered!")
         if(User.objects.filter(id=self.request.session.get('user_id'))[0].roleid_id > 2):
+            print("if")
             queryset = Workout.objects.raw('select e.id, e.name, e.type_id from api_workout as w '
                                            + 'inner join api_workout_consistsOf as wco on wco.workout_id = w.id '
                                            + 'inner join api_exercise as e on e.id = wco.exercise_id '
                                            + 'where  active = 1  and w.name = \'{}\';'.format(name))
         else:
+            print("else")
             queryset = Workout.objects.raw('select e.id, e.name, e.type_id from api_user_hasWorkouts as uhw '
             +'inner join api_workout as w on uhw.workout_id = w.id '
             +'inner join api_workout_consistsOf as wco on wco.workout_id = uhw.workout_id '
             +'inner join api_exercise as e on e.id = wco.exercise_id '
-            +'where uhw.user_id = \'{}\' and  active = 1  and w.name = \'{}\''.format(self.request.session.get('user_id'), name))
+            +'where uhw.user_id = \'{}\' and active = 1 and w.name = \'{}\''.format(self.request.session.get('user_id'), name))
             #if client, find exercises from their own workout named XYZ, else get exercises from standard workouts
             if(bool(queryset) == False):
+                print("2nd if")
                 queryset = Workout.objects.raw('select e.id, e.name, e.type_id from api_workout as w '
                 +'inner join api_workout_consistsOf as wco on wco.workout_id = w.id '
                 +'inner join api_exercise as e on e.id = wco.exercise_id '
-                +'where  active = 1  and w.name = \'{}\';'.format(name))
+                +'where active = 1 and w.name = \'{}\';'.format(name))
         
         if len(queryset)>0:
+            print("3d if")
             data = WorkoutSerializer(queryset, many=True).data
             print(data)
             return Response(data, status=status.HTTP_200_OK)
