@@ -34,24 +34,21 @@ export default class ActiveWorkoutPage extends Component{
         this.getWorkouts();
     }
 
-    componentDidMount = () => {
-        this.roleCheck();
-      };
-    
-      roleCheck = () => {
-        const requestOptions = {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        };
-    
-        fetch("/api/session-exist", requestOptions).then((response) => {
-          return response.json()
-        }).then((data) => {
-          if(data.role_id > 2){
-            window.location.replace("/dashboard")
-          }
-        })
-      }
+ 
+    roleCheck = () => {
+    const requestOptions = {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+    };
+
+    fetch("/api/session-exist", requestOptions).then((response) => {
+        return response.json()
+    }).then((data) => {
+        if(data.role_id > 2){
+        window.location.replace("/dashboard")
+        }
+    })
+    }
 
     handleLogSubmit = (e) =>{
         e.preventDefault();
@@ -151,7 +148,7 @@ export default class ActiveWorkoutPage extends Component{
         var set = e.target.id.split("-")[1];
         console.log(id)
         console.log(set)
-        this.handleRemoveLog();
+        this.handleRemoveLog(id, set);
     }
 
     handleRemoveLog=(id, set)=>{
