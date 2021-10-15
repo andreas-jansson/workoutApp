@@ -51,6 +51,8 @@ urlpatterns = [
     path('load-active-log', LoadActiveLogsView.as_view()),
     path('load-previous-log', LoadPreviousLogsView.as_view()),
     path('load-specific-log', LoadSpecificLogsView.as_view()),
+    path('delete-log', DeleteLogView.as_view()),
+    
 
     ##     Social     ##
     path('get-friends', GetFriendsView.as_view()),

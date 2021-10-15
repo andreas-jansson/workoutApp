@@ -869,6 +869,49 @@ class LoadSpecificLogsView(APIView):
             return Response(data, status=status.HTTP_200_OK) 
         return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
 
+class DeleteLogView(APIView):
+    def post(self, request, format=None):
+        print("DeleteLogView Triggered!")
+        currentSet = int(request.data['currentSet'])
+        workoutId = int(request.data['workoutId'])
+        setToDelete = int(request.data['setToDelete'])
+        exerciseId = int(request.data['exerciseId'])
+
+
+        print("setToDelete: " + str(setToDelete))
+        print("currentSet: " + str(currentSet))
+        print("workoutId: " + str(workoutId))
+        print("exerciseId: " + str(exerciseId))
+
+
+        if(setToDelete == currentSet):
+            log = Log.objects.raw('select * from api_log as l where scheduledWorkout_id = \'{}\' and sets = \'{}\' and exercise_id =\'{}\';'.format(workoutId, setToDelete, exerciseId))
+            print(log)
+            log[0].delete()
+            print("deleted if")
+        else:
+            log = Log.objects.raw('select * from api_log as l where scheduledWorkout_id = \'{}\' and sets = \'{}\' and exercise_id =\'{}\';'.format(workoutId, setToDelete, exerciseId))
+            print(log)
+            log[0].delete()
+            print("deleted else")
+
+            i = setToDelete + 1
+            print(i)
+            while i <= currentSet:
+                update_log = Log.objects.raw('select * from api_log as l where scheduledWorkout_id = \'{}\' and sets = \'{}\' and exercise_id =\'{}\';'.format(workoutId, i , exerciseId))
+                print("set: " + str(update_log[0].sets) + " -> " + str(i-1))
+                update_log[0].sets = i - 1
+                update_log[0].save()
+                i = i +1
+            
+
+
+
+
+        return Response({'Log Deleted': 'OK'}, status=status.HTTP_200_OK)
+
+
+
 
 class GetClientView(APIView):
     def get(self, request, format=None):
