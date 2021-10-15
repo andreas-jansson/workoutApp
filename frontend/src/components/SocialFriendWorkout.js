@@ -57,6 +57,7 @@ export default class SocialFriendWorkout extends Component{
         this.setState({workoutOpened: false})
         //window.location.reload();
         let targetNode = document.getElementsByClassName("sfw-dynamic-exercise-added-container")[0];
+        let targetNode2 = document.getElementsByClassName("sfw-dynamic-exercise-added-container")[0];
 
         if(targetNode != null){
             targetNode.remove();
@@ -199,6 +200,11 @@ export default class SocialFriendWorkout extends Component{
 
     LoadAllWorkouts = () =>{
         console.log("loading workouts")
+        let targetNode = document.getElementsByClassName("sfw-dynamic-workout-container")[0];
+
+        if(targetNode != null){
+            targetNode.remove();
+        }
 
         fetch("/api/get-friend-workouts?user=" + this.state.friend)
         .then((response) => {
