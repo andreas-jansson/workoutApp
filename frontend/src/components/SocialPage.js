@@ -26,6 +26,26 @@ export default class SocialPage extends Component{
         this.handleViewFriend = this.handleViewFriend.bind(this);
     }
 
+
+    componentDidMount = () => {
+        this.roleCheck();
+      };
+    
+      roleCheck = () => {
+        const requestOptions = {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        };
+    
+        fetch("/api/session-exist", requestOptions).then((response) => {
+          return response.json()
+        }).then((data) => {
+          if(data.role_id > 2){
+            window.location.replace("/dashboard")
+          }
+        })
+      }
+      
     handleViewFriend=(e)=>{
         e.preventDefault();
         console.log("todo: view friend: " + e.target.id)

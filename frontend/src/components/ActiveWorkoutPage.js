@@ -29,9 +29,29 @@ export default class ActiveWorkoutPage extends Component{
     }
 
     componentDidMount =()=>{
+        this.roleCheck();
         this.getScheduledWorkouts();
         this.getWorkouts();
     }
+
+    componentDidMount = () => {
+        this.roleCheck();
+      };
+    
+      roleCheck = () => {
+        const requestOptions = {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        };
+    
+        fetch("/api/session-exist", requestOptions).then((response) => {
+          return response.json()
+        }).then((data) => {
+          if(data.role_id > 2){
+            window.location.replace("/dashboard")
+          }
+        })
+      }
 
     handleLogSubmit = (e) =>{
         e.preventDefault();

@@ -15,6 +15,26 @@ export default class ManagementPage extends Component {
     };
     //this.state = { sessionActive: false };
   }
+
+  componentDidMount = () => {
+    this.roleCheck();
+  };
+
+  roleCheck = () => {
+    const requestOptions = {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    };
+
+    fetch("/api/session-exist", requestOptions).then((response) => {
+      return response.json()
+    }).then((data) => {
+      if(data.role_id < 3){
+        window.location.replace("/dashboard")
+      }
+    })
+  }
+
   handleNavigationState = (e) => {
     e.preventDefault();
     this.setState({ selectedPage: e.target.value });
