@@ -201,12 +201,6 @@ div.price-cards{
 /** PRICE CARD CHEESE-FIX**/
 
 
-@media only screen and (max-width:9000px)
-{
-  div.header-container{
-    background-color: rgba(0, 0, 0, 0.822);
-  }
-}
 
 @media only screen and (max-width: 2500px) {
   
@@ -230,7 +224,9 @@ div.price-cards{
 
 @media only screen and (max-width: 1441px) {
 
-
+  div.header-container{
+    background-color: rgba(0, 0, 0, 0.822);
+  }
   div.price-cards{
     margin-left: 15%;
    }

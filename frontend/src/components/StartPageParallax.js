@@ -115,7 +115,7 @@ export const StartPageParallax = () => {
           </div>
           <Parallax
             bgImage={image2}
-            strength={1000}
+            strength={600}
             renderLayer={() => (
               <div className="renderlayer-parallax-about-us">
                 <h1>
