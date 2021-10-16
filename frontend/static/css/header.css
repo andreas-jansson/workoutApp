@@ -1,14 +1,12 @@
 
-@media screen and (max-width: 1024px) {
 
-    .header-container{
-        width:100vw;
-        height:50px;
-        position: fixed;
-        z-index: 9999;
-        display:none;
-    }
+.header-container{
+    width:100vw;
+    height:50px;
+    position: fixed;
+    z-index: 9999;
 }
+
 
 .header-btn-container{
     background: rgba(51, 170, 51, 0);
@@ -55,7 +53,6 @@
     padding-top:10px;
     padding-right:20px;
 }
-
 
 .header-btn-btn3{
     padding-top:10px;
