@@ -1,6 +1,33 @@
 
 
 /**** Workout List *****/
+@media screen and (max-width: 1024px) {
+
+    div.wmp-container{
+        width:500px;
+    }
+
+    div.wmp-section{
+        width: 500px;
+    }
+
+    }
+
+
+    @media screen and (max-width: 600px) {
+
+        div.wmp-container{
+            width:400px;
+        }
+    
+        div.wmp-section{
+            width: 400px;
+        }
+        .wmp-box1-title{
+            font-size: 12px;
+        }
+    
+        }
 
 .wmp-box1-title{
     font-size: 36px;
@@ -14,7 +41,6 @@
     display:flex;
     justify-content: space-evenly;
     align-items: center;
-    margin-top: 3%;
     border-radius: 5px;
 
 }

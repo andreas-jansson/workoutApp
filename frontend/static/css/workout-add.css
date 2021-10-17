@@ -1,4 +1,56 @@
-/****** WorkoutAddPage ****/
+@media screen and (max-width: 1024px) {
+
+    div.wap-container{
+        width: 100vw;
+    }
+
+    div.wap-section{
+        width: 200%;
+    }
+
+    div.wap-box1{
+        width: 200%
+    }
+
+    div.wap-box2{
+        width: 500%;
+    }
+
+    }
+
+
+    @media screen and (max-width: 660px) {
+
+    
+        div.wap-section{
+            width: 100%;
+        }
+    
+        div.wap-box1{
+            width: 200vw;
+            height: 300px;
+            display: flexbox;
+            justify-content: flex-end ;
+            align-items: center;
+            flex-direction: column; 
+            flex-flow:column;
+ 
+        }
+    
+        div.wap-box2{
+            width: 50%;
+            height: 200px;
+            display: flexbox;
+            justify-content:flex-end ;
+            align-items: center;
+            flex-direction: column;  
+            flex-flow: column wrap;
+
+        }
+
+    
+        }
+
 
 .wap-container{
     width:100%;
@@ -7,9 +59,7 @@
     display:flex;
     justify-content: space-evenly;
     align-items: center;
-    margin-top: 3%;
     border-radius: 5px;
-
 }
 
 .wap-section{
