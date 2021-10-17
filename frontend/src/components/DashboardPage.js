@@ -43,7 +43,7 @@ export default class DashboardPage extends Component {
     return (
       /* main container*/
       <div className="db-container">
-        <h2 className="db-header-big-text"> The last 7 days you have </h2>
+        <h2 className="db-header-big-text"> Within the last 7 days, you have</h2>
         <div class="grid2x2">
           <div className="box box1">
             <p className="db-section1-big-text">Lifted a total of <span style={{ color: "white" }}>{information[0]}</span> kg</p>
