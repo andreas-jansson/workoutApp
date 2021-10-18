@@ -14,7 +14,7 @@ import "../../static/css/social-find-friends.css";
 function SocialFindFriendsPage() {
   const [data, setData] = useState([]);
   const public_url = "/api/social-find-friends";
-
+  
   const [preferDarkMode, setPreferDarkMode] = useState(() => {
     const mode = localStorage.getItem("_tableDarkMode");
     return mode === "true" || false;
@@ -24,6 +24,7 @@ function SocialFindFriendsPage() {
     {
       title: "🏋🏻‍♂️Find a gym partner🏋🏿",
       field: "email",
+      sorting: false,
     },
   ];
 
@@ -31,6 +32,7 @@ function SocialFindFriendsPage() {
     fetch(public_url)
       .then((resp) => resp.json())
       .then((resp) => setData(resp));
+      console.log("HÄR KOMMER DET!");
   };
 
   useEffect(() => {
@@ -43,7 +45,7 @@ function SocialFindFriendsPage() {
     },
   });
 
-  return (
+  return ( 
     <div>
       <br />
       <MuiThemeProvider theme={theme}>
@@ -77,16 +79,18 @@ function SocialFindFriendsPage() {
                   icon: "🧡",
                   tooltip: "Send Friend Request!",
                   onClick: () => {
-                    const requestOptions = {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({
-                        data,
-                      }),
-                    };
+                    console.log("TEST 1 - BEFORE IF")
+                    if(!data){
+                      console.log("TEST 2 - INSIDE OF IF")
+                      const requestOptions = {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          data,
+                        }),
+                      };
                     console.log(requestOptions.body);
                     console.log(data);
-
                     fetch(public_url, requestOptions).then((resp) => {
                       if (resp.ok) {
                         console.log("✅Friend Request Was Successful✅");
@@ -94,6 +98,7 @@ function SocialFindFriendsPage() {
                         console.log("❌Friend Request Was NOT Successful❌");
                       }
                     });
+                  }
                   },
                   //hidden: data.isVisible < 1,
                   disabled: data.isVisible < 1,
@@ -116,8 +121,7 @@ function SocialFindFriendsPage() {
                   fontSize: 19,
                   fontStyle: "roboto",
                 },
-                pageSizeOptions: false,
-                searchAutoFocus: true,
+                search: false,
                 rowStyle: (data) => ({
                   fontSize: 17,
                   color: "white",
@@ -127,6 +131,7 @@ function SocialFindFriendsPage() {
                   color: "white",
                   borderRadius: 20,
                 },
+                paging: false,
                 actionsColumnIndex: -1,
                 showFirstLastPageButtons: false,
               }}
