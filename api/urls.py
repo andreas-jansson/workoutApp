@@ -51,6 +51,8 @@ urlpatterns = [
     path('load-active-log', LoadActiveLogsView.as_view()),
     path('load-previous-log', LoadPreviousLogsView.as_view()),
     path('load-specific-log', LoadSpecificLogsView.as_view()),
+    path('delete-log', DeleteLogView.as_view()),
+    
 
     ##     Social     ##
     path('get-friends', GetFriendsView.as_view()),
@@ -69,6 +71,8 @@ urlpatterns = [
     # Behövs ovanstående fortfarande? Verkar inte som det. 
     path('list-unassigned-clients', ListUnassignedClients.as_view()),
     path('add-client-to-coach',AssignClientToCoach.as_view()),
-    path('remove-client-from-coach',RemoveClientFromCoach.as_view())
+    path('remove-client-from-coach',RemoveClientFromCoach.as_view()),
+
+    path('get-dashboard-data', GetDashboardData.as_view())
 
 ]

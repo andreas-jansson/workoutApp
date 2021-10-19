@@ -2,6 +2,7 @@ from codecs import lookup
 from django import http
 from django.conf.urls import url
 from django.db.models import query
+from django.db import connection
 from django.shortcuts import render
 from django.views.generic.base import RedirectView
 from rest_framework import generics, serializers, status
@@ -18,6 +19,7 @@ import io
 from rest_framework.parsers import JSONParser
 from datetime import date
 from datetime import datetime as dt
+from datetime import timedelta
 import datetime
 import calendar
 from itertools import chain
@@ -253,24 +255,28 @@ class GetWorkoutExercisesView(APIView):
         print("name: " + name)
         print("GetWorkoutExerciseView Triggered!")
         if(User.objects.filter(id=self.request.session.get('user_id'))[0].roleid_id > 2):
+            print("if")
             queryset = Workout.objects.raw('select e.id, e.name, e.type_id from api_workout as w '
                                            + 'inner join api_workout_consistsOf as wco on wco.workout_id = w.id '
                                            + 'inner join api_exercise as e on e.id = wco.exercise_id '
                                            + 'where  active = 1  and w.name = \'{}\';'.format(name))
         else:
+            print("else")
             queryset = Workout.objects.raw('select e.id, e.name, e.type_id from api_user_hasWorkouts as uhw '
             +'inner join api_workout as w on uhw.workout_id = w.id '
             +'inner join api_workout_consistsOf as wco on wco.workout_id = uhw.workout_id '
             +'inner join api_exercise as e on e.id = wco.exercise_id '
-            +'where uhw.user_id = \'{}\' and  active = 1  and w.name = \'{}\''.format(self.request.session.get('user_id'), name))
+            +'where uhw.user_id = \'{}\' and active = 1 and w.name = \'{}\''.format(self.request.session.get('user_id'), name))
             #if client, find exercises from their own workout named XYZ, else get exercises from standard workouts
             if(bool(queryset) == False):
+                print("2nd if")
                 queryset = Workout.objects.raw('select e.id, e.name, e.type_id from api_workout as w '
                 +'inner join api_workout_consistsOf as wco on wco.workout_id = w.id '
                 +'inner join api_exercise as e on e.id = wco.exercise_id '
-                +'where  active = 1  and w.name = \'{}\';'.format(name))
+                +'where active = 1 and w.name = \'{}\';'.format(name))
         
         if len(queryset)>0:
+            print("3d if")
             data = WorkoutSerializer(queryset, many=True).data
             print(data)
             return Response(data, status=status.HTTP_200_OK)
@@ -863,6 +869,49 @@ class LoadSpecificLogsView(APIView):
             return Response(data, status=status.HTTP_200_OK) 
         return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_404_NOT_FOUND)
 
+class DeleteLogView(APIView):
+    def post(self, request, format=None):
+        print("DeleteLogView Triggered!")
+        currentSet = int(request.data['currentSet'])
+        workoutId = int(request.data['workoutId'])
+        setToDelete = int(request.data['setToDelete'])
+        exerciseId = int(request.data['exerciseId'])
+
+
+        print("setToDelete: " + str(setToDelete))
+        print("currentSet: " + str(currentSet))
+        print("workoutId: " + str(workoutId))
+        print("exerciseId: " + str(exerciseId))
+
+
+        if(setToDelete == currentSet):
+            log = Log.objects.raw('select * from api_log as l where scheduledWorkout_id = \'{}\' and sets = \'{}\' and exercise_id =\'{}\';'.format(workoutId, setToDelete, exerciseId))
+            print(log)
+            log[0].delete()
+            print("deleted if")
+        else:
+            log = Log.objects.raw('select * from api_log as l where scheduledWorkout_id = \'{}\' and sets = \'{}\' and exercise_id =\'{}\';'.format(workoutId, setToDelete, exerciseId))
+            print(log)
+            log[0].delete()
+            print("deleted else")
+
+            i = setToDelete + 1
+            print(i)
+            while i <= currentSet:
+                update_log = Log.objects.raw('select * from api_log as l where scheduledWorkout_id = \'{}\' and sets = \'{}\' and exercise_id =\'{}\';'.format(workoutId, i , exerciseId))
+                print("set: " + str(update_log[0].sets) + " -> " + str(i-1))
+                update_log[0].sets = i - 1
+                update_log[0].save()
+                i = i +1
+            
+
+
+
+
+        return Response({'Log Deleted': 'OK'}, status=status.HTTP_200_OK)
+
+
+
 
 class GetClientView(APIView):
     def get(self, request, format=None):
@@ -950,18 +999,14 @@ class CopyFriendWorkoutView(APIView):
    
         name = request.data['workoutName']
         print(name)
-        user = request.data['user']
-        print(user)
-        #active=True
+        friend_id = request.data['user']
+        print(friend_id)
 
         queryset_workout_desc = Workout.objects.raw('select * from api_workout as w '
         +'inner join api_user_hasWorkouts as uhw on w.id = uhw.workout_id '
-        +'where w.name= \'{}\' and user_id = \'{}\' and w.active = true'.format(name, user))
+        +'where w.name= \'{}\' and user_id = \'{}\' and w.active = true'.format(name, friend_id))
 
 
-     
-
-        consistsOf = 'wtf'
         workout = Workout(name=name, description=queryset_workout_desc[0].description, active=True, shared=False)
         workout.save()
         
@@ -1217,6 +1262,37 @@ class RemoveClientFromCoach(APIView):
         CoachUser=User.objects.filter(id=coachId)[0]
         CoachHasClient.objects.filter(user=ClientUser,coach=CoachUser).delete()
         return Response({'Not Found': 'Code parameter not found in request'}, status=status.HTTP_200_OK)
+
+class GetDashboardData(APIView):
+    def get(self, request, format=None):
+        with connection.cursor() as cursor:
+            user_id = self.request.session.get('user_id')
+            start_date = dt.now() + timedelta(days=-7)
+            end_date = dt.now()
+            data = []
+
+            get_total_weights_lifted_last_7_days = f'select SUM(l.reps*l.weight) as totalWeight from api_log l where l.scheduledWorkout_id IN (select s.id from api_scheduledWorkout s where s.user_id = {user_id} and s.scheduledDate BETWEEN "{start_date}" AND "{end_date}")'
+            cursor.execute(get_total_weights_lifted_last_7_days)
+            data.append(cursor.fetchone())
+
+            get_total_reps_last_7_days = f'select SUM(l.reps) as totalReps from api_log l where l.scheduledWorkout_id IN (select s.id from api_scheduledWorkout s where s.user_id = {user_id} and s.scheduledDate BETWEEN "{start_date}" AND "{end_date}")'
+            cursor.execute(get_total_reps_last_7_days)
+            data.append(cursor.fetchone())
+
+            get_max_lift_last_7_days = f'select MAX(l.weight) as maxWeight from api_log l where l.scheduledWorkout_id IN (select s.id from api_scheduledWorkout s where s.user_id = {user_id} and s.scheduledDate BETWEEN "{start_date}" AND "{end_date}")'
+            cursor.execute(get_max_lift_last_7_days)
+            data.append(cursor.fetchone())
+
+            get_total_workouts_last_7_days = f'select Count(*) as totalWorkouts from api_scheduledWorkout where user_id = {user_id} and scheduledDate BETWEEN "{start_date}" AND "{end_date}"'
+            cursor.execute(get_total_workouts_last_7_days)
+            data.append(cursor.fetchone())
+
+            for i in range(len(data)):
+                if "None" in str(data[i]):
+                    data[i] = "0"
+
+            print(data)
+        return Response(data, status=status.HTTP_200_OK)
         
         
         

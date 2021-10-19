@@ -29,8 +29,25 @@ export default class ActiveWorkoutPage extends Component{
     }
 
     componentDidMount =()=>{
+        this.roleCheck();
         this.getScheduledWorkouts();
         this.getWorkouts();
+    }
+
+ 
+    roleCheck = () => {
+    const requestOptions = {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+    };
+
+    fetch("/api/session-exist", requestOptions).then((response) => {
+        return response.json()
+    }).then((data) => {
+        if(data.role_id > 2){
+        window.location.replace("/dashboard")
+        }
+    })
     }
 
     handleLogSubmit = (e) =>{
@@ -131,16 +148,52 @@ export default class ActiveWorkoutPage extends Component{
         var set = e.target.id.split("-")[1];
         console.log(id)
         console.log(set)
-        this.handleRemoveLog();
+        console.log(this.state.workoutId)
+
+
+        this.RemoveLog(id, set);
     }
 
-    handleRemoveLog=(id, set)=>{
+    RemoveLog=(id, set)=>{
         
         //call remove-log
         //decriment currentSet 
         //if there are sets with higher number, decriment all of those too
         //call loadActiveLogs()
+
+        console.log(id)
+        console.log(set)
+        var setToDelete = set
+        var currentSet = this.state.currentSet
+        var workoutId = this.state.workoutId
+        var exerciseId = this.state.exerciseId
+
+
+
+        const requestOptions={
+            method: 'POST',
+            headers: {'Content-Type' : 'application/json'},
+            body: JSON.stringify({
+                setToDelete,
+                currentSet,
+                workoutId,
+                exerciseId,
+            }),
+        }; 
+
+        fetch("/api/delete-log", requestOptions)
+        .then((response) => {
+            if (!response.ok){
+                console.log("Failed delete log!");
+            }
+            return response.json()}
+            ).then((data)=>{
+
+            this.loadActiveLogs()
+    })
+
     }
+
 
 
     loadActiveLogs=()=>{
@@ -232,10 +285,11 @@ export default class ActiveWorkoutPage extends Component{
     handleSelectedScheduledWorkout = (e) =>{
         e.preventDefault();
         console.log(e.target.value)
-        console.log(e.target.id)
+        console.log("workoutId: " + e.target.id)
         this.setState({
             workoutSelected: e.target.value,
             schduleId: e.target.id,
+            workoutId: e.target.id,
         })
 
         let targetNode = document.getElementsByClassName("awp-dynamic-workout-container")[0];
@@ -253,7 +307,7 @@ export default class ActiveWorkoutPage extends Component{
     handleSelectedWorkout = (e) =>{
         e.preventDefault();
         console.log(e.target.value)
-        console.log(e.target.id)
+        console.log("workoutId: " + e.target.id)
         this.setState({
             workoutSelected: e.target.value,
             workoutId: e.target.id,

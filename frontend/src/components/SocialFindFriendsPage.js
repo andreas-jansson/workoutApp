@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect} from "react";
 import MaterialTable, { MTableToolbar } from "material-table";
 import {
   MuiThemeProvider,
@@ -14,7 +14,7 @@ import "../../static/css/social-find-friends.css";
 function SocialFindFriendsPage() {
   const [data, setData] = useState([]);
   const public_url = "/api/social-find-friends";
-
+  
   const [preferDarkMode, setPreferDarkMode] = useState(() => {
     const mode = localStorage.getItem("_tableDarkMode");
     return mode === "true" || false;
@@ -22,8 +22,9 @@ function SocialFindFriendsPage() {
 
   const columns = [
     {
-      title: "🏋🏻‍♂️Find a gym partner🏋🏿",
+      title: "Find a gym partner",
       field: "email",
+      sorting: false,
     },
   ];
 
@@ -43,7 +44,9 @@ function SocialFindFriendsPage() {
     },
   });
 
-  return (
+
+
+  return ( 
     <div>
       <br />
       <MuiThemeProvider theme={theme}>
@@ -77,6 +80,7 @@ function SocialFindFriendsPage() {
                   icon: "🧡",
                   tooltip: "Send Friend Request!",
                   onClick: () => {
+                    
                     const requestOptions = {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },
@@ -84,12 +88,14 @@ function SocialFindFriendsPage() {
                         data,
                       }),
                     };
+                    
                     console.log(requestOptions.body);
                     console.log(data);
-
+                    
                     fetch(public_url, requestOptions).then((resp) => {
                       if (resp.ok) {
                         console.log("✅Friend Request Was Successful✅");
+                        alert('Friend Request Sent to\u00A0\u00A0' + data.fname + '\u00A0' +data.lname)
                       } else {
                         console.log("❌Friend Request Was NOT Successful❌");
                       }
@@ -116,17 +122,17 @@ function SocialFindFriendsPage() {
                   fontSize: 19,
                   fontStyle: "roboto",
                 },
-                pageSizeOptions: false,
-                searchAutoFocus: true,
                 rowStyle: (data) => ({
                   fontSize: 17,
                   color: "white",
                   fontStyle: "Times New Roman",
                 }),
+                search: false,
                 searchFieldStyle: {
                   color: "white",
                   borderRadius: 20,
                 },
+                pageSizeOptions: false,
                 actionsColumnIndex: -1,
                 showFirstLastPageButtons: false,
               }}

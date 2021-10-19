@@ -39,11 +39,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top:30px;
     
 }
 
 .social-btn{
-    border:2px rgb(255, 153, 0) solid;
+    border:2px var(--orangeGradiant1) solid;
     background: none;
     color: white;
     border-radius: 5px;
