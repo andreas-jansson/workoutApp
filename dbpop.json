@@ -257,14 +257,6 @@
     },
     {
         "model": "api.exercise",
-        "pk": 19,
-        "fields": {
-            "name": "Calf raiseee",
-            "type": 3
-        }
-    },
-    {
-        "model": "api.exercise",
         "pk": 20,
         "fields": {
             "name": "Federicos quantum crunch",
