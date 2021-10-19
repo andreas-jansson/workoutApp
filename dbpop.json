@@ -1202,7 +1202,7 @@
         "pk": 28,
         "fields": {
             "fname": "Franziska",
-            "lname": "Kl│gl",
+            "lname": "Klugl",
             "email": "franziska@mail.com",
             "pwhash": "a7803a9ab75fefdd376ce25982f24d462e9d26507a99f7075625f9dbc1ea63f8",
             "salt": "frQHBVRBcn",
@@ -1280,9 +1280,9 @@
         "model": "api.user",
         "pk": 33,
         "fields": {
-            "fname": "Andr┌",
+            "fname": "Andre",
             "lname": "Potenza",
-            "email": "andr┌@mail.com",
+            "email": "andre@mail.com",
             "pwhash": "8e7fb4eddd76b400f773fc1ffe1f1e7f1d90ebd0530a7e682abad56381011fdc",
             "salt": "NAyqyHshWG",
             "roleid": 2,
@@ -1340,9 +1340,9 @@
         "model": "api.user",
         "pk": 37,
         "fields": {
-            "fname": "JoÊo",
+            "fname": "Joao",
             "lname": "Salvado",
-            "email": "joÊo@mail.com",
+            "email": "joao@mail.com",
             "pwhash": "e4883783e5c1e71b7c1735ab824abf7bb3b6420d5be44bfce9c2493c3c206318",
             "salt": "JhmphaRNNr",
             "roleid": 2,
