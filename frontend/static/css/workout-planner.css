@@ -51,7 +51,8 @@
     width:150px;
     height: 40px;
     font-size: 14px;
-    color:white;
+    background-color: var(--grayDefault);
+    color: white;
     border-radius: 10px;
     margin-left:20px;
     margin-bottom:20px;
