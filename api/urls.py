@@ -1,11 +1,18 @@
 from django.urls import path
 from .views import *
 
+from django.conf import settings
+from django.conf.urls.static import static
+
+from django.conf.urls import serve
+from django.views.static import url
+
 urlpatterns = [
 
     ##     Initalize      ##
     path('', UserView.as_view()),
-
+    url(r'^media/(?P<path>.*)$', serve,{'document_root':       settings.MEDIA_ROOT}), 
+    url(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     ##      User          ##
     path('sign-out', SignOutView.as_view()),
     path('login-user', LoginUserView.as_view()),
@@ -74,5 +81,6 @@ urlpatterns = [
     path('remove-client-from-coach',RemoveClientFromCoach.as_view()),
 
     path('get-dashboard-data', GetDashboardData.as_view())
-
 ]
+
+urlpatterns=urlpatterns+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
