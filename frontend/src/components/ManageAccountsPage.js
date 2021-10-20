@@ -2,8 +2,6 @@ import React, {useState, useEffect } from "react";
 import MaterialTable,{ MTableToolbar } from "material-table";
 import "../../static/css/manage-account-table.css";
 import {
-  MuiThemeProvider,
-  createMuiTheme,
   Grid,
   Divider,
 } from "@material-ui/core";
@@ -13,11 +11,6 @@ function ManageAccountsPage() {
   const url = "/api/manage-user";
   const [data, setData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
-
-  const [preferDarkMode, setPreferDarkMode] = useState(() => {
-    const mode = localStorage.getItem("_tableDarkMode");
-    return mode === "true" || false;
-  });
 
   const columns = [
     {
@@ -84,17 +77,9 @@ function ManageAccountsPage() {
   }, []);
 
 
-  const theme = createMuiTheme({
-    palette: {
-      type: preferDarkMode ? "dark" : "light",
-    },
-  });
-
 
   return (
     <div>
-            <MuiThemeProvider theme={theme}>
-
       <div className="mactable-signup-text"></div>
       <div className="mactable-container">
         <br /> <br />
@@ -147,7 +132,7 @@ function ManageAccountsPage() {
             },
           }}
           style={{
-            background: "rgb(26, 24, 24)",
+            background: "	rgb(128,128,128)",
             color: "white",
             fontSize: 20,
             align: 'center',
@@ -198,7 +183,6 @@ function ManageAccountsPage() {
           }}
         />
       </div>
-      </MuiThemeProvider>
     </div>
   );
 }

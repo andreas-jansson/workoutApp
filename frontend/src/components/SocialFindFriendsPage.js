@@ -1,8 +1,6 @@
 import React, { useState, useEffect} from "react";
 import MaterialTable, { MTableToolbar } from "material-table";
 import {
-  MuiThemeProvider,
-  createMuiTheme,
   Grid,
   Divider,
 } from "@material-ui/core";
@@ -38,25 +36,16 @@ function SocialFindFriendsPage() {
     getPublicUsers();
   }, []);
 
-  const theme = createMuiTheme({
-    palette: {
-      type: preferDarkMode ? "dark" : "light",
-    },
-  });
-
-
-
   return ( 
     <div>
       <br />
-      <MuiThemeProvider theme={theme}>
       <SocialFindFriendsEmail />
         <div className="sff-container">
           <div>
             <br />
             <MaterialTable
               style={{
-                background: "#292727",
+                backgroundColor: "#433f3f ",
                 color: "white",
               }}
               title={
@@ -66,15 +55,6 @@ function SocialFindFriendsPage() {
               }
               columns={columns}
               data={data}
-              components={{
-                Toolbar: (props) => (
-                  <div>
-                    <MTableToolbar {...props} />
-                    <Grid align="right" style={{ padding: 0 }}></Grid>
-                    <Divider />
-                  </div>
-                ),
-              }}
               actions={[
                 (data) => ({
                   icon: "🧡",
@@ -180,7 +160,6 @@ function SocialFindFriendsPage() {
             <br /> <br />
           </div>
         </div>
-      </MuiThemeProvider>
     </div>
   );
 }

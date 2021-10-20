@@ -1,9 +1,9 @@
 /****** Coach creation Page ******/
 
 .mactable-container{
-    width:60%;
+    width:70%;
     height:auto;
-    margin: 0% 20%;
+    margin: 0% 15%;
 
     display: flex;
     flex-direction: column;
@@ -26,3 +26,44 @@
     padding-bottom: 5px;
   }
   
+  @media screen and (max-width: 1441px) {  
+
+    .mactable-container{
+      width:80%;
+      height:auto;
+      margin: 0% 10%;
+  
+      display: flex;
+      flex-direction: column;
+    }
+
+}
+
+  
+@media screen and (max-width: 1024px) {  
+
+  .mactable-container{
+    width:90%;
+    height:auto;
+    margin: 0% 5%;
+    margin-bottom: 10%;
+
+    display: flex;
+    flex-direction: column;
+  }
+
+}
+
+@media screen and (max-width: 770px) {  
+
+  .mactable-container{
+    width:80%;
+    height:auto;
+    margin: 0% 10%;
+    margin-bottom: 10%;
+
+    display: flex;
+    flex-direction: column;
+  }
+
+}
