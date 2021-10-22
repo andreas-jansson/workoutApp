@@ -1154,7 +1154,7 @@ class SocialFindFriends(APIView):
         queryset2 = User.objects.raw('select * from api_user')
 
         for person in queryset2:
-            if(person.isVisible == False or person.roleid_id > 2):
+            if(person.isVisible == False or person.roleid_id != 2):
                 friend_list.append(person.id)
         print(friend_list)
 
