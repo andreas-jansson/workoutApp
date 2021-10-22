@@ -34,8 +34,8 @@ class User(models.Model):
     isVisible = models.BooleanField(default=False)
 
 class scheduledWorkout(models.Model):
-    user = models.ForeignKey(User, null=False, on_delete=PROTECT)
-    workout = models.ForeignKey(Workout, null=False, on_delete=PROTECT)
+    user = models.ForeignKey(User, null=False, on_delete=CASCADE)
+    workout = models.ForeignKey(Workout, null=False, on_delete=CASCADE)
     scheduledDate = models.DateTimeField(null=False)
 
 class Log(models.Model):
